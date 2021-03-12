@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.bigdata.model.mapper.MemberMapper">
+	
+	<!-- MemberController -->
+
+	<select id="getAllMember" resultType="MemberDto">
+		select email, name, joinDate, role, introduce, profileImg, count(distinct post.postNo) as postCnt, count(distinct commentNo) as commentCnt
+        from member left join post using(email)
+        left join comment using(email)
+        group by email;
+	</select>
+	
+	<select id="getRole" parameterType="string" resultType="string">
+		select role
+		from member
+		where email = #{email}
+	</select>
+
+	<insert id="join" parameterType="MemberDto">
+		insert into member (email, pwd,	name, joinDate, introduce)
+		values (#{email}, #{pwd}, #{name}, NOW(), #{introduce})
+	</insert>
+
+	<select id="emailCheck" parameterType="string" resultType="string">
+		select email
+		from member
+		where email = #{email}
+	</select>
+
+	<select id="nameCheck" parameterType="string" resultType="string">
+		select name
+		from member
+		where name = #{name}
+	</select>
+
+	<select id="findUserInfo" parameterType="string" resultType="MemberDto">
+		select *
+		from member
+		where email=#{email}
+	</select>
+
+	<update id="updateIntro" parameterType="MemberDto">
+		update member
+		set	introduce = #{introduce}
+		where email=#{email}
+	</update>
+
+	<update id="updatePwd" parameterType="MemberDto">
+		update member
+		set pwd = #{pwd}
+		where email=#{email}
+	</update>
+
+	<delete id="delete" parameterType="string">
+		delete 
+		from member
+		where email=#{email}
+	</delete>
+
+	<update id="saveImg" parameterType="MemberDto">
+		update member
+		set profileImg = #{profileImg}
+		where email=#{email}
+	</update>
+
+	<update id="deleteImg" parameterType="string">
+		update member
+		set profileImg = null
+		where email=#{email}
+	</update>
+
+	<!-- LoginController -->
+	
+	<select id="login" parameterType="MemberDto" resultType="MemberDto">
+		select email, pwd, name, role
+		from member
+		where email=#{email}
+	</select>
+
+	<select id="findPwd" parameterType="string" resultType="string">
+		select pwd
+		from member
+		where email=#{email}
+	</select>
+	
+	<select id="getPostList" parameterType="string" resultType="PostDto">
+		select postNo, title, content,
+				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(uploadDate, '%H:%i:%s')
+				else date_format(uploadDate, '%y.%m.%d')
+				end uploadDate,
+				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(modifyDate, '%H:%i:%s')
+				else date_format(modifyDate, '%y.%m.%d')
+				end modifyDate,
+				likeCnt, email, name,
+				(
+					select thumbnail
+					from (
+						select pp.*, (select count(*)
+									from post_vote
+									where pp.picNo = post_vote.picNo
+						            ) as count
+						from post_pics pp
+						where post.postNo = pp.postNo
+						order by count desc
+						) as temp
+					limit 1
+				) as thumbnail,
+				(
+					select thumbnail
+					from (
+						select pp.*, (select count(*)
+									from post_vote
+									where pp.picNo = post_vote.picNo
+						            ) as count
+						from post_pics pp
+						where post.postNo = pp.postNo
+						order by count desc
+						) as temp
+					limit 1, 1
+				) as thumbnailTwo,
+				(
+					select count(*)
+					from comment
+		            where post.postNo = comment.postNo
+				) as commentCnt 
+		from post join member using(email)
+		where email = #{email} and temp = 0
+	</select>
+
+</mapper>
