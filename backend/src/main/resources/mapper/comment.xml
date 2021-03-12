@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.bigdata.model.mapper.CommentMapper">
+
+    <select id="getOne" parameterType="int" resultType="CommentDto">
+		select c.*, m.name
+		from comment c join member m
+				using(email)
+		where commentNo = #{commentNo}
+	</select>
+    
+    <select id="commentList" parameterType="map" resultType="CommentDto">
+		select commentNo, postNo, content,
+				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(uploadDate, '%H:%i:%s')
+				else date_format(uploadDate, '%y.%m.%d')
+				end uploadDate,
+				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(modifyDate, '%H:%i:%s')
+				else date_format(modifyDate, '%y.%m.%d')
+				end modifyDate,
+				likeCnt, email, name, profileImg
+				
+		from comment join member using(email)
+		where postNo = #{postNo}
+        <if test="sortBy == 'like'">
+            order by likeCnt desc
+        </if>
+		limit 0,10;
+	</select>
+
+    <select id="infiniteScrollDown" parameterType="map" resultType="CommentDto">
+		select commentNo, postNo, content,
+				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(uploadDate, '%H:%i:%s')
+				else date_format(uploadDate, '%y.%m.%d')
+				end uploadDate,
+				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(modifyDate, '%H:%i:%s')
+				else date_format(modifyDate, '%y.%m.%d')
+				end modifyDate,
+				likeCnt, email, name, profileImg
+		from comment join member using(email)
+		where postNo = #{postNo}
+		<if test="sortBy == 'like'">
+            order by likeCnt desc
+        </if>
+		limit #{pg}, 10
+	</select>
+
+    <insert id="commentWrite" parameterType="CommentDto">
+    	insert into
+    	comment (postNo, content, email)
+    	values(#{postNo},#{content},#{email})
+    </insert>
+    
+    <update id="commentUpdate" parameterType="CommentDto">
+        update comment
+        set content = #{content}
+        where commentNo = #{commentNo}
+    </update>
+    
+    <delete id="commentDelete" parameterType="int">
+        delete 
+        from comment 
+        where commentNo = #{commentNo}
+    </delete>
+    
+ 	<select id="likeCount" parameterType="int" resultType="int">
+ 		select count(cmLikeNo)
+ 		from comment_member_like
+ 		where commentNo = #{commentNo} and likeCheck = 'Y'
+ 	</select>
+	
+	<select id="likeCheck" parameterType="map" resultType="int">
+	    select count(cmLikeNo)
+	    from comment_member_like
+	    where commentNo=#{commentNo} and email=#{email}
+	</select>
+	
+	<select id="likeInfo" parameterType="map" resultType="CommentLikeDto">
+	    select cmLikeNo, commentNo, email, likeCheck
+	    from comment_member_like
+	    where commentNo=#{commentNo} and email=#{email}
+	</select>
+	
+	<insert id="insertLike" parameterType="map">
+		insert into comment_member_like(commentNo, email)
+		values (#{commentNo}, #{email})
+	</insert>
+	
+	<update id="like" parameterType="map">
+		update comment_member_like
+		set likeCheck = 'Y'
+		where commentNo = #{commentNo} and email = #{email}
+	</update>
+	
+	<update id="unlike" parameterType="map">
+		update comment_member_like
+		set likeCheck = 'N'
+		where commentNo = #{commentNo} and email = #{email}
+	</update>
+	
+	<update id="updateLike" parameterType="map">
+		update comment_member_like
+		set likeCheck = 
+			case
+				when likeCheck = 'Y' 
+					then 'N'
+				when likeCheck = 'N'
+					then 'Y'
+		where commentNo = #{commentNo} and email = #{email}
+	</update>
+	
+	<update id="likeCntUp" parameterType="int">
+		update comment
+		set likeCnt = likeCnt + 1
+		where commentNo = #{commentNo}
+	</update>
+	
+	<update id="likeCntDown" parameterType="int">
+		update comment
+		set likeCnt = likeCnt - 1
+		where commentNo = #{commentNo}
+	</update>
+
+</mapper>

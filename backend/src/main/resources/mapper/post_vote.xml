@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.bigdata.model.mapper.PostVoteMapper">
+
+	<select id="checkVoted" parameterType="PostVoteDto" resultType="int">
+		select count(vNo)
+		from post_vote
+		where postNo = #{postNo} and email = #{email}
+	</select>
+	
+	<select id="getVoteInfo" parameterType="PostVoteDto" resultType="PostVoteDto">
+	    select vNo, picNo, email, postNo
+	    from post_vote
+	    where postNo = #{postNo} and email = #{email}
+	</select>
+	
+	<insert id="insertVotePost" parameterType="PostVoteDto">
+		insert into post_vote (picNo, postNo, email)
+		values (#{picNo}, #{postNo}, #{email})
+	</insert>
+	
+	<update id="updateVotePost" parameterType="PostVoteDto">
+		update post_vote
+		set picNo = #{picNo}
+		where vNo = #{vNo}
+	</update>
+	
+ 	<select id="getVoteCountofPic" parameterType="int" resultType="int">
+ 		select count(vNo)
+ 		from post_vote
+ 		where picNo = #{picNo}
+ 	</select>
+	
+ 	<select id="getVoteCountofPost" parameterType="int" resultType="int">
+ 		select count(vNo)
+ 		from post_vote
+ 		where postNo = #{postNo}
+ 	</select>
+	
+	<update id="updateVoteCnt" parameterType="map">
+		update post_pics
+			<if test="type=='up'">
+				set voteCnt = voteCnt + 1
+			</if>
+			<if test="type=='down'">
+				set voteCnt = voteCnt - 1
+			</if>
+		where picNo = #{picNo}
+	</update>
+	
+</mapper>
