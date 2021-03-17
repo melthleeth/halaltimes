@@ -57,10 +57,24 @@ VALUES ('Jhon'), ('Mark');
 | LHPL002 | Mark |
 ```
 
+### LPAD
 
+왼쪽에 특정문자를 원하는 자리수만큼 채워서 반환
 
+#### 사용법
 
+LPAD(원본문자열 , 원하는 자리수, 채울 문자열)
 
-출처:https://stajun.tistory.com/entry/mysql-%EB%AC%B8%EC%9E%90%EC%97%B4%EA%B3%BC-%EC%A0%95%EC%88%98%EB%A1%9C-%EB%90%9C-%EA%B8%B0%EB%B3%B8%ED%82%A4-%EC%9E%90%EB%8F%99-%EC%A6%9D%EA%B0%80-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+ex ) SELECT LPAD('ABC',10,'0')  FROM DUAL;
+
+결과 : 0000000ABC
+
+<br>
+
+# 출처
+
+https://stajun.tistory.com/entry/mysql-%EB%AC%B8%EC%9E%90%EC%97%B4%EA%B3%BC-%EC%A0%95%EC%88%98%EB%A1%9C-%EB%90%9C-%EA%B8%B0%EB%B3%B8%ED%82%A4-%EC%9E%90%EB%8F%99-%EC%A6%9D%EA%B0%80-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
 
 https://stackoverflow.com/questions/17893988/how-to-make-mysql-table-primary-key-auto-increment-with-some-prefix
+
+https://titis.tistory.com/105
