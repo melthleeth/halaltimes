@@ -69,6 +69,19 @@ ex ) SELECT LPAD('ABC',10,'0')  FROM DUAL;
 
 결과 : 0000000ABC
 
+### RPAD
+
+오른쪽에 특정문자를 원하는 자리수만큼 채워서 반환
+
+#### 사용법
+
+RPAD(원본문자열 , 원하는 자리수, 채울 문자열)
+
+ex ) SELECT RPAD('ABC',10,'0')  FROM DUAL;
+
+결과 : ABC0000000
+
+
 <br>
 
 # 출처
