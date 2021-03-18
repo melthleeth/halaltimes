@@ -57,5 +57,8 @@ npm run serve
 #### Backend
 
 ```shell
-// 
+cd backend
+./mvnw clean package
+cd target
+java -jar (생성된 jar 파일)
 ```
