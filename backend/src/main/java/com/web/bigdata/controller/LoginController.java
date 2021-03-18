@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.bigdata.model.MemberDto;
+import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.service.ETCService;
 import com.web.bigdata.model.service.JwtService;
-import com.web.bigdata.model.service.MemberService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -36,7 +36,7 @@ public class LoginController {
 	private JwtService jwtService;
 
 	@Autowired
-	private MemberService memberService;
+	private UserService memberService;
 
 	@Autowired
 	private ETCService etcService;
@@ -50,13 +50,13 @@ public class LoginController {
 		HttpStatus status = null;
 		Map<String, Object> resultMap = new HashMap<>();
 
-		MemberDto dto = new MemberDto();
+		UserDto dto = new UserDto();
 		dto.setEmail(email);
-		dto.setPwd(pwd);
+		dto.setPassword(pwd);
 
 		// 로그인
 		try {
-			MemberDto loginUser = memberService.login(dto);
+			UserDto loginUser = memberService.login(dto);
 
 			if (loginUser != null) {
 				// jwt.io에서 확인
@@ -67,7 +67,7 @@ public class LoginController {
 				// 토큰 정보는 response의 헤더로 보내고 나머지는 Map에 담는다
 				resultMap.put("auth-token", token);
 				resultMap.put("user-email", loginUser.getEmail());
-				resultMap.put("user-name", loginUser.getName());
+				resultMap.put("user-name", loginUser.getNickname());
 				resultMap.put("role", loginUser.getRole());
 				status = HttpStatus.ACCEPTED;
 			} else {

@@ -23,7 +23,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.web.bigdata.model.ImgDto;
-import com.web.bigdata.model.MemberDto;
+import com.web.bigdata.model.UserDto;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -39,8 +39,8 @@ public class S3FileUploadService {
 	private String defaultUrl;
 
 	private final AmazonS3Client amazonS3Client;
-	private final String IMAGE_DIR = "/home/ubuntu/temp/";
-//	private final String IMAGE_DIR = "c:\\ssafy\\uploaded\\";
+//	private final String IMAGE_DIR = "/home/ubuntu/temp/";
+	private final String IMAGE_DIR = "c:\\ssafy\\uploaded\\";
 
 	public S3FileUploadService(AmazonS3Client amazonS3Client) {
 		this.amazonS3Client = amazonS3Client;
@@ -50,8 +50,8 @@ public class S3FileUploadService {
 		return defaultUrl;
 	}
 
-	public MemberDto upload(String email, MultipartFile uploadFile) throws IOException {
-		MemberDto member = new MemberDto();
+	public UserDto upload(String email, MultipartFile uploadFile) throws IOException {
+		UserDto member = new UserDto();
 		String origName = uploadFile.getOriginalFilename();
 
 		// 확장자를 찾기 위한 코드
@@ -74,7 +74,7 @@ public class S3FileUploadService {
 
 		// 주소 할당
 		member.setEmail(email);
-		member.setProfileImg(saveFileName);
+		member.setProfile_image(saveFileName);
 
 		// 파일 삭제
 		file.delete();
@@ -133,8 +133,8 @@ public class S3FileUploadService {
 
 		imgDto.setOriPicName(origName);
 		imgDto.setModPicName(saveFileName);
-		imgDto.setThumbnail(thumbFileName);
-		imgDto.setPicSize(uploadFile.getSize());
+		imgDto.setThumb_image(thumbFileName);
+//		imgDto.setPicsize(uploadFile.getSize());
 
 		// 파일 삭제
 		file.delete();
