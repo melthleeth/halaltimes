@@ -1,6 +1,6 @@
 package com.web.bigdata.model;
 
-public class PostParameterDto {
+public class ReviewParameterDto {
 	private int pg;
 	private int spp;
 	private int start;
@@ -9,7 +9,7 @@ public class PostParameterDto {
 	private String email;
 	private String sortBy;
 
-	public PostParameterDto() {
+	public ReviewParameterDto() {
 		pg = 1;
 		spp = 10;
 	}

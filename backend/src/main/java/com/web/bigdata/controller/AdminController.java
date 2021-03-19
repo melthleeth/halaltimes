@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web.bigdata.model.service.MemberService;
+import com.web.bigdata.model.service.UserService;
 import com.web.bigdata.model.service.S3FileUploadService;
 
 import io.swagger.annotations.ApiOperation;
@@ -29,15 +29,14 @@ public class AdminController {
 	public static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
-	MemberService memberService;
+	UserService userService;
 
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
 
 	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보(이메일, 이름, 가입일, 권한, 프로필, 게시글 수, 댓글 수)을 반환한다.", response = HashMap.class)
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getMembers(@RequestParam String email)
-			throws Exception {
+	public ResponseEntity<Map<String, Object>> getMembers(@RequestParam String email) throws Exception {
 		logger.info("getMembers - 호출");
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -45,12 +44,12 @@ public class AdminController {
 
 		// 회원 정보 조회
 		try {
-			if(!"admin".equals(memberService.getRole(email))) {
+			if (!"admin".equals(userService.getRole(email))) {
 				resultMap.put("message", "Not a Admin Account");
 				status = HttpStatus.METHOD_NOT_ALLOWED;
 				return new ResponseEntity<Map<String, Object>>(resultMap, status);
 			}
-			resultMap.put("members", memberService.getAllMember());
+			resultMap.put("members", userService.getAllUser());
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -70,11 +69,11 @@ public class AdminController {
 
 		// 회원 탈퇴
 		try {
-			for(String email : targets) {
-				String fileName = memberService.findUserInfo(email).getProfileImg();
+			for (String email : targets) {
+				String fileName = userService.findUserInfo(email).getProfile_image();
 				s3FileUploadService.delete(fileName);
-				flag = memberService.delete(email);
-				if(!flag) {
+				flag = userService.delete(email);
+				if (!flag) {
 					return new ResponseEntity<Boolean>(false, HttpStatus.NO_CONTENT);
 				}
 			}
