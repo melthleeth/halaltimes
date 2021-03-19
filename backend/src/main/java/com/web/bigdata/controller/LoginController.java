@@ -43,7 +43,7 @@ public class LoginController {
 
 	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/confirm/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String pwd,
+	public ResponseEntity<Map<String, Object>> login(@RequestParam String email, @RequestParam String password,
 			HttpServletResponse response, HttpSession session) {
 		logger.info("login - 호출");
 
@@ -52,7 +52,7 @@ public class LoginController {
 
 		UserDto dto = new UserDto();
 		dto.setEmail(email);
-		dto.setPassword(pwd);
+		dto.setPassword(password);
 
 		// 로그인
 		try {

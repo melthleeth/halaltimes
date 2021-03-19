@@ -11,7 +11,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.web.bigdata.model.MemberDto;
+import com.web.bigdata.model.UserDto;
 
 @Service
 public class ETCServiceImpl implements ETCService {
@@ -73,7 +73,7 @@ public class ETCServiceImpl implements ETCService {
 	}
 
 	private MimeMessage createMessageForPwd(String email) throws Exception {
-		MemberDto dto = new MemberServiceImpl().findUserInfo(email);
+		UserDto dto = new UserServiceImpl().findUserInfo(email);
 		MimeMessage message = emailSender.createMimeMessage();
 
 		message.addRecipients(RecipientType.TO, email);// 보내는 대상
@@ -91,7 +91,7 @@ public class ETCServiceImpl implements ETCService {
 		msgg += "<h3 style='color:blue;'>비밀번호입니다.</h3>";
 		msgg += "<div style='font-size:130%'>";
 		msgg += "CODE : <strong>";
-		msgg += dto.getPwd() + "</strong><div><br/> ";
+		msgg += dto.getPassword() + "</strong><div><br/> ";
 		msgg += "</div>";
 		message.setText(msgg, "utf-8", "html");// 내용
 		message.setFrom(new InternetAddress("shim99887@gmail.com", "PickPic"));// 보내는 사람
