@@ -84,13 +84,13 @@ public class ReviewController {
 
 			// like 했는지 확인
 			likeCheckMap.put("email", email);
-			likeCheckMap.put("ID_REVIEW", id_review);
+			likeCheckMap.put("id_review", id_review);
 
 			ReviewLikeDto likeDto = reviewService.likeInfo(likeCheckMap);
 
 			// 해당 리뷰 like 누른적 한 번도 없다면
 			if (likeDto == null) {
-				resultMap.put("likeCheck", "N");
+				resultMap.put("likeCheck", 0);
 			}
 			// like를 누른 적이 있으면
 			else {
@@ -98,14 +98,14 @@ public class ReviewController {
 			}
 
 			// post imgs
-			List<ImgDto> postImgs = reviewService.getImages(id_review);
-			for (ImgDto img : postImgs) {
+			List<ImgDto> review_image = reviewService.getImages(id_review);
+			for (ImgDto img : review_image) {
 				// 이름에 url 붙여주기
-				img.setModPicName(s3FileUploadService.getDefaultUrl() + img.getModPicName());
+				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
 				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
 			}
 //			resultMap.put("voteCount", voteService.getVoteCountofPost(ID_REVIEW));
-			resultMap.put("fileList", postImgs);
+			resultMap.put("fileList", review_image);
 
 			// 투표했었는지 찾기
 //			ReviewVoteDto voteSearch = new ReviewVoteDto();
@@ -132,6 +132,7 @@ public class ReviewController {
 
 		String result = SUCCESS;
 		HttpStatus status = HttpStatus.OK;
+		System.out.println("start " + reviewDto);
 
 		List<MultipartFile> files = reviewDto.getFiles();
 		List<String> unmodified = reviewDto.getUnmodified();
@@ -139,7 +140,8 @@ public class ReviewController {
 		// 리뷰 작성 성공 시
 		try {
 			if (reviewService.write(reviewDto)) {
-				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
+//				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
+				System.out.println(reviewDto);
 
 //				// 임시저장했던 리뷰이었다면
 //				if (reviewDto.getID_REVIEW() != -1) {
@@ -154,7 +156,7 @@ public class ReviewController {
 
 				// 추가된 파일이 있다면
 				if (files != null && files.size() > 0) {
-					saveFiles(ID_REVIEW, files);
+					saveFiles(reviewDto.getId_review(), files);
 				}
 			}
 			// 작성 실패시
@@ -214,7 +216,7 @@ public class ReviewController {
 		try {
 			// ec2 파일 삭제
 			for (ImgDto imgDto : reviewService.getImages(ID_REVIEW)) {
-				s3FileUploadService.delete(imgDto.getModPicName());
+				s3FileUploadService.delete(imgDto.getModified_image());
 				s3FileUploadService.delete(imgDto.getThumb_image());
 			}
 
@@ -233,14 +235,15 @@ public class ReviewController {
 	@ApiOperation(value = "이미지 저장", notes = "리뷰의 이미지를 저장한다.")
 	@PostMapping("/imgs/save")
 	private ResponseEntity<String> saveFiles(String id_review, List<MultipartFile> files) {
-		logger.info("saveFiles 호출, " + files.size());
+//		logger.info("saveFiles 호출, " + files.size());
+		System.out.println(id_review);
+		System.out.println(files);
 
 		// s3 업로드 후 db 저장
 		try {
 			for (MultipartFile file : files) {
 				ImgDto img = s3FileUploadService.uploadImage(file);
 				img.setId_review(id_review);
-
 				reviewService.uploadFile(img);
 			}
 		} catch (Exception e) {
@@ -260,7 +263,7 @@ public class ReviewController {
 		try {
 			for (String picNo : unmodified) {
 				// 원본
-				s3FileUploadService.delete(reviewService.getImgInfo(picNo).getModPicName());
+				s3FileUploadService.delete(reviewService.getImgInfo(picNo).getModified_image());
 				// 썸네일
 				s3FileUploadService.delete(reviewService.getImgInfo(picNo).getThumb_image());
 

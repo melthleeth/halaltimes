@@ -191,12 +191,12 @@ public class UserController {
 
 	@ApiOperation(value = "사용자의 프로필 이미지 업로드", notes = "회원의 프로필 이미지를 수정한다.")
 	@PostMapping("/upload")
-	public ResponseEntity<Void> updateUserPicture(@RequestParam String email, @RequestParam MultipartFile profileImg) {
+	public ResponseEntity<Void> updateUserPicture(@RequestParam String email, @RequestParam MultipartFile profile_image) {
 		logger.info("updateUserPicture - 호출");
 
 		// 프로필 이미지 업로드
 		try {
-			UserDto dto = s3FileUploadService.upload(email, profileImg);
+			UserDto dto = s3FileUploadService.upload(email, profile_image);
 			userService.saveImg(dto);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -108,6 +108,14 @@ public class ReviewDto {
 		this.thumbnail = thumbnail;
 	}
 
+	@Override
+	public String toString() {
+		return "ReviewDto [id_review=" + id_review + ", id_user=" + id_user + ", id_store=" + id_store + ", score="
+				+ score + ", content=" + content + ", upload_date=" + upload_date + ", update_date=" + update_date
+				+ ", likeCnt=" + likeCnt + ", files=" + files + ", unmodified=" + unmodified + ", thumbnail="
+				+ thumbnail + "]";
+	}
+
 //	public int getTemp() {
 //		return temp;
 //	}
@@ -131,4 +139,5 @@ public class ReviewDto {
 //	public void setCommentCnt(int commentCnt) {
 //		this.commentCnt = commentCnt;
 //	}
+
 }

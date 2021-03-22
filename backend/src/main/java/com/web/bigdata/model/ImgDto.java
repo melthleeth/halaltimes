@@ -5,8 +5,8 @@ public class ImgDto {
 	private String id_review_image;
 	private String id_review;
 	private String image;
-	private String oriPicName; // 실제 파일
-	private String modPicName; // 저장할 파일
+	private String original_image; // 실제 파일
+	private String modified_image; // 저장할 파일
 	private String thumb_image; // 저장할 파일
 //	private long picsize;
 
@@ -31,10 +31,6 @@ public class ImgDto {
 //		this.postNo = postNo;
 //	}
 //
-
-	public String getModPicName() {
-		return modPicName;
-	}
 
 	public String getId_review_image() {
 		return id_review_image;
@@ -68,6 +64,22 @@ public class ImgDto {
 		this.thumb_image = thumb_image;
 	}
 
+	public String getOriginal_image() {
+		return original_image;
+	}
+
+	public void setOriginal_image(String original_image) {
+		this.original_image = original_image;
+	}
+
+	public String getModified_image() {
+		return modified_image;
+	}
+
+	public void setModified_image(String modified_image) {
+		this.modified_image = modified_image;
+	}
+
 //	public long getPicsize() {
 //		return picsize;
 //	}
@@ -76,17 +88,6 @@ public class ImgDto {
 //		this.picsize = picsize;
 //	}
 
-	public void setModPicName(String modPicName) {
-		this.modPicName = modPicName;
-	}
-
-	public String getOriPicName() {
-		return oriPicName;
-	}
-
-	public void setOriPicName(String oriPicName) {
-		this.oriPicName = oriPicName;
-	}
 
 // 	public String getUploadDate() {
 //		return uploadDate;
