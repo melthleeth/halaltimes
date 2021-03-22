@@ -13,7 +13,7 @@ j4a206.p.ssafy.io
 - 공인 ip 주소 확인
 
     ```bash
-    curl [ipecho.net/plain;](http://ipecho.net/plain;) echo
+    curl ipecho.net/plain; echo
     ```
 
 # EC2 서버 접속
@@ -21,7 +21,7 @@ j4a206.p.ssafy.io
 - .pem 파일 위치 폴더 가서
 
 ```bash
-ssh -i J4A206T.pem [ubuntu@j4a206.p.ssafy.io](mailto:ubuntu@j4a206.p.ssafy.io)
+ssh -i J4A206T.pem ubuntu@j4a206.p.ssafy.io
 ```
 
 # 시스템 업데이트
