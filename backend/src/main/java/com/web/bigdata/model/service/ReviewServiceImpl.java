@@ -90,7 +90,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public int insertLike(Map<String, Object> map) throws Exception {
-		if (map.get("email") == null || "".equals(map.get("email").toString())) {
+		System.out.println("serviceImpl 까지옴");
+		if (map.get("id_user") == null || "".equals(map.get("id_user").toString())) {
+			System.out.println("zzz");
 			throw new Exception();
 		}
 		return reviewMapper.insertLike(map);

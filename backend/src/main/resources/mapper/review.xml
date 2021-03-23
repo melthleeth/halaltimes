@@ -132,10 +132,10 @@
 		where id_review = #{id_review}
 	</delete>
 	
- 	<select id="likeCount" parameterType="int" resultType="int">
- 		select count(pmLikeNo)
+ 	<select id="likeCount" parameterType="String" resultType="int">
+ 		select count(id_review_like)
  		from review_like
- 		where id_review = #{id_review} and likeCheck = 1
+ 		where id_review = #{id_review} and active = 1
  	</select>
 	
 	<select id="likeCheck" parameterType="map" resultType="int">
@@ -145,7 +145,7 @@
 	</select>
 	
 	<select id="likeInfo" parameterType="map" resultType="ReviewLikeDto">
-	    select pmLikeNo, id_review, id_user, LIKED
+	    select id_review_like, id_review, id_user, active
 	    from review_like
 	    where id_review=#{id_review} and id_user=#{id_user}
 	</select>
@@ -157,7 +157,7 @@
 	
 	<update id="updateLike" parameterType="map">
 		update review_like
-		set liked = 
+		set active = 
 			case
 				when likeCheck = 1 
 					then 0
@@ -168,23 +168,23 @@
 	
 	<update id="like" parameterType="map">
 		update review_like
-		set liked = 1
+		set active = 1
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
 	<update id="unlike" parameterType="map">
 		update review_like
-		set likeCheck = 0
+		set active = 0
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
-	<update id="likeCntUp" parameterType="int">
+	<update id="likeCntUp" parameterType="String">
 		update review
 		set likeCnt = likeCnt + 1
 		where id_review = #{id_review}
 	</update>
 	
-	<update id="likeCntDown" parameterType="int">
+	<update id="likeCntDown" parameterType="String">
 		update review
 		set likeCnt = likeCnt - 1
 		where id_review = #{id_review}
