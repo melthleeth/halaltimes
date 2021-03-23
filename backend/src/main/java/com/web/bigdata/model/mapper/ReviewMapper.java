@@ -14,34 +14,34 @@ import com.web.bigdata.model.ReviewParameterDto;
 @Mapper
 public interface ReviewMapper {
 
-	/** 게시글 목록 : 검색 기능 */
+	/** 리뷰 목록 : 검색 기능 */
 	public List<ReviewDto> getList(ReviewParameterDto reviewParameterDto) throws SQLException;
 
-	/** like 게시글 */
+	/** like 리뷰 */
 	public ReviewDto getLikeReview(String id_review) throws SQLException;
 
-	/** 총 게시글 개수 */
+	/** 총 리뷰 개수 */
 	public int getTotalCount(ReviewParameterDto reviewParameterDto) throws SQLException;
 
-	/** 게시글 번호 조회 */
+	/** 리뷰 번호 조회 */
 	public int getCount() throws SQLException;
 
-	/** 마지막 게시글 번호 가져오기 */
+	/** 마지막 리뷰 번호 가져오기 */
 	public String getLastReview(String id_user) throws SQLException;
 
-	/** 하나의 게시글 정보 */
+	/** 하나의 리뷰 정보 */
 	public ReviewDto getOne(String id_review) throws SQLException;
 
-	/** 게시글 작성 */
+	/** 리뷰 작성 */
 	public int write(ReviewDto reviewDto) throws SQLException;
 
-	/** 게시글 수정 */
+	/** 리뷰 수정 */
 	public int modify(ReviewDto reviewDto) throws SQLException;
 
-	/** 게시글 삭제 */
+	/** 리뷰 삭제 */
 	public int delete(String id_review) throws SQLException;
 
-	/** 해당 게시글의 좋아요 수 */
+	/** 해당 리뷰의 좋아요 수 */
 	public int likeCount(String id_review) throws SQLException;
 
 	/** 좋아요 했는지 조회 */
@@ -50,7 +50,7 @@ public interface ReviewMapper {
 	/** 좋아요 했었던 적이 있었을 때 가져올 정보 */
 	public ReviewLikeDto likeInfo(Map<String, Object> map) throws SQLException;
 
-	/** 게시글에 처음으로 좋아요 누름 */
+	/** 리뷰에 처음으로 좋아요 누름 */
 	public int insertLike(Map<String, Object> map) throws SQLException;
 
 	/** 좋아요 */
@@ -62,7 +62,7 @@ public interface ReviewMapper {
 	/** 좋아요 체크 해제 */
 	public int unlike(Map<String, Object> map) throws SQLException;
 
-	/** 게시글의 좋아요 수 갱신 */
+	/** 리뷰의 좋아요 수 갱신 */
 	public int likeCntUp(String id_review) throws SQLException;
 
 	public int likeCntDown(String id_review) throws SQLException;
@@ -70,7 +70,7 @@ public interface ReviewMapper {
 	/** File insert to DB */
 	public int uploadFile(ImgDto img) throws SQLException;
 
-	/** 게시글의 이미지 가져오기 */
+	/** 리뷰의 이미지 가져오기 */
 	public List<ImgDto> getImages(String id_review) throws SQLException;
 
 	/** 사진 정보 */
@@ -81,13 +81,13 @@ public interface ReviewMapper {
 
 	// ReviewTempController
 //
-//	/** 임시저장 게시글 목록 */
+//	/** 임시저장 리뷰 목록 */
 //	public List<ReviewDto> getTempList(ReviewParameterDto reviewParameterDto) throws SQLException;
 //
-//	/** 임시저장 게시글 수 */
+//	/** 임시저장 리뷰 수 */
 //	public int getTempCount(String email) throws SQLException;
 //
-//	/** 임시저장 게시글 작성 */
+//	/** 임시저장 리뷰 작성 */
 //	public int writeTemp(ReviewDto reviewDto) throws SQLException;
 //
 //	public int writeTemptoDB(ReviewDto review) throws SQLException;

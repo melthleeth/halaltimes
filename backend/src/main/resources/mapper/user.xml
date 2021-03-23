@@ -7,7 +7,7 @@
 	<!-- UserController -->
 
 	<select id="getAllUser" resultType="UserDto">
-		select email, nickname, role, profile_img
+		select email, nickname, role, profile_image
 <!-- 		, count(distinct post.postNo) as postCnt, count(distinct commentNo) as commentCnt -->
 <!--         from USER left join REVIEW using(EMAIL) -->
 <!--         left join comment using(EMAIL) -->
@@ -58,13 +58,13 @@
 
 	<update id="saveImg" parameterType="UserDto">
 		update user
-		set profile_img = #{profile_img}
+		set profile_image = #{profile_image}
 		where email=#{email}
 	</update>
 
 	<update id="deleteImg" parameterType="string">
 		update user
-		set profile_img = null
+		set profile_image = null
 		where email=#{email}
 	</update>
 

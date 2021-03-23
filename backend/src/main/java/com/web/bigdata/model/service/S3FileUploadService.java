@@ -131,8 +131,8 @@ public class S3FileUploadService {
 		uploadOnS3(saveFileName, file);
 		uploadOnS3(thumbFileName, thumb);
 
-		imgDto.setOriPicName(origName);
-		imgDto.setModPicName(saveFileName);
+		imgDto.setOriginal_image(origName);
+		imgDto.setModified_image(saveFileName);
 		imgDto.setThumb_image(thumbFileName);
 //		imgDto.setPicsize(uploadFile.getSize());
 

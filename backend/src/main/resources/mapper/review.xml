@@ -17,7 +17,7 @@
 				end update_date,
 				likeCnt, id_user, nickname,
 				(
-					select thumbnail
+					select thumb_image
 					from (
 						select pp.*, (select count(*)
 									from post_vote
@@ -28,20 +28,7 @@
 						order by count desc
 						) as temp
 					limit 1
-				) as thumbnail,
-				(
-					select thumbnail
-					from (
-						select pp.*, (select count(*)
-									from post_vote
-									where pp.id_review_image = post_vote.id_review_image
-						            ) as count
-						from review_image pp
-						where review.id_review = pp.id_review
-						order by count desc
-						) as temp
-					limit 1, 1
-				) as thumbnailTwo,
+				) as thumb_image,				
 				(
 					select count(*)
 					from comment
@@ -78,7 +65,7 @@
 				end update_date,
 				likeCnt, id_user, nickname,
 				(
-					select modPicName
+					select modified_image
 					from (
 						select pp.*, (select count(*)
 									from post_vote
@@ -89,20 +76,7 @@
 						order by count desc
 						) as temp
 					limit 1
-				) as thumbnail,
-				(
-					select modPicName
-					from (
-						select pp.*, (select count(*)
-									from post_vote
-									where pp.id_review_image = post_vote.id_review_image
-						            ) as count
-						from review_image pp
-						where post.id_review = pp.id_review
-						order by count desc
-						) as temp
-					limit 1, 1
-				) as thumbnailTwo
+				) as thumb_image				
 		from post join member using(id_user)
 		where temp = 0
         order by likeCnt desc
@@ -136,15 +110,15 @@
 	</select>
 	
 	<select id="getOne" parameterType="int" resultType="ReviewDto">
-		select p.*, m.name
-		from review p join member m
+		select p.*, u.name
+		from review p join user u
 			using(id_user)
 		where id_review = #{id_review}
 	</select>
 	
 	<insert id="write" parameterType="ReviewDto">
-		insert into review (content, id_user)
-		values (#{content}, #{id_user})
+		insert into review (content, id_user, id_store)
+		values (#{content}, #{id_user}, #{id_store})
 	</insert>
 	
 	<update id="modify" parameterType="ReviewDto">
@@ -160,29 +134,29 @@
 	
  	<select id="likeCount" parameterType="int" resultType="int">
  		select count(pmLikeNo)
- 		from post_member_like
+ 		from review_like
  		where id_review = #{id_review} and likeCheck = 1
  	</select>
 	
 	<select id="likeCheck" parameterType="map" resultType="int">
 	    select count(pmLikeNo)
-	    from post_member_like
+	    from review_like
 	    where id_review=#{id_review} and id_user=#{id_user}
 	</select>
 	
 	<select id="likeInfo" parameterType="map" resultType="ReviewLikeDto">
 	    select pmLikeNo, id_review, id_user, LIKED
-	    from post_member_like
+	    from review_like
 	    where id_review=#{id_review} and id_user=#{id_user}
 	</select>
 	
 	<insert id="insertLike" parameterType="map">
-		insert into post_member_like(id_review, id_user)
+		insert into review_like(id_review, id_user)
 		values (#{id_review}, #{id_user})
 	</insert>
 	
 	<update id="updateLike" parameterType="map">
-		update post_member_like
+		update review_like
 		set liked = 
 			case
 				when likeCheck = 1 
@@ -193,13 +167,13 @@
 	</update>
 	
 	<update id="like" parameterType="map">
-		update post_member_like
+		update review_like
 		set liked = 1
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
 	<update id="unlike" parameterType="map">
-		update post_member_like
+		update review_like
 		set likeCheck = 0
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
@@ -217,14 +191,14 @@
 	</update>
 	
 	<insert id="uploadFile">
-		insert into review_image (id_review, oriPicName, modPicName, thumbnail)
+		insert into review_image (id_review, original_image, modified_image, thumb_image)
 <!-- 		, PICSIZE) -->
-		values(#{id_review}, #{oriPicName}, #{modPicName}, #{thumbnail})
+		values(#{id_review}, #{original_image}, #{modified_image}, #{thumb_image})
 <!-- 		, #{PICSIZE}) -->
 	</insert>
 	
 	<select id="getImages" parameterType="String" resultType="ImgDto">
-		select id_review_image, id_review, oriPicName, modPicName, thumbnail, 
+		select id_review_image, id_review, original_image, modified_image, thumb_image, 
 <!-- 		PICSIZE, -->
 			date_format(upload_date, '%Y%m%d') as upload_date,
 <!-- 			(	select count(vNo) -->
@@ -236,7 +210,7 @@
 	</select>
 	
 	<select id="getImgInfo" parameterType="string" resultType="ImgDto">
-		select id_review_image, id_review, oriPicName, modPicName, thumbnail, 
+		select id_review_image, id_review, original_image, modified_image, thumb_image, 
 <!-- 		PICSIZE, -->
 			date_format(upload_date, '%Y%m%d') as upload_date,
 <!-- 			(	select count(vNo) -->
