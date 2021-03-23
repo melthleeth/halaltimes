@@ -8,7 +8,7 @@ const router = createRouter({
   routes: [
     // { path: , component: },
     { path: "/", redirect: "/home" },
-    // login/join
+    // home
     { path: "/home", component: Home },
     // not found
     { path: "/:notFound(.*)", component: NotFound },
