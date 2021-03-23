@@ -6,7 +6,7 @@
 
 	<!-- ReviewController -->
 	<select id="getList" parameterType="map" resultType="ReviewDto">
-		select id_review, content, nickname, likeCnt
+		select id_review, content, nickname, likeCnt,
 			case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(upload_date, '%H:%i:%s')
 							else date_format(upload_date, '%y.%m.%d')
