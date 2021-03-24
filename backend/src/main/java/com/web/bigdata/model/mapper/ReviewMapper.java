@@ -76,6 +76,8 @@ public interface ReviewMapper {
 	/** 사진 정보 */
 	public ImgDto getImgInfo(String id_review_image) throws SQLException;
 
+	public int deleteAllImage(String id_review) throws SQLException;
+	
 	/** File DB에서 지우기 */
 	public int deleteImage(String id_review_image) throws SQLException;
 
