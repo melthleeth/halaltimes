@@ -140,7 +140,7 @@ public class ReviewController {
 		// 리뷰 작성 성공 시
 		try {
 			if (reviewService.write(reviewDto)) {
-//				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
+				String id_review = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
 
 //				// 임시저장했던 리뷰이었다면
@@ -153,10 +153,11 @@ public class ReviewController {
 				if (unmodified != null && unmodified.size() > 0) {
 					deleteFiles(unmodified);
 				}
-
+				System.out.println("idreview "+id_review);
+//				String id_review = reviewService.getLastReview(reviewDto.getId_user());
 				// 추가된 파일이 있다면
 				if (files != null && files.size() > 0) {
-					saveFiles(reviewDto.getId_review(), files);
+					saveFiles(id_review, files);
 				}
 			}
 			// 작성 실패시
@@ -214,12 +215,14 @@ public class ReviewController {
 		logger.info("delete - 호출");
 		
 		try {
-			ReviewDto reviewDto = reviewService.getDetail(id_review);
+//			ReviewDto reviewDto = reviewService.getDetail(id_review);
 			// ec2 파일 삭제
 			for (ImgDto imgDto : reviewService.getImages(id_review)) {
 				s3FileUploadService.delete(imgDto.getModified_image());
 				s3FileUploadService.delete(imgDto.getThumb_image());
 			}
+			
+			System.out.println(id_review);
 			
 //			reviewService.deleteAllImage(id_review_image);
 			// db review 삭제 --cascade--> review images 삭제

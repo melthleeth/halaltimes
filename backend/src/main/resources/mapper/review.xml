@@ -95,7 +95,7 @@
 		where active = 1
 	</select>
 	
-	<select id="getLastReview" parameterType="string" resultType="int">
+	<select id="getLastReview" parameterType="string" resultType="string">
 		select id_review
 		from review
 		where id_user = #{id_user} and active = 1
@@ -111,8 +111,8 @@
 	</select>
 	
 	<insert id="write" parameterType="ReviewDto">
-		insert into review (content, id_user, id_store, score, upload_date)
-		values (#{content}, #{id_user}, #{id_store}, #{score}, current_timestamp)
+		insert into review (content, id_user, id_store, score, upload_date, update_date)
+		values (#{content}, #{id_user}, #{id_store}, #{score}, current_timestamp, current_timestamp)
 	</insert>
 	
 	<update id="modify" parameterType="ReviewDto">
@@ -185,7 +185,7 @@
 		where id_review = #{id_review}
 	</update>
 	
-	<insert id="uploadFile">
+	<insert id="uploadFile" parameterType="ImgDto">
 		insert into review_image (id_review, original_image, modified_image, thumb_image)
 <!-- 		, PICSIZE) -->
 		values(#{id_review}, #{original_image}, #{modified_image}, #{thumb_image})
