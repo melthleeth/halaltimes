@@ -3,14 +3,14 @@
     <nav class="flex justify-between items-center mx-10">
       <router-link to="/home">
         <img
-          src="../../assets/logo_circular_text_sm.png"
-          alt="logo"
-          class="absolute w-28 h-28 -top-5 left-1 animate-spin"
-        />
-        <img
           src="../../assets/halaltimes_icon.png"
           alt="logo"
-          class="w-10 h-10"
+          class="w-10 h-10 z-10"
+        />
+        <img
+          src="../../assets/logo_circular_text_sm.png"
+          alt="logo"
+          class="absolute w-28 h-28 -top-5 left-1 animate-spin z-0"
         />
       </router-link>
       <ul
