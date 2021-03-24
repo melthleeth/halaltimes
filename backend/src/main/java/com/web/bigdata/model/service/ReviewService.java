@@ -16,13 +16,13 @@ public interface ReviewService {
 	public List<ReviewDto> getList(ReviewParameterDto reviewParameterDto) throws Exception;
 
 	/** like 리뷰 */
-	public ReviewDto getLikeReview(String ID_REVIEW) throws Exception;
+	public ReviewDto getLikeReview(String id_review) throws Exception;
 
 	/** 하나의 리뷰 정보 */
-	public ReviewDto getDetail(String ID_REVIEW) throws Exception;
+	public ReviewDto getDetail(String id_review) throws Exception;
 
 	/** 마지막으로 작성한 리뷰 번호 */
-	public String getLastReview(String ID_USER) throws Exception;
+	public String getLastReview(String id_user) throws Exception;
 
 	/** 리뷰 작성 */
 	public boolean write(ReviewDto reviewDto) throws Exception;
@@ -31,10 +31,10 @@ public interface ReviewService {
 	public boolean modify(ReviewDto reviewDto) throws Exception;
 
 	/** 리뷰 삭제 */
-	public boolean delete(String ID_REVIEW) throws Exception;
+	public boolean delete(String id_review) throws Exception;
 
 	/** 해당 리뷰의 좋아요 수 */
-	public int likeCount(String ID_REVIEW) throws Exception;
+	public int likeCount(String id_review) throws Exception;
 
 	/** 좋아요 했는지 조회 */
 	public int likeCheck(Map<String, Object> map) throws Exception;
@@ -52,19 +52,21 @@ public interface ReviewService {
 	public int unlike(Map<String, Object> map) throws Exception;
 
 	/** 리뷰의 좋아요 수 갱신 */
-	public int likeCntUp(String ID_REVIEW) throws Exception;
+	public int likeCntUp(String id_review) throws Exception;
 
-	public int likeCntDown(String ID_REVIEW) throws Exception;
+	public int likeCntDown(String id_review) throws Exception;
 
 	/** File insert to DB */
 	public boolean uploadFile(ImgDto img) throws Exception;
 
 	/** 리뷰의 이미지 가져오기 */
-	public List<ImgDto> getImages(String ID_REVIEW) throws Exception;
+	public List<ImgDto> getImages(String id_review) throws Exception;
 
 	/** 사진 정보 */
 	public ImgDto getImgInfo(String id_review_image) throws Exception;
 
+	public boolean deleteAllImage(String id_review) throws Exception;
+	
 	/** File DB에서 지우기 */
 	public boolean deleteImage(String id_review_image) throws Exception;
 

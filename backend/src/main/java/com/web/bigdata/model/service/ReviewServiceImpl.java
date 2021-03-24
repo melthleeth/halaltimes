@@ -90,9 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public int insertLike(Map<String, Object> map) throws Exception {
-		System.out.println("serviceImpl 까지옴");
 		if (map.get("id_user") == null || "".equals(map.get("id_user").toString())) {
-			System.out.println("zzz");
 			throw new Exception();
 		}
 		return reviewMapper.insertLike(map);
@@ -136,11 +134,17 @@ public class ReviewServiceImpl implements ReviewService {
 	public ImgDto getImgInfo(String id_review_image) throws Exception {
 		return reviewMapper.getImgInfo(id_review_image);
 	}
-
+	
 	@Override
 	@Transactional
 	public boolean deleteImage(String id_review_image) throws Exception {
 		return reviewMapper.deleteImage(id_review_image) == 1;
+	}
+	
+	@Override
+	@Transactional
+	public boolean deleteAllImage(String id_review) throws Exception {
+		return reviewMapper.deleteAllImage(id_review) == 1;
 	}
 
 //	@Override
