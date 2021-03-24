@@ -1,10 +1,18 @@
 <template>
   <div
     id="bg"
-    class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
+    class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6"
   >
-    <section class="flex justify-center mt-4 mb-6">
-      <span class="text-5xl mx-10 w-full text-center py-1 mt-4 mb-2 font-outline work-sans border-line">About</span>
+    <section class="flex flex-col justify-center mt-4 mb-6">
+      <span
+        class="text-5xl w-full text-center py-1 mt-4 mb-1 font-outline work-sans border-line"
+        >About</span
+      >
+      <article class="flex justify-between text-xs border-line">
+        <span>VOL 1. No.1</span>
+        <span>EVERYTHING BUT HALAL</span>
+        <span>{{ currDate }}</span>
+      </article>
     </section>
     <section class="flex">
         <article class="w-1/2">
@@ -30,6 +38,18 @@
 export default {
   data() {
     return {};
+  },
+  computed: {
+    currDate() {
+      const event = new Date();
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      return event.toLocaleDateString(undefined, options);
+    },
   },
 };
 </script>
