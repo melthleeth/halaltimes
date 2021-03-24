@@ -80,6 +80,8 @@ public class ImgDto {
 		this.modified_image = modified_image;
 	}
 
+	
+
 //	public long getPicsize() {
 //		return picsize;
 //	}

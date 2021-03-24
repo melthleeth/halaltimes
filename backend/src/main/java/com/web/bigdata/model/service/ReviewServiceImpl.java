@@ -92,7 +92,6 @@ public class ReviewServiceImpl implements ReviewService {
 	public int insertLike(Map<String, Object> map) throws Exception {
 		System.out.println("serviceImpl 까지옴");
 		if (map.get("id_user") == null || "".equals(map.get("id_user").toString())) {
-			System.out.println("zzz");
 			throw new Exception();
 		}
 		return reviewMapper.insertLike(map);
