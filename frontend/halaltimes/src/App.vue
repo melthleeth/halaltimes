@@ -21,6 +21,41 @@ export default {
 };
 </script>
 <style>
+  @font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.G-market-sans {
+  font-family: 'GmarketSansMedium';
+}
+
+.font-color-black-400 {
+  color: #2B2A29;
+}
+
+.font-color-black-300 {
+  color: #6A6969;
+}
+
+.font-color-black-200 {
+  color: #AAA9A9;
+}
+
+.font-color-black-100 {
+  color: #DAD3CB;
+}
+
+body {
+  margin: 0;
+}
+
+input {
+  outline: none;
+}
+
 .route-enter-from {
   opacity: 0;
   transform: translateY(-30px);

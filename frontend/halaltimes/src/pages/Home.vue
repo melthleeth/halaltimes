@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span class="text-lg">HOME</span>
+        home
     </div>
 </template>
 <script>

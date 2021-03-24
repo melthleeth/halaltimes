@@ -30,17 +30,30 @@ export default {
 </script>
 
 <style scoped>
+:root {
+  --primary-color: #CF4F2E;
+  --primary-color-hover: #903720;
+  
+  --secondary-color: #4F8163;
+  --secondary-color-hover: #2F4D3B;
+
+  --base-color: #2B2A29;
+  --base-color-hover: #6A6969;
+
+  --important-color: #FFF58C;
+}
+
 button,
 a {
   text-decoration: none;
-  /* padding: 0.75rem 1.5rem; */
+  padding: 0.25rem 1rem;
   /* font: inherit; */
-  background-color: #00002f;
-  border: 3px solid #00002f;
   color: white;
+  background-color: #2B2A29;
+  border: 3px solid #2B2A29;
   cursor: pointer;
-  border-radius: 30px;
-  margin-right: 0.5rem;
+  /* border-radius: 30px; */
+  /* margin-right: 0.5rem; */
   display: inline-block;
   transition: 0.3s ease-out;
 }
@@ -49,7 +62,8 @@ a:hover,
 a:active,
 button:hover,
 button:active {
-  color: #ff5e46;
+  background-color: #6A6969;
+  border: 3px solid #6A6969;
 }
 
 a:focus,
@@ -57,63 +71,72 @@ button:focus {
   outline: none;
 }
 
-.flat {
+.important {
   background-color: transparent;
-  color: #270041;
-  border: none;
+  color: #2B2A29;
+  border: 3px solid #2B2A29;
+  padding: 0.25rem 0.75rem;
+}
+
+.important:hover,
+.important:active {
+  background-color: #FFF58C;
+}
+
+.primary {
+  color: white;
+  background-color: #CF4F2E;
+  border: 3px solid #CF4F2E;
+}
+
+.primary:hover {
+  background-color: #903720;
+  border: 3px solid #903720;
+}
+
+.secondary {
+  color: white;
+  background-color: #4F8163;
+  border: 3px solid #4F8163;
+}
+
+.secondary:hover {
+  background-color: #2F4D3B;
+  border: 3px solid #2F4D3B;
+}
+
+.outline_primary {
+  color: #CF4F2E;
+  background-color: transparent;
+  border: 3px solid #CF4F2E;
+}
+
+.outline_primary:hover {
+  color: white;
+  background-color: #CF4F2E;
+}
+
+.outline_secondary {
+  color: #4F8163;
+  background-color: transparent;
+  border: 3px solid #4F8163;
+}
+
+.outline_secondary:hover {
+  color: white;
+  background-color: #2F4D3B;
 }
 
 .outline {
   background-color: transparent;
-  border: 3px solid #00002f;
-  color: #00002f;
+  border: 3px solid #2B2A29;
+  color: #2B2A29;
 }
 
-.redbutton:hover,
-.flat:hover,
-.flat:active,
 .outline:hover,
 .outline:active {
   color: white;
   background-color: #00002f;
 }
 
-
-.important {
-  background-color: #ff5e46;
-  border: 1px solid #ffffff;
-}
-
-.important:hover {
-  color: #00002f;
-  background-color: #ff5e46;
-}
-
-.nude {
-  color: #00002f;
-  background-color: transparent;
-  border: 1px solid transparent;
-}
-
-.nude:hover,
-.nude:active {
-  color: white;
-  background-color: #00002f;
-}
-
-.outline-colored:hover,
-.outline-colored:active {
-  color: #00002f;
-  background-color: #56e6a5;
-}
-.colored {
-  color: #00002f;
-  background-color: #56e6a5;
-}
-
-.colored:hover,
-.colored:active {
-  color: white;
-  background-color: #00002f;
-}
 </style>
