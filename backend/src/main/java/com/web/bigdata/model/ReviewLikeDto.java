@@ -6,7 +6,7 @@ public class ReviewLikeDto {
 	private String id_review_like;
 	private String id_review;
 	private String id_user;
-	private int liked;
+	private int active; // active
 
 	public String getId_review_like() {
 		return id_review_like;
@@ -33,11 +33,18 @@ public class ReviewLikeDto {
 	}
 
 	public int getLiked() {
-		return liked;
+		return active;
 	}
 
-	public void setLiked(int liked) {
-		this.liked = liked;
+	public void setLiked(int active) {
+		this.active = active;
 	}
 
+	@Override
+	public String toString() {
+		return "ReviewLikeDto [id_review_like=" + id_review_like + ", id_review=" + id_review + ", id_user=" + id_user
+				+ ", active=" + active + "]";
+	}
+	
+	
 }

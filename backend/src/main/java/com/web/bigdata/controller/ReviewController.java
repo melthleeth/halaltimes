@@ -70,7 +70,7 @@ public class ReviewController {
 	@ApiOperation(value = "리뷰 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getReviewDetail(@RequestParam String id_review,
-			@RequestParam String email) throws Exception {
+			@RequestParam String id_user) throws Exception {
 		logger.info("getOne - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -83,7 +83,7 @@ public class ReviewController {
 			resultMap.put("reviewInfo", reviewDto);
 
 			// like 했는지 확인
-			likeCheckMap.put("email", email);
+			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_review", id_review);
 
 			ReviewLikeDto likeDto = reviewService.likeInfo(likeCheckMap);
@@ -140,7 +140,7 @@ public class ReviewController {
 		// 리뷰 작성 성공 시
 		try {
 			if (reviewService.write(reviewDto)) {
-//				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
+				String id_review = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
 
 //				// 임시저장했던 리뷰이었다면
@@ -153,10 +153,11 @@ public class ReviewController {
 				if (unmodified != null && unmodified.size() > 0) {
 					deleteFiles(unmodified);
 				}
-
+				System.out.println("idreview "+id_review);
+//				String id_review = reviewService.getLastReview(reviewDto.getId_user());
 				// 추가된 파일이 있다면
 				if (files != null && files.size() > 0) {
-					saveFiles(reviewDto.getId_review(), files);
+					saveFiles(id_review, files);
 				}
 			}
 			// 작성 실패시
@@ -176,7 +177,7 @@ public class ReviewController {
 	}
 
 	@ApiOperation(value = "리뷰 수정", notes = "새로운 리뷰 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@PutMapping
+	@PutMapping("/modify")
 	public ResponseEntity<String> modify(ReviewDto review) throws Exception {
 		logger.info("modify - 호출");
 
@@ -209,19 +210,23 @@ public class ReviewController {
 	}
 
 	@ApiOperation(value = "리뷰 삭제", notes = "리뷰 번호에 해당하는 리뷰의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@DeleteMapping
-	public ResponseEntity<String> delete(@RequestParam String ID_REVIEW) {
+	@PutMapping("/delete")
+	public ResponseEntity<String> delete(@RequestParam String id_review) {
 		logger.info("delete - 호출");
-
+		
 		try {
+//			ReviewDto reviewDto = reviewService.getDetail(id_review);
 			// ec2 파일 삭제
-			for (ImgDto imgDto : reviewService.getImages(ID_REVIEW)) {
+			for (ImgDto imgDto : reviewService.getImages(id_review)) {
 				s3FileUploadService.delete(imgDto.getModified_image());
 				s3FileUploadService.delete(imgDto.getThumb_image());
 			}
-
+			
+			System.out.println(id_review);
+			
+//			reviewService.deleteAllImage(id_review_image);
 			// db review 삭제 --cascade--> review images 삭제
-			if (reviewService.delete(ID_REVIEW)) {
+			if (reviewService.delete(id_review) && reviewService.deleteAllImage(id_review)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -261,13 +266,13 @@ public class ReviewController {
 
 		// ec2에서 파일 지우고 db에서 지우기
 		try {
-			for (String picNo : unmodified) {
+			for (String id_review_image : unmodified) {
 				// 원본
-				s3FileUploadService.delete(reviewService.getImgInfo(picNo).getModified_image());
+				s3FileUploadService.delete(reviewService.getImgInfo(id_review_image).getModified_image());
 				// 썸네일
-				s3FileUploadService.delete(reviewService.getImgInfo(picNo).getThumb_image());
+				s3FileUploadService.delete(reviewService.getImgInfo(id_review_image).getThumb_image());
 
-				reviewService.deleteImage(picNo);
+				reviewService.deleteImage(id_review_image);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -279,7 +284,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 like", notes = "리뷰 번호에 해당하는 리뷰의 like를 토글한다.", response = HashMap.class)
 	@PutMapping("/like")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String email) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String id_user) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -288,27 +293,35 @@ public class ReviewController {
 
 		try {
 			map.put("id_review", id_review);
-			map.put("email", email);
+			map.put("id_user", id_user);
 
 			ReviewLikeDto likeDto = reviewService.likeInfo(map);
-
+//			System.out.println(likeDto);
+			System.out.println("likeDto : "+ likeDto);
 			// 해당 리뷰에 한번도 like 한 적 없다면
 			if (likeDto == null) {
+				System.out.println("if문 통과");
 				reviewService.insertLike(map);
+				System.out.println("insertLike 됨?");
 				likeDto = reviewService.likeInfo(map);
+				System.out.println("새 likeDto : "+ likeDto);
 			}
 
 			int like_check = 0;
 			like_check = likeDto.getLiked(); // like 체크 값
-
+			System.out.println("like_check : "+ like_check);
 			if (like_check == 0) {
 				reviewService.like(map);
+				System.out.println("like");
 				like_check = 1;
 				reviewService.likeCntUp(id_review); // like 갯수 증가
+				System.out.println("like 갯수 증가");
 			} else {
 				reviewService.unlike(map);
+				System.out.println("unlike");
 				like_check = 0;
 				reviewService.likeCntDown(id_review); // like 갯수 감소
+				System.out.println("like 갯수 감소");
 			}
 
 			resultMap.put("id_review", id_review);

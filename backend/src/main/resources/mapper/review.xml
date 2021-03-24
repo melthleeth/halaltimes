@@ -6,51 +6,44 @@
 
 	<!-- ReviewController -->
 	<select id="getList" parameterType="map" resultType="ReviewDto">
-		select id_review, content,
-				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
-				then date_format(upload_date, '%H:%i:%s')
-				else date_format(upload_date, '%y.%m.%d')
-				end upload_date,
-				case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
-				then date_format(update_date, '%H:%i:%s')
-				else date_format(update_date, '%y.%m.%d')
-				end update_date,
-				likeCnt, id_user, nickname,
-				(
-					select thumb_image
-					from (
-						select pp.*, (select count(*)
-									from post_vote
-									where pp.id_review_image = post_vote.id_review_image
-						            ) as count
-						from review_image pp
-						where review.id_review = pp.id_review
-						order by count desc
-						) as temp
-					limit 1
-				) as thumb_image,				
-				(
-					select count(*)
-					from comment
-		            where review.id_review = comment.id_review
-				) as commentCnt 
-		from review join member using(id_user)
-		where temp = 0
-		<if test="word != null and word != ''">
-			<if test="key == 'title'">
-				and title like concat('%', #{word}, '%')
-			</if>
-			<if test="key != 'title'">
-				and #{key} = #{word}
-			</if>
-		</if>
-		<if test="sortBy == 'like'">
-            order by likeCnt desc
-        </if>
-        <if test="sortBy != 'like'">
-			order by id_review desc, update_date desc
-        </if>
-		limit #{start}, #{spp}
+		select id_review, content, nickname, likeCnt,
+			case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
+							then date_format(upload_date, '%H:%i:%s')
+							else date_format(upload_date, '%y.%m.%d')
+							end upload_date,
+							case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
+							then date_format(update_date, '%H:%i:%s')
+							else date_format(update_date, '%y.%m.%d')
+							end update_date,
+			(
+				select thumb_image
+				from (
+					select ri.id_review_image, ri.id_review, ri.original_image, ri.modified_image, ri.thumb_image
+					from review_image ri
+					where r.id_review = ri.id_review
+				) as temp
+				limit 1
+			) as thumb_image				 
+		from review r join user
+		using(id_user)    
+		where r.active = 1;
+<!-- 		temp = 0  -->
+<!-- 		리뷰 검색 조건? -->
+<!-- 		<if test="word != null and word != ''"> -->
+<!-- 			<if test="key == 'title'"> -->
+<!-- 				and title like concat('%', #{word}, '%') -->
+<!-- 			</if> -->
+<!-- 			<if test="key != 'title'"> -->
+<!-- 				and #{key} = #{word} -->
+<!-- 			</if> -->
+<!-- 		</if> -->
+<!-- 		<if test="sortBy == 'like'"> -->
+<!--             order by likeCnt desc -->
+<!--         </if> -->
+<!--         <if test="sortBy != 'like'"> -->
+<!-- 			order by id_review desc, update_date desc -->
+<!--         </if> -->
+<!-- 		limit #{start}, #{spp} -->
 	</select>
 	
 	<select id="getLikeReview" parameterType="int" resultType="ReviewDto">
@@ -97,45 +90,47 @@
 	</select>
 	
 	<select id="getCount" resultType="int">
-		select count(*)
+		select count(id_review)
 		from review
+		where active = 1
 	</select>
 	
-	<select id="getLastReview" parameterType="string" resultType="int">
+	<select id="getLastReview" parameterType="string" resultType="string">
 		select id_review
 		from review
-		where id_user = #{id_user}
+		where id_user = #{id_user} and active = 1
 		order by update_date desc
 		limit 1
 	</select>
 	
 	<select id="getOne" parameterType="int" resultType="ReviewDto">
-		select p.*, u.name
-		from review p join user u
+		select r.id_review, r.id_store,  r.content, r.score, r.upload_date, r.update_date, u.nickname
+		from review r join user u
 			using(id_user)
-		where id_review = #{id_review}
+		where id_review = 1 and r.active = 1
 	</select>
 	
 	<insert id="write" parameterType="ReviewDto">
-		insert into review (content, id_user, id_store)
-		values (#{content}, #{id_user}, #{id_store})
+		insert into review (content, id_user, id_store, score, upload_date, update_date)
+		values (#{content}, #{id_user}, #{id_store}, #{score}, current_timestamp, current_timestamp)
 	</insert>
 	
 	<update id="modify" parameterType="ReviewDto">
 		update review
-		set content = #{content}, update_date = current_timestamp
-		where id_review = #{id_review}
+		set content = #{content}, score = #{score}, update_date = current_timestamp
+		where id_review = #{id_review} and active = 1
 	</update>
 	
-	<delete id="delete" parameterType="String">
-		delete from review
-		where id_review = #{id_review}
-	</delete>
+	<update id="delete" parameterType="string">
+		update review
+		set active = 0
+		where id_review = #{id_review} and active = 1
+	</update>
 	
- 	<select id="likeCount" parameterType="int" resultType="int">
- 		select count(pmLikeNo)
+ 	<select id="likeCount" parameterType="String" resultType="int">
+ 		select count(id_review_like)
  		from review_like
- 		where id_review = #{id_review} and likeCheck = 1
+ 		where id_review = #{id_review} and active = 1
  	</select>
 	
 	<select id="likeCheck" parameterType="map" resultType="int">
@@ -145,7 +140,7 @@
 	</select>
 	
 	<select id="likeInfo" parameterType="map" resultType="ReviewLikeDto">
-	    select pmLikeNo, id_review, id_user, LIKED
+	    select id_review_like, id_review, id_user, active
 	    from review_like
 	    where id_review=#{id_review} and id_user=#{id_user}
 	</select>
@@ -157,7 +152,7 @@
 	
 	<update id="updateLike" parameterType="map">
 		update review_like
-		set liked = 
+		set active = 
 			case
 				when likeCheck = 1 
 					then 0
@@ -168,29 +163,30 @@
 	
 	<update id="like" parameterType="map">
 		update review_like
-		set liked = 1
+		set active = 1
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
 	<update id="unlike" parameterType="map">
 		update review_like
-		set likeCheck = 0
+		set active = 0
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
-	<update id="likeCntUp" parameterType="int">
+	<update id="likeCntUp" parameterType="String">
 		update review
 		set likeCnt = likeCnt + 1
 		where id_review = #{id_review}
 	</update>
 	
-	<update id="likeCntDown" parameterType="int">
+	<update id="likeCntDown" parameterType="String">
 		update review
 		set likeCnt = likeCnt - 1
 		where id_review = #{id_review}
 	</update>
+
 	
-	<insert id="uploadFile">
+	<insert id="uploadFile" parameterType="ImgDto">
 		insert into review_image (id_review, original_image, modified_image, thumb_image)
 <!-- 		, PICSIZE) -->
 		values(#{id_review}, #{original_image}, #{modified_image}, #{thumb_image})
@@ -198,9 +194,9 @@
 	</insert>
 	
 	<select id="getImages" parameterType="String" resultType="ImgDto">
-		select id_review_image, id_review, original_image, modified_image, thumb_image, 
+		select id_review_image, id_review, original_image, modified_image, thumb_image
 <!-- 		PICSIZE, -->
-			date_format(upload_date, '%Y%m%d') as upload_date,
+<!-- 			date_format(upload_date, '%Y%m%d') as upload_date, -->
 <!-- 			(	select count(vNo) -->
 <!-- 				from post_vote -->
 <!--     			where post_vote.id_review_image = post_pics.id_review_image -->
@@ -212,7 +208,7 @@
 	<select id="getImgInfo" parameterType="string" resultType="ImgDto">
 		select id_review_image, id_review, original_image, modified_image, thumb_image, 
 <!-- 		PICSIZE, -->
-			date_format(upload_date, '%Y%m%d') as upload_date,
+<!-- 			date_format(upload_date, '%Y%m%d') as upload_date, -->
 <!-- 			(	select count(vNo) -->
 <!-- 				from post_vote -->
 <!--     			where post_vote.id_review_image = post_pics.id_review_image -->
@@ -221,10 +217,17 @@
 		where id_review_image = #{id_review_image}
 	</select>
 	
-	<delete id="deleteImage" parameterType="string">
-		delete from review_image
+	<update id="deleteImage" parameterType="string">
+		update review_image
+		set active = 0
 		where id_review_image = #{id_review_image}
-	</delete>
+	</update>
+	
+	<update id="deleteAllImage" parameterType="string">
+		update review_image
+		set active = 0
+		where id_review = #{id_review}
+	</update>
 	
 	<!-- PostTempController -->
 	

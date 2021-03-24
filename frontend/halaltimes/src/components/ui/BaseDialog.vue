@@ -1,5 +1,6 @@
 <template>
-  <div v-if="open" class="backdrop" @click="$emit('close')"></div>
+  <div v-if="open" class="backdrop" @click="$emit('close')">
+  </div>
   <transition name="modal">
     <dialog open v-if="open" :class="custom">
       <slot></slot>
