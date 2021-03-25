@@ -1,8 +1,12 @@
 package com.web.bigdata.controller;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.bigdata.model.BookmarkDto;
-import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
 import com.web.bigdata.model.service.S3FileUploadService;
@@ -320,4 +323,108 @@ public class StoreController {
 
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	@ApiOperation(value = "이미지 삽입", notes = "S3에 이미지를 저장 하고 store 테이블에 이미지url 삽입 ", response = HashMap.class)
+	@PutMapping("/insertImg")
+	public ResponseEntity<Map<String, Object>> insertImg() throws Exception {
+		logger.info("insertImg - 호출");
+		HttpStatus status = HttpStatus.OK;
+		
+		
+		Map<String, Object> resultMap = new HashMap<>();
+
+		for(int index=0; index<3; index++) {
+			String id_store = storeService.getIdStore(index);
+			String path = "C:\\Users\\yhs\\Desktop\\싸피\\2학기\\특화 플젝\\imgtest";
+			path = path + "\\"+index;
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			List<File> imgs = new ArrayList<>();
+			imgs = getImgFileList(path);
+//			
+			for(File img : imgs) {
+				String imgName = img.toString();
+//				 확장자를 찾기 위한 코드
+				final String ext = imgName.substring(imgName.lastIndexOf('.'));
+//				// 파일이름 암호화
+				final String saveFileName = getUuid() + ext;
+//				s3FileUploadService.uploadOnS3(saveFileName, img);
+				final String origName = imgName.substring(path.length()+1,imgName.length());
+				map.put("id_store", id_store);
+				map.put("origName", origName);
+				map.put("saveFileName", saveFileName);
+				storeService.insertImgUrl(map);
+			}
+		}
+		
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	// 이미지
+	private static String getUuid() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
+	
+	/**
+     * 해당 경로의 이미지 파일 목록 반환 
+     */
+    public static List<File> getImgFileList(String path){        
+         
+        return getImgFileList(new File(path));
+    }    
+
+    /**
+     * 해당 경로의 이미지 파일 목록 반환 
+     */
+    public static List<File> getImgFileList(File file){        
+            
+        List<File> resultList = new ArrayList<File>(); //이미지 파일을 저장할 리스트 생성
+        
+         //지정한 이미지폴더가 존재 할지 않을경우 빈 리스트 반환.
+        if(!file.exists()) return resultList;
+        
+        File[] list = file.listFiles(new FileFilter() { //원하는 파일만 가져오기 위해 FileFilter정의
+            
+            String strImgExt = "jpg|jpeg|png|gif|bmp"; //허용할 이미지타입
+            
+            @Override
+            public boolean accept(File pathname) {                            
+                
+                //System.out.println(pathname);
+                boolean chkResult = false;
+                if(pathname.isFile()) {
+                    String ext = pathname.getName().substring(pathname.getName().lastIndexOf(".")+1);
+                    //System.out.println("확장자:"+ext);
+                    chkResult = strImgExt.contains(ext.toLowerCase());        
+                    //System.out.println(chkResult +" "+ext.toLowerCase());
+                } else {
+                    chkResult = true;
+                }
+                return chkResult;
+            }
+        });        
+        
+        for(File f : list) {            
+            if(f.isDirectory()) {
+                //폴더이면 이미지목록을 가져오는 현재메서드를 재귀호출
+                resultList.addAll(getImgFileList(f));                 
+            }else {            
+                //폴더가 아니고 파일이면 리스트(resultList)에 추가
+                resultList.add(f);
+            }
+        }            
+        return resultList; 
+    }
+    
+    //확장자를 제외한 파일 이름 만 출력
+    public static String getFileNameNoExt(String filepath){        
+        String fileName = filepath.substring(0,  filepath.lastIndexOf("."));
+        return fileName;
+    }    
+    
+    //파일 확장자만 출력
+    public static String getFileExt(String filepath){
+        String ext = filepath.substring(filepath.lastIndexOf(".")+1);
+        return ext;
+    }
 }

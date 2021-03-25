@@ -185,39 +185,14 @@
 		where id_review_image = #{id_review_image}
 	</delete>
 	
-	<!-- PostTempController -->
+	<select id="getIdStore" parameterType="map" resultType="String">
+		select id_store 
+		from store 
+		limit #{start},1
+	</select>
 	
-<!-- 	<select id="getTempList" parameterType="map" resultType="ReviewDto"> -->
-<!-- 		select id_review, title, content, temp,  -->
-<!-- 				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(uploadDate, '%H:%i:%s') -->
-<!-- 				else date_format(uploadDate, '%y.%m.%d') -->
-<!-- 				end uploadDate, -->
-<!-- 				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(modifyDate, '%H:%i:%s') -->
-<!-- 				else date_format(modifyDate, '%y.%m.%d') -->
-<!-- 				end modifyDate, -->
-<!-- 				likeCnt, email, name -->
-<!-- 		from post join member using(email) -->
-<!-- 		where temp = 1 and email = #{email} -->
-<!-- 		order by id_review desc, modifyDate desc -->
-<!-- 	</select> -->
-	
-<!-- 	<select id="getTempCount" parameterType="string" resultType="int"> -->
-<!-- 		select count(postNo) -->
-<!-- 		from post -->
-<!-- 		where temp = 1 and email = #{email} -->
-<!-- 	</select> -->
-	
-<!-- 	<insert id="writeTemp" parameterType="ReviewDto"> -->
-<!-- 		insert into post (title, content, email, temp) -->
-<!-- 		values (#{title}, #{content}, #{email}, 1) -->
-<!-- 	</insert> -->
-	
-<!-- 	<update id="writeTemptoDB" parameterType="ReviewDto"> -->
-<!-- 		update post -->
-<!-- 		set temp = 0, title = #{title}, content = #{content}, uploadDate = current_timestamp, modifyDate = current_timestamp -->
-<!-- 		where postNo = #{postNo} -->
-<!-- 	</update> -->
-	
+	<insert id="insertImgUrl" parameterType="map">
+		insert into store_image(id_store, original_image, modified_image)
+		values (#{id_store}, #{origName}, #{saveFileName})
+	</insert>
 </mapper>

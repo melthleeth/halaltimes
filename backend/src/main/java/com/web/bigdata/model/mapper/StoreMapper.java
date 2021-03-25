@@ -79,4 +79,11 @@ public interface StoreMapper {
 
 	/** 임시저장글 작성 */
 	public boolean writeTemp(StoreDto storeDto) throws Exception;	
+
+	/** 임시저장글 작성 */
+	public String getIdStore(int index) throws Exception;	
+	
+	/** 임시저장글 작성 */
+	public int insertImgUrl(Map<String, Object> map) throws Exception;	
+	
 }
