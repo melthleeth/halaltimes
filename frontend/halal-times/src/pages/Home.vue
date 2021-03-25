@@ -163,6 +163,7 @@ export default {
   data() {
     return {
       randomName: nameRaffle.name,
+      keyword: "",
     };
   },
   computed: {
@@ -171,7 +172,19 @@ export default {
         ? `익명의 ${this.randomName[getRandomInt(this.randomName.length)]}`
         : localStorage.getItem("username");
     },
-  }
+  },
+  methods: {
+    search() {
+      if (this.keyword === "") {
+        alert("검색어를 입력하세요.");
+        return;
+      }
+      this.$store.dispatch("restaurants/setKeyword", this.keyword);
+      this.keyword = "";
+      console.log("keyword", this.$store.getters["restaurants/keyword"]);
+      this.$router.push("/explore");
+    },
+  },
 };
 </script>
 <style scoped>

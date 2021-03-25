@@ -10,7 +10,7 @@
     >
       <article class="flex w-full items-center">
         <input
-          class="mx-auto text-base text-left shadow-lg appearance-none rounded-full w-5/6 pl-10 pr-20 py-4 leading-tight border-3 border-transparent hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:border-gray-200"
+          class="mx-auto text-base text-left appearance-none rounded-full w-5/6 pl-10 pr-20 py-4 leading-tight border-3 border-transparent hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:border-gray-200"
           id="search"
           type="text"
           placeholder="음식점 이름, 태그로 검색하세요 🧕👳‍♂️"
@@ -86,6 +86,7 @@ export default {
   },
   created() {
     // this.loadRestaurants();
+    this.loadKeyword();
   },
   methods: {
     async loadRestaurants(refresh = true) {
@@ -99,7 +100,11 @@ export default {
           error.message || '음식점을 불러오는데 문제가 발생했습니다.';
       }
       this.isLoading = false;
-    }
+    },
+    loadKeyword() {
+      this.keyword = this.$store.getters["restaurants/keyword"];
+      this.$store.dispatch("restaurants/setKeyword", null);
+    },
   }
 };
 </script>

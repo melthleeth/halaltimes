@@ -40,5 +40,8 @@ export default {
     }
 
     context.commit('setRestaurants', restaurants);
-  }
+  },
+  setKeyword(context, payload) {
+    context.commit("setKeyword", payload);
+  },
 };

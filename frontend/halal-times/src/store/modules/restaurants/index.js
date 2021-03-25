@@ -6,6 +6,7 @@ export default {
   namespaced: true,
   state() {
     return {
+      keyword: null,
       restaurants: [
         {
           restaurantId: 1,
