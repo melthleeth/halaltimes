@@ -68,7 +68,7 @@
             class="input-base w-full placeholder-gray-500 placeholder-opacity-50 xl:text-base lg:text-sm md:text-sm sm:text-xs"
           />
           <div
-            class="w-6 h-6 search-icon my-auto ml-auto mr-2 cursor-pointer"
+            class="w-6 h-6 search-icon my-auto ml-auto mr-4 cursor-pointer"
             @click="search"
           >
             <svg
