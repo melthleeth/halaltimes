@@ -291,15 +291,10 @@ public class ReviewController {
 			map.put("id_user", id_user);
 
 			ReviewLikeDto likeDto = reviewService.likeInfo(map);
-//			System.out.println(likeDto);
-			System.out.println("likeDto : "+ likeDto);
 			// 해당 리뷰에 한번도 like 한 적 없다면
 			if (likeDto == null) {
-				System.out.println("if문 통과");
 				reviewService.insertLike(map);
-				System.out.println("insertLike 됨?");
 				likeDto = reviewService.likeInfo(map);
-				System.out.println("새 likeDto : "+ likeDto);
 			}
 
 			int like_check = 0;
@@ -307,16 +302,12 @@ public class ReviewController {
 			System.out.println("like_check : "+ like_check);
 			if (like_check == 0) {
 				reviewService.like(map);
-				System.out.println("like");
 				like_check = 1;
 				reviewService.likeCntUp(id_review); // like 갯수 증가
-				System.out.println("like 갯수 증가");
 			} else {
 				reviewService.unlike(map);
-				System.out.println("unlike");
 				like_check = 0;
 				reviewService.likeCntDown(id_review); // like 갯수 감소
-				System.out.println("like 갯수 감소");
 			}
 
 			resultMap.put("id_review", id_review);

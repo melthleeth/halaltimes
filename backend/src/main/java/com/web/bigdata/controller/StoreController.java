@@ -10,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ImgDto;
@@ -29,11 +27,12 @@ import com.web.bigdata.model.service.StoreService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api("StoreController")
+@Api("StoreController V1")
 @CrossOrigin(origins = {"*"}, maxAge = 6000)
+@RestController
 @RequestMapping("/store")
 public class StoreController {
-	private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
+	private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
 	
@@ -59,14 +58,14 @@ public class StoreController {
 		logger.info("getOne - 호출, " + no);
 		
 		return new ResponseEntity<StoreDto>(storeService.getLikePost(no), HttpStatus.OK);
-	}
+	}	
 
 
 	@ApiOperation(value = "음식점 상세 보기", notes = "음식점 번호에 해당하는 음식점의 정보를 반환한다.", response = StoreDto.class)
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getPostDetail(@RequestParam String id_store, @RequestParam String email)
 			throws Exception {
-		logger.info("getOne - 호출");
+		logger.info("getDetail - 호출");
 		HttpStatus status = HttpStatus.OK;
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -76,31 +75,32 @@ public class StoreController {
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
 			resultMap.put("storeInfo", storeDto);
-
+			System.out.println(resultMap);
 			// like(bookmark) 했는지 확인
 			likeCheckMap.put("email", email);
 			likeCheckMap.put("id_store", id_store);
 
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
+			System.out.println(bookmarkDto);
 
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
-				resultMap.put("active", 0);
+				resultMap.put("like", 0);
 			}
 			// like를 누른 적이 있으면
 			else {
-				resultMap.put("active", bookmarkDto.getActive());
+				resultMap.put("like", bookmarkDto.getActive());
 			}
 
-			// store imgs
-			List<ImgDto> storeImgs = storeService.getImages(id_store);
-			for (ImgDto img : storeImgs) {
-				// 이름에 url 붙여주기
-				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
-				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
-			}
-//			resultMap.put("voteCount", voteService.getVoteCountofPost(postNo));
-			resultMap.put("fileList", storeImgs);
+			// store_image 테이블이 필요할듯
+//			List<ImgDto> storeImgs = storeService.getImages(id_store);
+//			for (ImgDto img : storeImgs) {
+//				// 이름에 url 붙여주기
+//				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
+//				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
+//			}
+////			resultMap.put("voteCount", voteService.getVoteCountofPost(postNo));
+//			resultMap.put("fileList", storeImgs);
 			
 
 //			// 투표했었는지 찾기
@@ -276,8 +276,8 @@ public class StoreController {
 //	}
 
 	@ApiOperation(value = "식당 북마크", notes = "store_id에 해당하는 식당의 북마크를 토글한다.", response = HashMap.class)
-	@PutMapping("/like")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String email) {
+	@PutMapping("/bookmark")
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String id_user) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -286,11 +286,11 @@ public class StoreController {
 
 		try {
 			map.put("id_store", id_store);
-			map.put("email", email);
+			map.put("id_user", id_user);
 
 			BookmarkDto bookmarkDto = storeService.likeInfo(map);
-
-			// 해당 게시글에 한번도 like 한 적 없다면
+			System.out.println("bookmarkDto"+bookmarkDto);
+			// 해당 게시글에 한번도 북마크 한 적 없다면
 			if (bookmarkDto == null) {
 				storeService.insertLike(map);
 				bookmarkDto = storeService.likeInfo(map);
@@ -302,16 +302,15 @@ public class StoreController {
 			if (active == 0) {
 				storeService.like(map);
 				active = 1;
-				storeService.likeCntUp(id_store); // like 갯수 증가
+//				storeService.likeCntUp(id_store); // like 갯수 증가
 			} else {
 				storeService.unlike(map);
 				active = 0;
-				storeService.likeCntDown(id_store); // like 갯수 감소
+//				storeService.likeCntDown(id_store); // like 갯수 감소
 			}
 
 			resultMap.put("id_store", id_store);
 			resultMap.put("active", active);
-//			resultMap.put("likeCnt", storeService.likeCount(id_store));
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			e.printStackTrace();

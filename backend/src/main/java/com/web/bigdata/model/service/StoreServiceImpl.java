@@ -3,17 +3,27 @@ package com.web.bigdata.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.mapper.StoreMapper;
 
+@Service
 public class StoreServiceImpl implements StoreService {
 
+	@Autowired
+	private StoreMapper storeMapper;
+	
 	@Override
-	public List<StoreDto> getList(StoreParameterDto postParameterDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<StoreDto> getList(StoreParameterDto storeParameterDto) throws Exception {
+		int start = storeParameterDto.getPg() == 0 ? 0 : (storeParameterDto.getPg() - 1) * storeParameterDto.getSpp();
+		storeParameterDto.setStart(start);
+		return storeMapper.getList(storeParameterDto);
 	}
 
 	@Override
@@ -24,8 +34,7 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public StoreDto getDetail(String id_store) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return storeMapper.getDetail(id_store);
 	}
 
 	@Override
@@ -66,35 +75,38 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public BookmarkDto likeInfo(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return storeMapper.likeInfo(map);
 	}
 
 	@Override
 	public int insertLike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		if (map.get("id_user") == null || "".equals(map.get("id_user").toString())) {
+			throw new Exception();
+		}
+		return storeMapper.insertLike(map);
 	}
 
 	@Override
+	@Transactional
 	public int like(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return storeMapper.like(map);
 	}
 
 	@Override
+	@Transactional
 	public int unlike(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return storeMapper.unlike(map);
 	}
 
 	@Override
+	@Transactional
 	public int likeCntUp(String id_store) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
+	@Transactional
 	public int likeCntDown(String id_store) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;

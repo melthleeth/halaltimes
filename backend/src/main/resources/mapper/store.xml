@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.web.bigdata.model.mapper.StoreMapper">
+
+	<!-- StoreController -->
+	<select id="getList" parameterType="map" resultType="StoreDto">
+		select id_store, store_name, muslim_friendly, location_region,
+			food_category, address, tel, working_time, days_closed, parking,
+			image, thumb_image, lat, lng, active
+		from store
+		where active = 1
+	</select>
+	
+	<select id="getLikeReview" parameterType="int" resultType="StoreDto">
+		select id_review, content,
+				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(upload_date, '%H:%i:%s')
+				else date_format(upload_date, '%y.%m.%d')
+				end upload_date,
+				case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
+				then date_format(update_date, '%H:%i:%s')
+				else date_format(update_date, '%y.%m.%d')
+				end update_date,
+				likeCnt, id_user, nickname,
+				(
+					select modified_image
+					from (
+						select pp.*, (select count(*)
+									from post_vote
+									where pp.id_review_image = post_vote.id_review_image
+						            ) as count
+						from review_image pp
+						where post.id_review = pp.id_review
+						order by count desc
+						) as temp
+					limit 1
+				) as thumb_image			
+		from post join member using(id_user)
+		where temp = 0
+        order by likeCnt desc
+		limit #{no},1
+	</select>
+
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(id_user)
+		from review
+		<if test="word != null and word != ''">
+			<if test="key == 'title'">
+				where subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'title'">
+				where #{key} = #{word}
+			</if>
+		</if>
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(*)
+		from review
+	</select>
+	
+	<select id="getLastReview" parameterType="string" resultType="int">
+		select id_review
+		from review
+		where id_user = #{id_user}
+		order by update_date desc
+		limit 1
+	</select>
+	
+	<select id="getDetail" parameterType="String" resultType="StoreDto">
+		select p.*
+		from store p
+		where id_store = #{id_store} and active = 1
+	</select>
+	
+	<insert id="write" parameterType="StoreDto">
+		insert into review (content, id_user, id_store)
+		values (#{content}, #{id_user}, #{id_store})
+	</insert>
+	
+	<update id="modify" parameterType="StoreDto">
+		update review
+		set content = #{content}, update_date = current_timestamp
+		where id_review = #{id_review}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		delete from review
+		where id_review = #{id_review}
+	</delete>
+	
+ 	<select id="likeCount" parameterType="String" resultType="int">
+ 		select count(id_review_like)
+ 		from review_like
+ 		where id_review = #{id_review} and active = 1
+ 	</select>
+	
+	<select id="likeCheck" parameterType="map" resultType="int">
+	    select count(pmLikeNo)
+	    from review_like
+	    where id_review=#{id_review} and id_user=#{id_user}
+	</select>
+	
+	<select id="likeInfo" parameterType="map" resultType="BookmarkDto">
+	    select id_bookmark, id_store, id_user, active
+	    from bookmark
+	    where id_store=#{id_store} and id_user=#{id_user}
+	</select>
+	
+	<insert id="insertLike" parameterType="map">
+		insert into bookmark(id_store, id_user)
+		values (#{id_store}, #{id_user})
+	</insert>
+	
+	<update id="updateLike" parameterType="map">
+		update review_like
+		set active = 
+			case
+				when likeCheck = 1 
+					then 0
+				when likeCheck = 0
+					then 1
+		where id_review = #{id_review} and id_user = #{id_user}
+	</update>
+	
+	<update id="like" parameterType="map">
+		update bookmark
+		set active = 1
+		where id_store = #{id_store} and id_user = #{id_user}
+	</update>
+	
+	<update id="unlike" parameterType="map">
+		update bookmark
+		set active = 0
+		where id_store = #{id_store} and id_user = #{id_user}
+	</update>
+	
+	<update id="likeCntUp" parameterType="String">
+		update review
+		set likeCnt = likeCnt + 1
+		where id_review = #{id_review}
+	</update>
+	
+	<update id="likeCntDown" parameterType="String">
+		update review
+		set likeCnt = likeCnt - 1
+		where id_review = #{id_review}
+	</update>
+	
+	<insert id="uploadFile">
+		insert into review_image (id_review, original_image, modified_image, thumb_image)
+<!-- 		, PICSIZE) -->
+		values(#{id_review}, #{original_image}, #{modified_image}, #{thumb_image})
+<!-- 		, #{PICSIZE}) -->
+	</insert>
+	
+	<select id="getImages" parameterType="String" resultType="ImgDto">
+		select id_review_image, id_review, original_image, modified_image, thumb_image, 
+<!-- 		PICSIZE, -->
+			date_format(upload_date, '%Y%m%d') as upload_date,
+<!-- 			(	select count(vNo) -->
+<!-- 				from post_vote -->
+<!--     			where post_vote.id_review_image = post_pics.id_review_image -->
+<!--    			) as voteCnt -->
+		from review_image
+		where id_review = #{id_review}
+	</select>
+	
+	<select id="getImgInfo" parameterType="string" resultType="ImgDto">
+		select id_review_image, id_review, original_image, modified_image, thumb_image, 
+<!-- 		PICSIZE, -->
+			date_format(upload_date, '%Y%m%d') as upload_date,
+<!-- 			(	select count(vNo) -->
+<!-- 				from post_vote -->
+<!--     			where post_vote.id_review_image = post_pics.id_review_image -->
+<!--    			) as voteCnt -->
+		from review_image
+		where id_review_image = #{id_review_image}
+	</select>
+	
+	<delete id="deleteImage" parameterType="string">
+		delete from review_image
+		where id_review_image = #{id_review_image}
+	</delete>
+	
+	<!-- PostTempController -->
+	
+<!-- 	<select id="getTempList" parameterType="map" resultType="ReviewDto"> -->
+<!-- 		select id_review, title, content, temp,  -->
+<!-- 				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
+<!-- 				then date_format(uploadDate, '%H:%i:%s') -->
+<!-- 				else date_format(uploadDate, '%y.%m.%d') -->
+<!-- 				end uploadDate, -->
+<!-- 				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
+<!-- 				then date_format(modifyDate, '%H:%i:%s') -->
+<!-- 				else date_format(modifyDate, '%y.%m.%d') -->
+<!-- 				end modifyDate, -->
+<!-- 				likeCnt, email, name -->
+<!-- 		from post join member using(email) -->
+<!-- 		where temp = 1 and email = #{email} -->
+<!-- 		order by id_review desc, modifyDate desc -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="getTempCount" parameterType="string" resultType="int"> -->
+<!-- 		select count(postNo) -->
+<!-- 		from post -->
+<!-- 		where temp = 1 and email = #{email} -->
+<!-- 	</select> -->
+	
+<!-- 	<insert id="writeTemp" parameterType="ReviewDto"> -->
+<!-- 		insert into post (title, content, email, temp) -->
+<!-- 		values (#{title}, #{content}, #{email}, 1) -->
+<!-- 	</insert> -->
+	
+<!-- 	<update id="writeTemptoDB" parameterType="ReviewDto"> -->
+<!-- 		update post -->
+<!-- 		set temp = 0, title = #{title}, content = #{content}, uploadDate = current_timestamp, modifyDate = current_timestamp -->
+<!-- 		where postNo = #{postNo} -->
+<!-- 	</update> -->
+	
+</mapper>
