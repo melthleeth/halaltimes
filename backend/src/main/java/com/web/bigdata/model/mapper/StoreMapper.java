@@ -17,7 +17,7 @@ public interface StoreMapper {
 	public List<StoreDto> getList(StoreParameterDto storeParameterDto) throws Exception;
 	
 	/** like 게시글 */
-	public StoreDto getLikePost(int no) throws Exception;
+	public StoreDto getLikeStore(int no) throws Exception;
 
 	/** 하나의 게시글 정보 */
 	public StoreDto getDetail(String id_store) throws Exception;
@@ -32,10 +32,10 @@ public interface StoreMapper {
 	public boolean modify(StoreDto storeDto) throws Exception;
 
 	/** 게시글 삭제 */
-	public boolean delete(int postNo) throws Exception;
+	public boolean delete(String id_store) throws Exception;
 
 	/** 해당 게시글의 좋아요 수 */
-	public int likeCount(int postNo) throws Exception;
+	public int likeCount(String id_store) throws Exception;
 
 	/** 좋아요 했는지 조회 */
 	public int likeCheck(Map<String, Object> map) throws Exception;
@@ -64,10 +64,10 @@ public interface StoreMapper {
 	public List<ImgDto> getImages(String id_store) throws Exception;
 
 	/** 사진 정보 */
-	public ImgDto getImgInfo(String picNo) throws Exception;
+	public ImgDto getImgInfo(String id_store) throws Exception;
 
 	/** File DB에서 지우기 */
-	public boolean deleteImage(String picNo) throws Exception;
+	public boolean deleteImage(String id_store) throws Exception;
 
 	// PostTempController
 

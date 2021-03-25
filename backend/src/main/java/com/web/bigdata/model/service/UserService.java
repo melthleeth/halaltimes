@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
+import com.web.bigdata.model.StoreDto;
 
 public interface UserService {
 
@@ -50,5 +52,7 @@ public interface UserService {
 
 //	/** 게시글 리스트 */
 	public List<ReviewDto> getReviewList(String email) throws SQLException;
+
+	public List<BookmarkDto> getBookmarkList(String email) throws SQLException;
 
 }

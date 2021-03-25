@@ -17,7 +17,7 @@ public interface StoreService {
 	public List<StoreDto> getList(StoreParameterDto postParameterDto) throws Exception;
 	
 	/** like 게시글 */
-	public StoreDto getLikePost(int no) throws Exception;
+	public StoreDto getLikeStore(int no) throws Exception;
 
 	/** 하나의 게시글 정보 */
 	public StoreDto getDetail(String id_store) throws Exception;

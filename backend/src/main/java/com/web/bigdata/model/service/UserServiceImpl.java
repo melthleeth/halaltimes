@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
+import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.mapper.UserMapper;
 
 @Service
@@ -123,5 +125,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<ReviewDto> getReviewList(String email) throws SQLException {
 		return userMapper.getReviewList(email);
+	}
+
+	@Override
+	public List<BookmarkDto> getBookmarkList(String email) throws SQLException {
+		return userMapper.getBookmarkList(email);
 	}
 }

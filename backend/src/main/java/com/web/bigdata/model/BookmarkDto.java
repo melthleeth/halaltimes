@@ -4,6 +4,29 @@ public class BookmarkDto {
 	private String id_bookmark;
 	private String id_store;
 	private String id_user;
+	private String store_name;
+	private String score;
+	private String address;
+	
+	
+	public String getScore() {
+		return score;
+	}
+	public void setScore(String score) {
+		this.score = score;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getStore_name() {
+		return store_name;
+	}
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
+	}
 	private int active;
 	
 	public String getId_bookmark() {

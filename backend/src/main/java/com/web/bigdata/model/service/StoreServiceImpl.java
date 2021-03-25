@@ -27,7 +27,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public StoreDto getLikePost(int no) throws Exception {
+	public StoreDto getLikeStore(int no) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -44,25 +44,25 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public boolean write(StoreDto postDto) throws Exception {
+	public boolean write(StoreDto storeDto) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean modify(StoreDto postDto) throws Exception {
+	public boolean modify(StoreDto storeDto) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean delete(int postNo) throws Exception {
+	public boolean delete(int StoreNo) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public int likeCount(int postNo) throws Exception {
+	public int likeCount(int StoreNo) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -125,7 +125,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public ImgDto getImgInfo(String picNo) throws Exception {
+	public ImgDto getImgInfo(String storeDto) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -137,7 +137,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public List<StoreDto> getTempList(StoreParameterDto postParameterDto) throws Exception {
+	public List<StoreDto> getTempList(StoreParameterDto storeParameterDto) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -149,7 +149,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public boolean writeTemp(StoreDto postDto) throws Exception {
+	public boolean writeTemp(StoreDto storeDto) throws Exception {
 		// TODO Auto-generated method stub
 		return false;
 	}

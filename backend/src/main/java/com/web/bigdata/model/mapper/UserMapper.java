@@ -7,7 +7,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
+import com.web.bigdata.model.StoreDto;
 
 @Mapper
 public interface UserMapper {
@@ -30,7 +32,7 @@ public interface UserMapper {
 
 	/** 인자로 받은 email의 비밀번호를 반환 */
 	public UserDto findUserInfo(String email) throws SQLException;
-	
+
 	/** 인자로 받은 MemberDto를 수정하고, 성공 여부를 반환 */
 	public boolean updateNickname(UserDto userDto) throws SQLException;
 
@@ -58,5 +60,7 @@ public interface UserMapper {
 
 	/** 게시글 리스트 */
 	public List<ReviewDto> getReviewList(String email) throws SQLException;
+
+	public List<BookmarkDto> getBookmarkList(String email) throws SQLException;
 
 }

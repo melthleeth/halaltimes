@@ -13,7 +13,7 @@
 		where active = 1
 	</select>
 	
-	<select id="getLikeReview" parameterType="int" resultType="StoreDto">
+	<select id="getLikeStore" parameterType="int" resultType="StoreDto">
 		select id_review, content,
 				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 				then date_format(upload_date, '%H:%i:%s')

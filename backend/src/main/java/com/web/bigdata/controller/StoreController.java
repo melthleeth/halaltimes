@@ -52,18 +52,18 @@ public class StoreController {
 		return new ResponseEntity<List<StoreDto>>(storeService.getList(storeParameterDto), HttpStatus.OK);
 	}
 	
-	@ApiOperation(value = "해당 숫자의 순서의 Post", notes = "해당 게시글의 정보 반환한다.", response = List.class)
+	@ApiOperation(value = "해당 숫자의 순서의 Store", notes = "해당 게시글의 정보 반환한다.", response = List.class)
 	@GetMapping("/list/{no}")
-	public ResponseEntity<StoreDto> getLikePost(@PathVariable int no) throws Exception {
+	public ResponseEntity<StoreDto> getLikeStore(@PathVariable int no) throws Exception {
 		logger.info("getOne - 호출, " + no);
 		
-		return new ResponseEntity<StoreDto>(storeService.getLikePost(no), HttpStatus.OK);
+		return new ResponseEntity<StoreDto>(storeService.getLikeStore(no), HttpStatus.OK);
 	}	
 
 
 	@ApiOperation(value = "음식점 상세 보기", notes = "음식점 번호에 해당하는 음식점의 정보를 반환한다.", response = StoreDto.class)
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getPostDetail(@RequestParam String id_store, @RequestParam String email)
+	public ResponseEntity<Map<String, Object>> getStoreDetail(@RequestParam String id_store, @RequestParam String email)
 			throws Exception {
 		logger.info("getDetail - 호출");
 		HttpStatus status = HttpStatus.OK;
@@ -91,7 +91,7 @@ public class StoreController {
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
-
+			System.out.println(resultMap);
 			// store_image 테이블이 필요할듯
 //			List<ImgDto> storeImgs = storeService.getImages(id_store);
 //			for (ImgDto img : storeImgs) {
@@ -311,6 +311,7 @@ public class StoreController {
 
 			resultMap.put("id_store", id_store);
 			resultMap.put("active", active);
+			System.out.println(resultMap);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			e.printStackTrace();
