@@ -104,6 +104,7 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import ReviewDesign from './ReviewDesign.vue';
+import BookmarkDesign from './BookmarkDesign.vue';
 
 const SERVER_URL = 'http://localhost:8765/sub';
 export default {
@@ -116,6 +117,7 @@ export default {
   },
   components: {
     ReviewDesign,
+    BookmarkDesign
   },
   computed: {
     currDate() {
@@ -142,7 +144,8 @@ export default {
       } else {
         this.user.gender = '남성';
       }
-      this.reviews = response.data.reviewList;
+      this.reviews = response.data.reviewList;      
+      this.bookmarks = response.data.bookmarkList;
       // this.user.profile_image =
       //   'https://apfbucket.s3.ap-northeast-2.amazonaws.com/' +
       //   response.data.info.profile_image;
