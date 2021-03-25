@@ -6,7 +6,7 @@ public class ReviewLikeDto {
 	private String id_review_like;
 	private String id_review;
 	private String id_user;
-	private int active; // active
+	private int active;
 
 	public String getId_review_like() {
 		return id_review_like;
