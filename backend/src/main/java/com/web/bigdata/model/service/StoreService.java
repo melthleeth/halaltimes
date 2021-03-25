@@ -79,4 +79,12 @@ public interface StoreService {
 
 	/** 임시저장글 작성 */
 	public boolean writeTemp(StoreDto postDto) throws Exception;	
+	
+	/** store_image에 사진 저장  */
+	public int insertImg(Map<String, Object> map) throws Exception;
+
+	/** index에 해당하는 id_store 가져오기 */
+	public String getIdStore(int index) throws Exception;
+
+	public int insertImgUrl(Map<String, Object> map) throws Exception;
 }
