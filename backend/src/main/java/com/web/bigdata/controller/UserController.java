@@ -167,7 +167,7 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "회원 탈퇴", notes = "회원탈퇴를 한다.", response = Boolean.class)
-	@DeleteMapping
+	@PutMapping("/delete")
 	public ResponseEntity<Boolean> delete(@RequestBody Map<String, String> map) {
 		logger.info("delete - 호출");
 
@@ -190,7 +190,7 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "사용자의 프로필 이미지 업로드", notes = "회원의 프로필 이미지를 수정한다.")
-	@PostMapping("/upload")
+	@PostMapping("/profilepic/upload")
 	public ResponseEntity<Void> updateUserPicture(@RequestParam String email, @RequestParam MultipartFile profile_image) {
 		logger.info("updateUserPicture - 호출");
 
@@ -208,7 +208,7 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "사용자의 프로필 이미지 삭제", notes = "회원의 프로필 이미지를 삭제한다.")
-	@GetMapping("/delete")
+	@GetMapping("/profilepic/delete")
 	public ResponseEntity<Void> deleteProfilePicture(@RequestParam String email) {
 		logger.info("deleteProfilePicture - 호출");
 

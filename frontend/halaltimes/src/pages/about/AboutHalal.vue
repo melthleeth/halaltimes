@@ -1,0 +1,43 @@
+<template>
+  <div
+    id="bg"
+    class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
+  >
+    <section class="flex justify-content-center w-full">
+      <span class="text-4xl mx-auto">About</span>
+    </section>
+    <section class="flex">
+      <img src="../../assets/resources/about_1.png" class="w-1/2" />
+      <article class="w-1/2 mx-2">
+      <span class="text-lg inline-block">할랄의 의미는「허락된 것」</span>
+        <span class="inline-block"
+          >할랄(HALAL)은 생활 전반에 걸쳐 이슬람법에 따라 사용이 허용되는 것을
+          뜻합니다. 음식, 의약품, 화장품, 심지어 가전제품까지 일상생활에서
+          사용하는 모든 것이 해당되며, 그 중에서도 이슬람 율법이 허락해 무슬림이
+          먹을 수 있는 음식을 할랄 식품이라고 합니다. 고기는 이슬람식 도축방식인
+          다비하(Dhabihah)에 따라 도축한 고기만을 할랄 식품으로 인정하며, 이
+          외에 이슬람 법에 금지되는 것들을 하람(Haram)이라고 합니다. 정확히
+          할랄이나 하람으로 분류되지 않은 애매하거나 의심스러운 식음료들은
+          슈브하(Syubhah)에 속합니다.</span
+        >
+      </article>
+    </section>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {};
+  },
+};
+</script>
+<style scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
+
+#bg {
+  background-color: #f4f2ea;
+}
+</style>

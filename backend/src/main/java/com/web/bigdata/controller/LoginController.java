@@ -47,13 +47,13 @@ public class LoginController {
 			HttpServletResponse response, HttpSession session) {
 		logger.info("login - 호출");
 
+		System.out.println(email + " " + password);
 		HttpStatus status = null;
 		Map<String, Object> resultMap = new HashMap<>();
 
 		UserDto dto = new UserDto();
 		dto.setEmail(email);
 		dto.setPassword(password);
-
 		// 로그인
 		try {
 			UserDto loginUser = memberService.login(dto);

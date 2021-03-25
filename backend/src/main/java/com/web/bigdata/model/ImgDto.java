@@ -80,7 +80,12 @@ public class ImgDto {
 		this.modified_image = modified_image;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "ImgDto [id_review_image=" + id_review_image + ", id_review=" + id_review + ", image=" + image
+				+ ", original_image=" + original_image + ", modified_image=" + modified_image + ", thumb_image="
+				+ thumb_image + "]";
+	}
 
 //	public long getPicsize() {
 //		return picsize;
