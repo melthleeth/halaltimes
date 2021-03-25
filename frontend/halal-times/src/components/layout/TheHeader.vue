@@ -31,7 +31,6 @@
           @close="hideLoginDialog"
           class="flex flex-col justify-items-center z-40"
         >
-          <form>
             <span class="text-2xl mt-6 mb-4">로그인</span>
             <section class="flex flex-col space-y-3">
               <input
@@ -56,11 +55,10 @@
               >
                 로그인</base-button
               >
-              <base-button class="text-sm" mode="" @click="hideLoginDialog"
+              <base-button class="text-sm" @click="hideLoginDialog"
                 >취소</base-button
               >
             </section>
-          </form>
         </base-dialog>
       </section>
       <section v-else class="flex items-center space-x-6">
