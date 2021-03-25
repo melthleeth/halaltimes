@@ -29,7 +29,7 @@ const router = createRouter({
     { path: "/about", component: About },
     // explore
     { path: "/explore", component: RestaurantList },
-    { path: "/explore/:restaurantId", props: true, component: RestaurantDetail },
+    { path: "/explore/:restaurantName", name: 'RestaurantDetail', props: true, component: RestaurantDetail },
     // community
     { path: "/community", component: Community },
     // not found
