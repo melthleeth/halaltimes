@@ -24,6 +24,13 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@1,900&display=swap");
 
 @font-face {
+    font-family: 'GmarketSansLight';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
   font-family: "GmarketSansMedium";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
     format("woff");
@@ -31,13 +38,28 @@ export default {
   font-style: normal;
 }
 
+@font-face {
+    font-family: 'GmarketSansBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .work-sans {
   font-family: 'Work Sans', sans-serif;
   letter-spacing: 0.2em;
 }
 
+.G-market-sans-L {
+  font-family: 'GmarketSansLight';
+}
+
 .G-market-sans {
   font-family: "GmarketSansMedium";
+}
+
+.G-market-sans-B {
+  font-family: "GmarketSansBold";
 }
 
 .font-color-black-400 {
@@ -101,6 +123,14 @@ export default {
 
 .bg-brown {
   background-color: #D0AC73;
+}
+
+.bg-purple {
+  background-color: #3D1F5D;
+}
+
+.color-primary {
+  color: #CF4F2E;
 }
 
 .color-secondary {
