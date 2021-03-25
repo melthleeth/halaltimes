@@ -18,7 +18,7 @@
               placeholder="halal@halaltimes.com"
               required
             />
-            <base-button mode="secondary" @click="emailSend()"
+            <base-button mode="secondary" @click="emailSend"
               >인증메일 전송</base-button
             >
           </section>
@@ -32,7 +32,7 @@
               v-model="code"
               required
             />
-            <base-button v-bind:disabled="codeAuth" @click="codeCheck()"
+            <base-button v-bind:disabled="codeAuth" @click="codeCheck"
               >확인</base-button
             >
             <span class="checkMessageColor">{{ emailmessage }}</span>
@@ -43,8 +43,8 @@
         <article class="flex items-center">
           <!-- 출생년도 -->
           <section>
-            <label for="born">출생 연월</label>
-            <input id="born" type="month" v-model="born" required />
+            <label for="born_year">출생 연월</label>
+            <input id="born_year" type="month" v-model="born_year" required />
           </section>
           <!-- 성별 -->
           <section>
@@ -54,6 +54,7 @@
             <select
               id="gender"
               class="text-base text-left px-6 py-3 hover:bg-gray-100 focus:outline-none"
+              v-model="gender"
               required
             >
               <option value="" hidden>선택</option>
@@ -75,8 +76,9 @@
               v-model="nickname"
               pattern="{2,12}+"
               required
+              @keyup="nicknameCheck()"
             />
-            <base-button @click="nicknameCheck()">중복 확인</base-button>
+            <base-button @click="modulesCheckNickname">중복 확인</base-button>
             <span class="checkMessageColor">{{ nicknamemessage }}</span>
             <p class="alertText">
               * 닉네임은 최소 2자, 최대 12자까지 입력이 가능합니다.<br />*
@@ -94,7 +96,7 @@
               type="password"
               minlength="8"
               maxlength="20"
-              pattern="^(?=.*[A-Za-z])(?=.[0-9])[A-Za-z0-9]+{8,20}$"
+              pattern="^(?=.*[0-9])(?=.*[a-zA-Z]).{8,20}$"
               v-model="password"
               required
               @keyup="passwordCheck()"
@@ -116,7 +118,7 @@
               type="password"
               minlength="8"
               maxlength="20"
-              pattern="^(?=.*[A-Za-z])(?=.[0-9])[A-Za-z0-9]+{8,20}$"
+              pattern="^(?=.*[0-9])(?=.*[a-zA-Z]).{8,20}$"
               v-model="confirm"
               required
               @keyup="passwordConfirmCheck()"
@@ -147,9 +149,8 @@
         <!-- 버튼 -->
         <article>
           <section>
-            <base-button v-bind:disabled="registerSignup" @click="signupCheck()"
-              >회원가입</base-button
-            >
+            <!-- v-bind:disabled="registerSignup" -->
+            <base-button @click="signupCheck">회원가입</base-button>
             <base-button @click="goHome()">돌아가기</base-button>
           </section>
         </article>
@@ -161,13 +162,13 @@
 export default {
   data() {
     return {
-      emailmessage: "",
-      nicknamemessage: "",
-      passwordmessage: "",
-      passwordconfirmmessage: "",
+      emailmessage: '',
+      nicknamemessage: '',
+      passwordmessage: '',
+      passwordconfirmmessage: '',
 
       codeAuth: true,
-      codeFromSpring: "",
+      codeFromSpring: '',
 
       registerSignup: true,
 
@@ -180,23 +181,32 @@ export default {
     };
   },
   methods: {
-    emailSend() {
-      // 초기화 필요
-      // this.emailmessage = ""
-      // this.codeAuth = false (클릭 가능해짐)
-      if (this.email == null) {
-        alert("이메일 주소를 입력하시기 바랍니다.");
+    async emailSend() {
+      const result = await this.$store.dispatch(
+        'account/sendCodeCheck',
+        this.email
+      );
+      if (result === 'SUCCESS') {
+        alert('인증코드가 전송되었습니다.');
+        this.codeAuth = false;
+      } else {
+        alert('인증코드 전송을 실패했습니다.');
+        this.codeAuth = true;
       }
-      this.listCheck();
     },
-    codeCheck() {
-      // 인증메일 전송 눌러야 활성화 가능
-      if (this.codeFromSpring == this.code) {
+    async codeCheck() {
+      const result = await this.$store.dispatch(
+        'account/emailCodeCheck',
+        this.code
+      );
+      if (result === 'SUCCESS') {
+        this.emailmessage = '이메일 인증 성공';
         this.codeAuth = true; // 클릭 비활성화
         this.checkEmail = true;
-        this.emailmessage = "이메일 인증 성공";
       } else {
-        this.emailmessage = "이메일 인증 실패";
+        this.emailmessage = '이메일 인증 실패';
+        this.codeAuth = false; // 클릭 활성화
+        this.checkEmail = false;
       }
       this.listCheck();
     },
@@ -206,29 +216,42 @@ export default {
         this.nickname.length < 2 ||
         this.nickname.length > 12
       ) {
-        this.nicknamemessage = "글자 수를 확인 바랍니다.";
+        this.nicknamemessage = '글자 수를 확인 바랍니다.';
       } else {
-        this.nicknamemessage = "허허";
+        this.nicknamemessage = '';
+      }
+    },
+    async modulesCheckNickname() {
+      const result = await this.$store.dispatch(
+        'account/nicknameCheck',
+        this.nickname
+      );
+      if (result === 'SUCCESS') {
+        this.nicknamemessage = '사용 가능합니다.';
+        this.checkNickname = true;
+      } else {
+        this.nicknamemessage = '사용 불가합니다.';
+        this.checkNickname = false;
       }
       this.listCheck();
     },
     passwordCheck() {
-      var check = new RegExp("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,20}$");
+      var check = new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z]).{8,20}$');
       if (check.test(this.password)) {
-        this.passwordmessage = "사용 가능";
+        this.passwordmessage = '사용 가능';
         this.checkPassword = true;
         return this.listCheck();
       }
-      this.passwordmessage = "영문포함 필수";
+      this.passwordmessage = '영문포함 필수';
       this.checkPassword = false;
       this.listCheck();
     },
     passwordConfirmCheck() {
       if (this.password === this.confirm) {
-        this.passwordconfirmmessage = "비밀번호가 동일합니다.";
+        this.passwordconfirmmessage = '비밀번호가 동일합니다.';
         this.checkPasswordConfirm = true;
       } else {
-        this.passwordconfirmmessage = "비밀번호가 다릅니다.";
+        this.passwordconfirmmessage = '비밀번호가 다릅니다.';
         this.checkPasswordConfirm = false;
       }
       this.listCheck();
@@ -241,17 +264,41 @@ export default {
         this.checkPassword &&
         this.checkPasswordConfirm
       ) {
-        return (this.registerSignup = false);
+        return (this.registerSignup = true);
       }
-      return (this.registerSignup = true);
+      return (this.registerSignup = false);
     },
-    signupCheck() {
-      var yearMonth = this.born.replace("-", "");
-      if (yearMonth < 190001) {
-        alert("가입할 수 없는 출생 연월입니다.");
-      } else if (yearMonth > 202103) {
-        alert("탄생 예정을 축하합니다.");
+    // signupCheck() {
+    //   var yearMonth = this.born_year.replace('-', '');
+    //   if (yearMonth < 190001) {
+    //     alert('가입할 수 없는 출생 연월입니다.');
+    //   } else if (yearMonth > 202103) {
+    //     alert('탄생 예정을 축하합니다.');
+    //   }
+    // },
+    async signupCheck() {
+      this.listCheck();
+      if (!this.registerSignup) return;
+
+      const signupData = {
+        email: this.email,
+        password: this.password,
+        nickname: this.nickname,
+        born_year: this.born_year.replace('-', ''),
+        gender: this.gender,
+      };
+
+      const result = await this.$store.dispatch(
+        'account/signupRegister',
+        signupData
+      );
+      if (result === 'SUCCESS') {
+        console.log('회원가입성공');
+      } else {
+        console.log('실패');
       }
+
+      this.$router.go(-1);
     },
     goHome() {
       this.$router.go(-1);
@@ -271,7 +318,7 @@ img {
 }
 
 .checkMessageColor {
-  color: red;
+  color: #cf4f2e;
 }
 
 input {
@@ -291,7 +338,7 @@ input:hover {
   background-color: rgba(243, 244, 246, var(--tw-bg-opacity));
 }
 
-input[type="text"]:focus {
+input[type='text']:focus {
   border: 1px solid rgb(153, 152, 152);
 }
 

@@ -4,15 +4,17 @@ import createPersistedState from 'vuex-persistedstate';
 
 import authModule from './modules/auth/index.js';
 import restaurantModule from './modules/restaurants/index.js';
+import accountModule from './modules/account/index.js';
 
 
 const SERVER_URL = "http://localhost:8765/sub";
 
 const store = createStore({
-    modules: {
-        auth: authModule,
-        restaurants: restaurantModule,
-    },
+  modules: {
+    auth: authModule,
+    restaurants: restaurantModule,
+    account: accountModule,
+  },
   plugins: [
     createPersistedState({
       key: 'vuex',
@@ -94,7 +96,7 @@ const store = createStore({
         .then((response) => {
           if (response.data.message) {
             console.log('받았다', response);
-            alert('아이디 또는 비밀번호를 틀렸습니다.','','warning');
+            alert('아이디 또는 비밀번호를 틀렸습니다.', '', 'warning');
           } else {
             console.log(response);
             context.commit('LOGIN', response.data);
@@ -123,7 +125,7 @@ const store = createStore({
             'auth-token'
           ] = `${response.data['auth-token']}`;
         })
-        .error(() => {});
+        .error(() => { });
     },
   },
 });
