@@ -21,31 +21,49 @@ export default {
 };
 </script>
 <style>
-  @font-face {
-    font-family: 'GmarketSansMedium';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@1,900&display=swap");
+
+@font-face {
+  font-family: "GmarketSansMedium";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.work-sans {
+  font-family: 'Work Sans', sans-serif;
+  letter-spacing: 0.2em;
 }
 
 .G-market-sans {
-  font-family: 'GmarketSansMedium';
+  font-family: "GmarketSansMedium";
 }
 
 .font-color-black-400 {
-  color: #2B2A29;
+  color: #2b2a29;
 }
 
 .font-color-black-300 {
-  color: #6A6969;
+  color: #6a6969;
 }
 
 .font-color-black-200 {
-  color: #AAA9A9;
+  color: #aaa9a9;
 }
 
 .font-color-black-100 {
-  color: #DAD3CB;
+  color: #dad3cb;
+}
+
+.border-line {
+  border-bottom: 3.2px solid #2b2a29;
+}
+
+.font-outline {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #2b2a29;
 }
 
 body {

@@ -7,7 +7,7 @@
 	<!-- UserController -->
 
 	<select id="getAllUser" resultType="UserDto">
-		select email, nickname, role, profile_image
+		select email, nickname, role, profile_image, id_user
 <!-- 		, count(distinct post.postNo) as postCnt, count(distinct commentNo) as commentCnt -->
 <!--         from USER left join REVIEW using(EMAIL) -->
 <!--         left join comment using(EMAIL) -->
@@ -43,6 +43,12 @@
 		from user
 		where email=#{email}
 	</select>
+	
+	<update id="updateNickname" parameterType="UserDto">
+		update user
+		set	nickname = #{nickname}
+		where email = #{email}
+	</update>
 
 	<update id="updatePwd" parameterType="UserDto">
 		update user
@@ -82,50 +88,34 @@
 		where email=#{email}
 	</select>
 	
-<!-- 	<select id="getPostList" parameterType="string" resultType="PostDto"> -->
-<!-- 		select postNo, title, content, -->
-<!-- 				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(uploadDate, '%H:%i:%s') -->
-<!-- 				else date_format(uploadDate, '%y.%m.%d') -->
-<!-- 				end uploadDate, -->
-<!-- 				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(modifyDate, '%H:%i:%s') -->
-<!-- 				else date_format(modifyDate, '%y.%m.%d') -->
-<!-- 				end modifyDate, -->
-<!-- 				likeCnt, EMAIL, NICKNAME, -->
-<!-- 				( -->
-<!-- 					select thumbnail -->
-<!-- 					from ( -->
-<!-- 						select pp.*, (select count(*) -->
-<!-- 									from post_vote -->
-<!-- 									where pp.picNo = post_vote.picNo -->
-<!-- 						            ) as count -->
-<!-- 						from post_pics pp -->
-<!-- 						where post.postNo = pp.postNo -->
-<!-- 						order by count desc -->
-<!-- 						) as temp -->
-<!-- 					limit 1 -->
-<!-- 				) as thumbnail, -->
-<!-- 				( -->
-<!-- 					select thumbnail -->
-<!-- 					from ( -->
-<!-- 						select pp.*, (select count(*) -->
-<!-- 									from post_vote -->
-<!-- 									where pp.picNo = post_vote.picNo -->
-<!-- 						            ) as count -->
-<!-- 						from post_pics pp -->
-<!-- 						where post.postNo = pp.postNo -->
-<!-- 						order by count desc -->
-<!-- 						) as temp -->
-<!-- 					limit 1, 1 -->
-<!-- 				) as thumbnailTwo, -->
-<!-- 				( -->
-<!-- 					select count(*) -->
-<!-- 					from comment -->
-<!-- 		            where post.postNo = comment.postNo -->
-<!-- 				) as commentCnt  -->
-<!-- 		from post join USER using(EMAIL) -->
-<!-- 		where EMAIL = #{EMAIL} and temp = 0 -->
-<!-- 	</select> -->
-
+	<select id="getStoreName" parameterType="string" resultType="string">
+		select store_name
+		from store join review r
+		using(id_store)
+		where id_review = #{id_review} and r.active = 1
+	</select>
+	
+	<select id="getReviewList" parameterType="string" resultType="ReviewDto">
+		select id_review, content, score, likeCnt, id_store,
+<!-- 				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
+<!-- 				then date_format(upload_date, '%H:%i:%s') -->
+<!-- 				else date_format(upload_date, '%y.%m.%d') -->
+<!-- 				end -->
+				 upload_date,
+<!-- 				case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
+<!-- 				then date_format(update_date, '%H:%i:%s') -->
+<!-- 				else date_format(update_date, '%y.%m.%d') -->
+<!-- 				end  -->
+				update_date,
+				(
+					select store_name
+					from store join review r2
+					using(id_store)
+					where r.id_review = r2.id_review and r.active = 1
+				) as store_name						
+		from review r join user
+		using(id_user)
+		where email = #{email} and r.active = 1
+	</select>
+	
 </mapper>

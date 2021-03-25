@@ -1,16 +1,16 @@
 <template>
   <div
     id="bg"
-    class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
+    class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6"
   >
-    <section class="flex justify-content-center w-full">
-      <span class="text-4xl mx-auto">About</span>
-    </section>
+    <base-title>About</base-title>
     <section class="flex">
-      <img src="../../assets/resources/about_1.png" class="w-1/2" />
-      <article class="w-1/2 mx-2">
-      <span class="text-lg inline-block">할랄의 의미는「허락된 것」</span>
-        <span class="inline-block"
+        <article class="w-1/2">
+      <img src="../../assets/resources/about_1.png" alt="about-1" class="" />
+      </article>
+      <article class="flex flex-col w-1/2 h-auto mx-2">
+      <span class="text-lg tracking-widest mt-3 mb-1">할랄의 의미는「허락된 것」</span>
+        <span class="text-sm tracking-wider leading-relaxed"
           >할랄(HALAL)은 생활 전반에 걸쳐 이슬람법에 따라 사용이 허용되는 것을
           뜻합니다. 음식, 의약품, 화장품, 심지어 가전제품까지 일상생활에서
           사용하는 모든 것이 해당되며, 그 중에서도 이슬람 율법이 허락해 무슬림이
@@ -28,6 +28,18 @@
 export default {
   data() {
     return {};
+  },
+  computed: {
+    currDate() {
+      const event = new Date();
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      return event.toLocaleDateString(undefined, options);
+    },
   },
 };
 </script>

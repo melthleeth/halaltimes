@@ -8,6 +8,7 @@ public class ReviewDto {
 	private String id_review;
 	private String id_user;
 	private String id_store;
+	private String store_name;
 	private float score;
 	private String content;
 	private String upload_date;
@@ -22,6 +23,14 @@ public class ReviewDto {
 
 	public List<String> getUnmodified() {
 		return unmodified;
+	}
+
+	public String getStore_name() {
+		return store_name;
+	}
+
+	public void setStore_name(String store_name) {
+		this.store_name = store_name;
 	}
 
 	public void setUnmodified(List<String> unmodified) {
