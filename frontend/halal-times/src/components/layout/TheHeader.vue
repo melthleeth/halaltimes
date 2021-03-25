@@ -31,34 +31,38 @@
           @close="hideLoginDialog"
           class="flex flex-col justify-items-center z-40"
         >
-            <span class="text-2xl mt-6 mb-4">로그인</span>
-            <section class="flex flex-col space-y-3">
-              <input
-                class="dialog-input"
-                type="text"
-                placeholder="이메일"
-                v-model.trim="user.email"
-              />
-              <input
-                class="dialog-input"
-                type="password"
-                placeholder="비밀번호"
-                v-model.trim="user.password"
-              />
-            </section>
-            <section class="flex space-x-2 mt-4 mb-6">
-              <base-button
-                type="submit"
-                @click="login"
-                mode="primary"
-                class="text-sm"
-              >
-                로그인</base-button
-              >
-              <base-button class="text-sm" @click="hideLoginDialog"
-                >취소</base-button
-              >
-            </section>
+          <span class="text-2xl font-bold mt-10 mb-4">로그인</span>
+          <section class="flex flex-col space-y-4">
+            <input
+              class="input-dialog"
+              type="text"
+              placeholder="이메일"
+              v-model.trim="user.email"
+            />
+            <input
+              class="input-dialog"
+              type="password"
+              placeholder="비밀번호"
+              v-model.trim="user.password"
+            />
+          </section>
+          <section class="flex space-x-2 mt-6">
+            <base-button
+              type="submit"
+              @click="login"
+              mode="primary"
+              class="text-sm"
+            >
+              로그인</base-button
+            >
+            <base-button class="text-sm" @click="hideLoginDialog"
+              >취소</base-button
+            >
+          </section>
+          <section class="font-color-black-300 text-xs mt-2 mb-10">
+            <span>아직 회원이 아니신가요?</span>
+            <span class="underline text-link" @click="moveToSignUp">회원가입</span>
+          </section>
         </base-dialog>
       </section>
       <section v-else class="flex items-center space-x-6">
@@ -75,30 +79,30 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from 'vuex';
 export default {
   data() {
     return {
       user: {
-        email: "",
-        password: "",
+        email: '',
+        password: ''
       },
       isLoginned: false,
-      loginDialogIsVisible: false,
+      loginDialogIsVisible: false
     };
   },
   computed: {
     imgsrc() {
       //   return this.$store.getters.profileImage;
-      return "https://media1.giphy.com/media/Mc75LHdpFvI9Ta42TY/giphy.gif";
+      return 'https://media1.giphy.com/media/Mc75LHdpFvI9Ta42TY/giphy.gif';
     },
     ...mapGetters([
       // 'links',
-      "getAccessToken",
-      "getUserEmail",
-      "getUserName",
-      "getRole",
-    ]),
+      'getAccessToken',
+      'getUserEmail',
+      'getUserName',
+      'getRole'
+    ])
   },
   methods: {
     showLoginDialog() {
@@ -107,10 +111,10 @@ export default {
     hideLoginDialog() {
       this.loginDialogIsVisible = false;
     },
-    ...mapMutations(["toggleDrawer"]),
+    ...mapMutations(['toggleDrawer']),
     onClick(e, item) {
-      this.$router.push(item.href).catch((error) => {
-        if (error.name === "NavigationDuplicated") {
+      this.$router.push(item.href).catch(error => {
+        if (error.name === 'NavigationDuplicated') {
           // 같은 경로 클릭시 새로고침 되게
           location.reload();
         }
@@ -123,39 +127,52 @@ export default {
       this.dialog = false;
       // LOGIN 액션 실행
       // 서버와 통신(axios)을 해 토큰값을 얻어야 하므로 Actions를 호출.
-      this.$store.dispatch("LOGIN", this.user);
+      this.$store.dispatch('LOGIN', this.user);
       console.log(this.$store.getters.getAccessToken);
-      this.$emit("loginSuccess");
-      this.user.email = "";
-      this.user.password = "";
+      this.$emit('loginSuccess');
+      this.user.email = '';
+      this.user.password = '';
     },
     logout() {
       this.$store
-        .dispatch("LOGOUT")
-        .then(() => this.$router.replace("/").catch(() => {}));
+        .dispatch('LOGOUT')
+        .then(() => this.$router.replace('/').catch(() => {}));
       console.log(localStorage);
       localStorage.clear;
       console.log(localStorage);
     },
-  },
+    moveToSignUp() {
+      this.loginDialogIsVisible = false;
+      this.$router.push({ path: '/signup'});
+    },
+  }
 };
 </script>
 <style scoped>
-#menu li {
-  transition: 0.3s ease-out;
+#menu li a {
+  transition: 0.5s ease-out;
+  padding: 0.25rem 1rem;
+  background: linear-gradient(135deg, #fff58c 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  border-radius: 100%;
 }
 
-#menu li:hover {
-  background-color: red;
-}
-
-.dialog-input {
-  border: 3px solid #2b2a29;
-  padding: 0.5rem 0.75rem;
-  text-align: center;
+#menu li a:hover,
+#menu li a.router-link-active {
+  background-position: left bottom;
 }
 
 .animate-spin {
   animation-duration: 6s;
 }
+
+.text-link {
+  transition: .3s;
+}
+
+.text-link:hover {
+  color: #2b2a29;
+}
+
 </style>
