@@ -60,10 +60,64 @@ export default {
   border-bottom: 3.2px solid #2b2a29;
 }
 
+.border-line-full {
+  border: 3.2px solid #2b2a29;
+}
+
 .font-outline {
   -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: #2b2a29;
+}
+
+.input-dialog {
+  border: 3px solid #2b2a29;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+}
+
+.input-base {
+  border: 3.2px solid #2b2a29;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.input-base:hover,
+.input-base:focus {
+  background-color: #FFF58C;
+}
+
+.bg-primary {
+  background-color: #CF4F2E;
+}
+
+.bg-secondary {
+  background-color: #4F8163;
+}
+
+.bg-secondary-light {
+  background-color: #E1EEDF;
+}
+
+.bg-brown {
+  background-color: #D0AC73;
+}
+
+.color-secondary {
+  color: #4F8163;
+}
+
+:root {
+  --primary-color: #CF4F2E;
+  --primary-color-hover: #903720;
+  
+  --secondary-color: #4F8163;
+  --secondary-color-hover: #2F4D3B;
+
+  --base-color: #2B2A29;
+  --base-color-hover: #6A6969;
+
+  --important-color: #FFF58C;
 }
 
 body {
