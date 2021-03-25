@@ -39,7 +39,7 @@
 	</select>
 
 	<select id="findUserInfo" parameterType="string" resultType="UserDto">
-		select *
+		select id_user, email, nickname, born_year, gender, favorites, profile_image
 		from user
 		where email=#{email}
 	</select>
@@ -50,11 +50,11 @@
 		where email=#{email}
 	</update>
 
-	<delete id="delete" parameterType="string">
-		delete 
-		from user
+	<update id="delete" parameterType="string">
+		update user
+		set active = 0
 		where email=#{email}
-	</delete>
+	</update>
 
 	<update id="saveImg" parameterType="UserDto">
 		update user
