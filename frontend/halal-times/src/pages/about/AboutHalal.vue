@@ -6,7 +6,7 @@
     <base-title>About</base-title>
     <section class="flex">
       <article class="w-1/2">
-        <img src="../../assets/resources/about_1.png" alt="about-1" class="" />
+        <img src="../../assets/resources/about_1.png" alt="about-1" class="mt-4" />
       </article>
       <article class="flex flex-col w-1/2 h-auto ml-4 mr-2">
         <span class="text-xl tracking-widest mt-3 mb-2 font-bold"
