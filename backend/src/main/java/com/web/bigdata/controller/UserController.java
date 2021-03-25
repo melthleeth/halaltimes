@@ -105,7 +105,7 @@ public class UserController {
 		// 회원 정보 조회
 		try {
 			resultMap.put("info", userService.findUserInfo(email));
-//			resultMap.put("postList", memberService.getPostList(email));
+			resultMap.put("reviewList", userService.getReviewList(email));
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -115,30 +115,30 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-//	@ApiOperation(value = "자기소개 수정", notes = "회원의 자기소개서를 수정한다.", response = Boolean.class)
-//	@PutMapping("/intro")
-//	public ResponseEntity<Boolean> modifyIntro(@RequestBody Map<String, String> map) {
-//		logger.info("modifyIntro - 호출");
-//
-//		HttpStatus status = HttpStatus.ACCEPTED;
-//		boolean flag = false;
-//
-//		// 회원 정보 조회
-//		UserDto dto = new UserDto();
-//		dto.setEMAIL(map.get("email"));
-////		dto.setIntroduce(map.get("introduce"));
-//
-//		// 회원 소개 수정
-//		try {
-//			flag = memberService.updateIntro(dto);
-//			status = HttpStatus.ACCEPTED;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			status = HttpStatus.INTERNAL_SERVER_ERROR;
-//		}
-//
-//		return new ResponseEntity<Boolean>(flag, status);
-//	}
+	@ApiOperation(value = "별명 수정", notes = "회원의 별명을 수정한다.", response = Boolean.class)
+	@PutMapping("/nickname")
+	public ResponseEntity<Boolean> modifyNickname(@RequestBody Map<String, String> map) {
+		logger.info("modifyNickname - 호출");
+
+		HttpStatus status = HttpStatus.ACCEPTED;
+		boolean flag = false;
+
+		// 회원 정보 조회
+		UserDto dto = new UserDto();
+		dto.setEmail(map.get("email"));
+		dto.setNickname(map.get("nickname"));
+
+		// 회원 소개 수정
+		try {
+			flag = userService.updateNickname(dto);
+			status = HttpStatus.ACCEPTED;
+		} catch (Exception e) {
+			e.printStackTrace();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<Boolean>(flag, status);
+	}
 
 	@ApiOperation(value = "회원 비밀번호 변경", notes = "회원의 비밀번호를 수정한다.", response = Boolean.class)
 	@PutMapping("/password")

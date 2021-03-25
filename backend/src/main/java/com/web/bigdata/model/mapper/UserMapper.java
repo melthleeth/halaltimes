@@ -30,6 +30,9 @@ public interface UserMapper {
 
 	/** 인자로 받은 email의 비밀번호를 반환 */
 	public UserDto findUserInfo(String email) throws SQLException;
+	
+	/** 인자로 받은 MemberDto를 수정하고, 성공 여부를 반환 */
+	public boolean updateNickname(UserDto userDto) throws SQLException;
 
 	/** 인자로 받은 UserDto의 비밀번호를 수정하고, 성공 여부를 반환 */
 	public boolean updatePwd(UserDto userDto) throws SQLException;
@@ -43,6 +46,8 @@ public interface UserMapper {
 	/** 인자로 받은 email의 프로필 사진을 삭제 */
 	public void deleteImg(String email);
 
+//	public List<String> getStoreName(String id_review);
+
 	// LoginController
 
 	/** id, pwd와 일치하는 UserDto를 반환 */
@@ -52,6 +57,6 @@ public interface UserMapper {
 	public String findPwd(String email);
 
 	/** 게시글 리스트 */
-	public List<ReviewDto> getPostList(String email) throws SQLException;
+	public List<ReviewDto> getReviewList(String email) throws SQLException;
 
 }

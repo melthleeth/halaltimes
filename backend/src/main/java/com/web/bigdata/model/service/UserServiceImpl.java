@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 	public void join(UserDto dto) throws Exception {
 		String encodePassword = passwordEncoder.encode(dto.getPassword());
 		dto.setPassword(encodePassword);
-		System.out.println(dto);
 		userMapper.join(dto);
 	}
 
@@ -62,6 +61,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public boolean updateNickname(UserDto userDto) throws Exception {
+		if (userDto == null) {
+			return false;
+		}
+
+		return userMapper.updateNickname(userDto);
+	}
+
+	@Override
 	public boolean updatePwd(UserDto userDto) throws Exception {
 		if (userDto == null) {
 			return false;
@@ -76,6 +84,12 @@ public class UserServiceImpl implements UserService {
 
 		return false;
 	}
+
+//	@Override
+//	public List<String> getStoreName(String id_review) throws Exception {
+//		System.out.println("service "+id_review);
+//		return userMapper.getStoreName(id_review);
+//	}
 
 	@Override
 	public boolean delete(String email) throws Exception {
@@ -106,8 +120,8 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-//	@Override
-//	public List<ReviewDto> getPostList(String email) throws Exception {
-//		return userMapper.getPostList(email);
-//	}
+	@Override
+	public List<ReviewDto> getReviewList(String email) throws SQLException {
+		return userMapper.getReviewList(email);
+	}
 }
