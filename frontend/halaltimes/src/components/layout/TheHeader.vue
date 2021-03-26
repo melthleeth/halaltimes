@@ -31,47 +31,45 @@
           @close="hideLoginDialog"
           class="flex flex-col justify-items-center z-40"
         >
-        <form>
-          <span class="text-2xl mt-6 mb-4">로그인</span>
-          <section class="flex flex-col space-y-3">
-            <input
-              class="dialog-input"
-              type="text"
-              placeholder="이메일"
-              v-model.trim="user.email"
-            />
-            <input
-              class="dialog-input"
-              type="password"
-              placeholder="비밀번호"
-              v-model.trim="user.password"
-            />
-          </section>
-          <section class="flex space-x-2 mt-4 mb-6">
-            <input
+          <form>
+            <span class="text-2xl mt-6 mb-4">로그인</span>
+            <section class="flex flex-col space-y-3">
+              <input
+                class="dialog-input"
+                type="text"
+                placeholder="이메일"
+                v-model.trim="user.email"
+              />
+              <input
+                class="dialog-input"
+                type="password"
+                placeholder="비밀번호"
+                v-model.trim="user.password"
+              />
+            </section>
+            <section class="flex space-x-2 mt-4 mb-6">
+              <base-button
                 type="submit"
                 @click="login"
-                value="로그인"
                 mode="primary"
                 class="text-sm"
-              />
-            <!-- <base-button class="text-sm" mode="primary" @click="login"
-              >로그인</base-button
-            > -->
-            <base-button class="text-sm" mode="" @click="hideLoginDialog"
-              >취소</base-button
-            >
-          </section>
-        </form>
+              >
+                로그인</base-button
+              >
+              <base-button class="text-sm" mode="" @click="hideLoginDialog"
+                >취소</base-button
+              >
+            </section>
+          </form>
         </base-dialog>
       </section>
       <section v-else class="flex items-center space-x-6">
         <router-link to="/mypage">
-        <img
-          class="h-10 w-10 cursor-pointer rounded-full object-cover"
-          :src="imgsrc"
-          alt="user profile"
-        />
+          <img
+            class="h-10 w-10 cursor-pointer rounded-full object-cover"
+            :src="imgsrc"
+            alt="user profile"
+          />
         </router-link>
         <base-button class="text-xs" @click="logout">로그아웃</base-button>
       </section>
@@ -79,13 +77,13 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
       user: {
-            email: '',
-            password: '',
+        email: "",
+        password: "",
       },
       isLoginned: false,
       loginDialogIsVisible: false,
@@ -98,10 +96,10 @@ export default {
     },
     ...mapGetters([
       // 'links',
-      'getAccessToken',
-      'getUserEmail',
-      'getUserName',
-      'getRole',
+      "getAccessToken",
+      "getUserEmail",
+      "getUserName",
+      "getRole",
     ]),
   },
   methods: {
@@ -111,49 +109,36 @@ export default {
     hideLoginDialog() {
       this.loginDialogIsVisible = false;
     },
-    ...mapMutations(['toggleDrawer']),
+    ...mapMutations(["toggleDrawer"]),
     onClick(e, item) {
       this.$router.push(item.href).catch((error) => {
-        if (error.name === 'NavigationDuplicated') {
+        if (error.name === "NavigationDuplicated") {
           // 같은 경로 클릭시 새로고침 되게
           location.reload();
         }
       });
     },
-    // login() {
-    //   // login logic
-    //   const userInfo = {
-    //     email: this.email,
-    //     password: this.password,
-    //   };
-    //   console.log(userInfo);
-    //   this.isLoginned = !this.isLoginned;
-    // },
-    // logout() {
-    //   this.isLoginned = !this.isLoginned;
-    //   this.loginDialogIsVisible = false;
-    // },
-    login: function(event) {
-            console.log(this.user.email)
-            console.log(this.user.password)
-            event.preventDefault();
-            this.dialog = false;
-            // LOGIN 액션 실행
-            // 서버와 통신(axios)을 해 토큰값을 얻어야 하므로 Actions를 호출.
-            this.$store.dispatch('LOGIN', this.user);
-            console.log(this.$store.getters.getAccessToken);
-            this.$emit('loginSuccess');
-            this.user.email = '';
-            this.user.password = '';
-        },
-        logout() {
-            this.$store
-            .dispatch('LOGOUT')
-            .then(() => this.$router.replace('/').catch(() => {}));
-            console.log(localStorage);
-            localStorage.clear;
-            console.log(localStorage);
-        },
+    login(event) {
+      console.log(this.user.email);
+      console.log(this.user.password);
+      event.preventDefault();
+      this.dialog = false;
+      // LOGIN 액션 실행
+      // 서버와 통신(axios)을 해 토큰값을 얻어야 하므로 Actions를 호출.
+      this.$store.dispatch("LOGIN", this.user);
+      console.log(this.$store.getters.getAccessToken);
+      this.$emit("loginSuccess");
+      this.user.email = "";
+      this.user.password = "";
+    },
+    logout() {
+      this.$store
+        .dispatch("LOGOUT")
+        .then(() => this.$router.replace("/").catch(() => {}));
+      console.log(localStorage);
+      localStorage.clear;
+      console.log(localStorage);
+    },
   },
 };
 </script>
