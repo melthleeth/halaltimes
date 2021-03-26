@@ -25,11 +25,11 @@ public class ETCServiceImpl implements ETCService {
 		MimeMessage message = emailSender.createMimeMessage();
 
 		message.addRecipients(RecipientType.TO, to);// 보내는 대상
-		message.setSubject("PickPic 인증번호가 도착했습니다.");// 제목
+		message.setSubject("HalalTimes 인증번호가 도착했습니다.");// 제목
 
 		String msgg = "";
 		msgg += "<div style='margin:100px;'>";
-		msgg += "<h1> 안녕하세요  PickPic입니다!!! </h1>";
+		msgg += "<h1> 안녕하세요  HalalTimes입니다!!! </h1>";
 		msgg += "<br>";
 		msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
 		msgg += "<br>";
@@ -42,7 +42,7 @@ public class ETCServiceImpl implements ETCService {
 		msgg += ePw + "</strong><div><br/> ";
 		msgg += "</div>";
 		message.setText(msgg, "utf-8", "html");// 내용
-		message.setFrom(new InternetAddress("shim99887@gmail.com", "PickPic"));// 보내는 사람
+		message.setFrom(new InternetAddress("ssafylee5@gmail.com", "HalalTimes"));// 보내는 사람
 		return message;
 	}
 
@@ -77,11 +77,11 @@ public class ETCServiceImpl implements ETCService {
 		MimeMessage message = emailSender.createMimeMessage();
 
 		message.addRecipients(RecipientType.TO, email);// 보내는 대상
-		message.setSubject("PickPic 인증번호가 도착했습니다.");// 제목
+		message.setSubject("HalalTimes 인증번호가 도착했습니다.");// 제목
 
 		String msgg = "";
 		msgg += "<div style='margin:100px;'>";
-		msgg += "<h1> 안녕하세요  PickPic입니다!!! </h1>";
+		msgg += "<h1> 안녕하세요  HalalTimes입니다!!! </h1>";
 		msgg += "<br>";
 		msgg += "<p>비밀번호를 확인해주세요.<p>";
 		msgg += "<br>";
@@ -94,7 +94,7 @@ public class ETCServiceImpl implements ETCService {
 		msgg += dto.getPassword() + "</strong><div><br/> ";
 		msgg += "</div>";
 		message.setText(msgg, "utf-8", "html");// 내용
-		message.setFrom(new InternetAddress("shim99887@gmail.com", "PickPic"));// 보내는 사람
+		message.setFrom(new InternetAddress("ssafylee5@gmail.com", "HalalTimes"));// 보내는 사람
 
 		return message;
 	}
