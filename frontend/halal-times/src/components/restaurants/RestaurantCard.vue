@@ -25,7 +25,7 @@
           class="w-max bg-brown inline-block rounded-full px-3 py-1 text-xs text-white"
           >{{ foodCategory }}</span
         >
-        <span
+        <span v-if="muslimFriendly.length > 0"
           class="w-max inline-block rounded-full px-3 py-1 text-xs text-white"
           :class="getTagColor"
           >{{ muslimFriendly }}</span
