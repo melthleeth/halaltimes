@@ -148,7 +148,7 @@ export default {
       console.log(response);
       //   this.user = null;
       this.user = response.data.info;
-      if (this.user.gender == 0) {
+      if (this.user.gender == 1) {
         this.user.gender = '여성';
       } else {
         this.user.gender = '남성';
