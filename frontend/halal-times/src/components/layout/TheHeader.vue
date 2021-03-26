@@ -59,9 +59,9 @@
               >취소</base-button
             >
           </section>
-          <section class="font-color-black-300 text-xs mt-2 mb-10">
+          <section class="font-color-black-300 text-xs mt-3 mb-6">
             <span>아직 회원이 아니신가요?</span>
-            <span class="underline text-link" @click="moveToSignUp">회원가입</span>
+            <span class="underline text-link cursor-pointer" @click="moveToSignUp">회원가입</span>
           </section>
         </base-dialog>
       </section>
