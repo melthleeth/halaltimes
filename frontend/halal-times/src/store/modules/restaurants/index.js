@@ -11,7 +11,7 @@ export default {
         {
           restaurantId: 1,
           imgpath:
-            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/default.png',
+            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/9bdd2e29c6664ec0a7e6acbdc05581e9.jpg',
           restaurantName: '우스마니아',
           averageScore: '3.4',
           locationRegion: '서울',
@@ -24,7 +24,7 @@ export default {
         {
           restaurantId: 2,
           imgpath:
-            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/4f1b0384b2a448bea8d6fa2fec929ec3.jpg',
+            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/4cb7a96d45174d9594ab3a819cc427f9.jpg',
           restaurantName: '미스터케밥 2호점',
           averageScore: '4.5',
           locationRegion: '서울',
@@ -37,7 +37,7 @@ export default {
         {
           restaurantId: 3,
           imgpath:
-            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/9f121c2f5ce2405186c3bc48240a476b.jpg',
+            'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/d027f5b4cf714f23abf4a346975699d7.jpg',
           restaurantName: '카파도키아',
           averageScore: '4.0',
           locationRegion: '부산',
