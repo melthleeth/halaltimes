@@ -6,8 +6,7 @@ import authModule from './modules/auth/index.js';
 import restaurantModule from './modules/restaurants/index.js';
 import accountModule from './modules/account/index.js';
 
-
-const SERVER_URL = "http://localhost:8765/sub";
+const SERVER_URL = process.env.VUE_APP_SERVER_URL;
 
 const store = createStore({
   modules: {
@@ -34,7 +33,7 @@ const store = createStore({
       {
         text: '홈으로',
         href: '',
-      }
+      },
       // {
       //   text: '게시판',
       //   href: '/board',
@@ -107,13 +106,13 @@ const store = createStore({
           }
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error);
         });
     },
     LOGOUT(context) {
       context.commit('LOGOUT');
       axios.defaults.headers.common['auth-token'] = undefined;
-      location.href = "/";
+      location.href = '/';
     },
     REGIST(context, user) {
       return axios
@@ -125,7 +124,7 @@ const store = createStore({
             'auth-token'
           ] = `${response.data['auth-token']}`;
         })
-        .error(() => { });
+        .error(() => {});
     },
   },
 });
