@@ -11,7 +11,7 @@
           class="mt-1 mx-5 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md my-3"
         >
           <div class="space-y-1 my-10 mx-10 text-center">
-            <svg
+            <!-- <svg
               class="mx-auto h-12 w-12 text-gray-400"
               stroke="currentColor"
               fill="none"
@@ -24,7 +24,14 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-            </svg>
+            </svg> -->
+            <img
+              id="blah"
+              :src="user.profile_image"
+              onerror=""
+              alt="프로필 이미지"
+            />
+            <!-- <input id="pic" class="pis" @change="addProfile" type="file" /> -->
             <div class="flex text-sm text-gray-600">
               <label
                 for="file-upload"
@@ -34,14 +41,15 @@
                   >* 이미지를 클릭하여 프로필 사진을 등록/업데이트 할 수
                   있어요</span
                 >
-                <input
-                  id="file-upload"
-                  name="file-upload"
-                  type="file"
-                  class="sr-only"
-                />
               </label>
             </div>
+            <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              class="sr-only pis"
+              @change="addProfile"
+            />
           </div>
         </div>
       </article>
@@ -117,7 +125,7 @@ export default {
   },
   components: {
     ReviewDesign,
-    BookmarkDesign
+    BookmarkDesign,
   },
   computed: {
     currDate() {
@@ -144,11 +152,11 @@ export default {
       } else {
         this.user.gender = '남성';
       }
-      this.reviews = response.data.reviewList;      
+      this.reviews = response.data.reviewList;
       this.bookmarks = response.data.bookmarkList;
-      // this.user.profile_image =
-      //   'https://apfbucket.s3.ap-northeast-2.amazonaws.com/' +
-      //   response.data.info.profile_image;
+      this.user.profile_image =
+        'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
+        response.data.info.profile_image;
     });
     //   .catch(() => {
     //     this.$router.push({
@@ -158,57 +166,62 @@ export default {
     //   });
   },
   methods: {
-    // addProfile: function(input) {
-    //   if (input.target.files[0]) {
-    //     if (this.user.profile_image) {
-    //       const params = new URLSearchParams();
-    //       params.append('email', this.user.email);
-    //       axios
-    //         .get(`${SERVER_URL}/member/delete`, { params })
-    //         .then((response) => {})
-    //         .catch((err) => {
-    //           this.$router.push({
-    //             path: '/Error',
-    //             query: { status: error.response.status },
-    //           });
-    //         });
-    //     }
-    //     var frm = new FormData();
-    //     var photoFile = input.target.files[0];
-    //     frm.append('profile_image', photoFile);
-    //     frm.append('email', this.user.email);
-    //     axios
-    //       .post(`${SERVER_URL}/member/upload`, frm, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data',
-    //         },
-    //       })
-    //       .then((response) => {
-    //         this.$alert('프로필 업로드 완료', '', 'success');
-    //         const params = new URLSearchParams();
-    //         params.append('email', this.getUserEmail);
-    //         axios
-    //           .get(`${SERVER_URL}/member`, { params })
-    //           .then((response) => {
-    //             this.user.profile_image =
-    //               'https://apfbucket.s3.ap-northeast-2.amazonaws.com/' +
-    //               response.data.info.profile_image;
-    //           })
-    //           .catch(() => {
-    //             this.$router.push({
-    //               path: '/Error',
-    //               query: { status: error.response.status },
-    //             });
-    //           });
-    //       })
-    //       .catch((error) => {
-    //         this.$router.push({
-    //           path: '/Error',
-    //           query: { status: error.response.status },
-    //         });
-    //       });
-    //   }
-    // },
+    addProfile: function(input) {
+      if (input.target.files[0]) {
+        if (this.user.profile_image) {
+          const params = new URLSearchParams();
+          params.append('email', this.user.email);
+          axios
+            .get(`${SERVER_URL}/user/profilepic/delete`, { params })
+            .then((response) => {
+              console.log(response);
+            });
+          // .catch((err) => {
+          //   this.$router.push({
+          //     path: '/Error',
+          //     query: { status: error.response.status },
+          //   });
+          // });
+        }
+        var frm = new FormData();
+        var photoFile = input.target.files[0];
+        frm.append('profile_image', photoFile);
+        frm.append('email', this.user.email);
+        axios
+          .post(`${SERVER_URL}/user/profilepic/upload`, frm, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          })
+          .then((response) => {
+            console.log(response);
+            alert('프로필 업로드 완료');
+            const params = new URLSearchParams();
+            params.append('email', this.getUserEmail);
+            axios
+              .get(`${SERVER_URL}/user`, { params })
+              .then((response) => {
+                console.log(response);
+                this.user.profile_image =
+                  'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
+                  response.data.info.profile_image;
+                console.log('check' + this.user.profile_image);
+              })
+              .catch((error) => {
+                this.$router.push({
+                  path: '/Error',
+                  query: { status: error.response.status },
+                });
+              });
+          });
+        // .catch((error) => {
+        //   this.$router.push({
+        //     path: '/Error',
+        //     query: { status: error.response.status },
+        //   });
+        // });
+      }
+    },
     // showmodifyForm: function() {
     //   //   this.modify = true;
     // },
