@@ -20,10 +20,10 @@
     </section>
     <section id="tag-and-bookmark" class="flex items-center w-full mt-3 mb-1">
       <article class="space-x-2">
-      <span class="w-max bg-brown rounded-full px-3 py-1 text-xs text-white">{{
+      <span class="w-max bg-brown inline-block rounded-full px-3 py-1 text-xs text-white">{{
         foodCategory
       }}</span>
-      <span class="w-max bg-purple rounded-full px-3 py-1 text-xs text-white"
+      <span class="w-max inline-block rounded-full px-3 py-1 text-xs text-white"
         :class="getTagColor"
       >{{
         muslimCategory
@@ -31,7 +31,7 @@
       </article>
         <img
           src="../../assets/icon/bookmark@0.75x.png"
-          class="object-contain justify-items-end ml-auto cursor-pointer"
+          class="object-contain justify-items-end ml-auto cursor-pointer mr-2"
           alt="bookmark icon"
         />
     </section>
