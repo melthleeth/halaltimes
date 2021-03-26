@@ -65,12 +65,13 @@ export default {
   watch: {
     keyword(value) {
       this.keyword = value;
+      console.log(value);
     }
   },
   computed: {
     filteredRestaurants() {
       let restaurants = this.$store.getters['restaurants/restaurants'];
-
+      
       if (this.keyword !== "") {
         restaurants = restaurants.filter((restaurantItem) => {
           if (restaurantItem.restaurantName.includes(this.keyword)) return true;
@@ -102,7 +103,8 @@ export default {
       this.isLoading = false;
     },
     loadKeyword() {
-      this.keyword = this.$store.getters["restaurants/keyword"];
+      const searchKeyword = this.$store.getters["restaurants/keyword"];
+      if (searchKeyword !== null) this.keyword = searchKeyword;
       this.$store.dispatch("restaurants/setKeyword", null);
     },
   }
