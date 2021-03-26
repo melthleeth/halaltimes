@@ -20,20 +20,22 @@
     </section>
     <section id="tag-and-bookmark" class="flex items-center w-full mt-3 mb-1">
       <article class="space-x-2">
-      <span class="w-max bg-brown inline-block rounded-full px-3 py-1 text-xs text-white">{{
-        foodCategory
-      }}</span>
-      <span class="w-max inline-block rounded-full px-3 py-1 text-xs text-white"
-        :class="getTagColor"
-      >{{
-        muslimCategory
-      }}</span>
+        <span
+          v-if="foodCategory.length > 0"
+          class="w-max bg-brown inline-block rounded-full px-3 py-1 text-xs text-white"
+          >{{ foodCategory }}</span
+        >
+        <span
+          class="w-max inline-block rounded-full px-3 py-1 text-xs text-white"
+          :class="getTagColor"
+          >{{ muslimFriendly }}</span
+        >
       </article>
-        <img
-          src="../../assets/icon/bookmark@0.75x.png"
-          class="object-contain justify-items-end ml-auto cursor-pointer mr-2"
-          alt="bookmark icon"
-        />
+      <img
+        src="../../assets/icon/bookmark@0.75x.png"
+        class="object-contain justify-items-end ml-auto cursor-pointer mr-2"
+        alt="bookmark icon"
+      />
     </section>
   </div>
 </template>
@@ -48,24 +50,24 @@ export default {
     'hits',
     'reviewCounts',
     'foodCategory',
-    'muslimCategory'
+    'muslimFriendly'
   ],
   data() {
     return {
       imgsrc: this.imgpath,
-      tagColor: 1,
+      tagColor: 1
     };
   },
   computed: {
     getTagColor() {
-      if (this.tagColor === 1) return "tag-color-1";
-      else if (this.tagColor === 2) return "tag-color-2";
-      else if (this.tagColor === 3) return "tag-color-3";
-      else return "tag-color-4";
+      if (this.tagColor === 1) return 'tag-color-1';
+      else if (this.tagColor === 2) return 'tag-color-2';
+      else if (this.tagColor === 3) return 'tag-color-3';
+      else return 'tag-color-4';
     }
   },
   created() {
-    switch(this.muslimCategory){
+    switch (this.muslimFriendly) {
       case '무슬림 자가 인증':
         this.tagColor = 2;
         break;
@@ -96,16 +98,15 @@ export default {
 }
 
 .tag-color-1 {
-  background-color: #3D1F5D;
+  background-color: #3d1f5d;
 }
 .tag-color-2 {
-  background-color: #3A9CFF;
+  background-color: #3a9cff;
 }
 .tag-color-3 {
-  background-color: #FF4900;
+  background-color: #ff4900;
 }
 .tag-color-4 {
-  background-color: #FF9400;
+  background-color: #ff9400;
 }
-
 </style>
