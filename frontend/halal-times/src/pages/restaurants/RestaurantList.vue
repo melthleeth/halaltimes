@@ -13,7 +13,7 @@
           class="mx-auto text-base text-left appearance-none rounded-full w-5/6 pl-10 pr-20 py-4 leading-tight border-3 border-transparent hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:border-gray-200"
           id="search"
           type="text"
-          placeholder="음식점 이름, 태그로 검색하세요 🧕👳‍♂️"
+          placeholder="음식점 이름, 태그로 검색해보세요 🧕👳‍♂️"
           v-model.trim="keyword"
         />
       </article>
@@ -37,7 +37,7 @@
           :hits="restaurant.hits"
           :reviewCounts="restaurant.reviewCounts"
           :foodCategory="restaurant.foodCategory"
-          :muslimCategory="restaurant.muslimCategory"
+          :muslimFriendly="restaurant.muslimFriendly"
         >
         </restaurant-card>
       </div>
@@ -71,12 +71,13 @@ export default {
   computed: {
     filteredRestaurants() {
       let restaurants = this.$store.getters['restaurants/restaurants'];
-      
+      console.log(restaurants);
+
       if (this.keyword !== "") {
         restaurants = restaurants.filter((restaurantItem) => {
           if (restaurantItem.restaurantName.includes(this.keyword)) return true;
           if (restaurantItem.foodCategory.includes(this.keyword)) return true;
-          if (restaurantItem.muslimCategory.includes(this.keyword)) return true;
+          if (restaurantItem.muslimFriendly.includes(this.keyword)) return true;
           return false;
         });
       }
@@ -86,7 +87,7 @@ export default {
     }
   },
   created() {
-    // this.loadRestaurants();
+    this.loadRestaurants();
     this.loadKeyword();
   },
   methods: {

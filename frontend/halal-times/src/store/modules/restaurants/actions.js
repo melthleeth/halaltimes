@@ -6,15 +6,14 @@ export default {
         return;
       }
 
-    const response = await fetch(`${SERVER_URL}/article/all`, {
+    const response = await fetch(`${SERVER_URL}/store/list`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*'
       },
-      method: 'POST',
-      body: JSON.stringify(payload)
+      method: 'GET'
     });
     const responseData = await response.json();
     if (!response.ok) {
@@ -28,10 +27,13 @@ export default {
         restaurantId: responseData[key].id_store,
         imgpath: responseData[key].image,
         restaurantName: responseData[key].store_name,
-        averageScore: responseData[key].average_score,
+        // averageScore: responseData[key].average_score,
+        averageScore: 4.1,
         locationRegion: responseData[key].location_region,
-        hits: responseData[key].hits,
-        reviewCounts: responseData[key].review_counts,
+        // hits: responseData[key].hits,
+        hits: 41,
+        // reviewCounts: responseData[key].review_counts,
+        reviewCounts: 26,
         muslimFriendly: responseData[key].muslim_friendly,
         foodCategory: responseData[key].food_category
       };
