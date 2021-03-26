@@ -1,5 +1,6 @@
 package com.web.bigdata.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,4 +155,19 @@ public class StoreServiceImpl implements StoreService {
 		return false;
 	}
 
+	@Override
+	public int insertImg(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getIdStore(int index) throws Exception {
+		return storeMapper.getIdStore(index);
+	}
+
+	@Override
+	public int insertImgUrl(Map<String, Object> map) throws Exception {
+		return storeMapper.insertImgUrl(map);
+	}
 }

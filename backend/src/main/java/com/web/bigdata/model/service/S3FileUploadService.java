@@ -162,7 +162,7 @@ public class S3FileUploadService {
 		}
 	}
 
-	private void uploadOnS3(final String findName, final File file) {
+	public void uploadOnS3(final String findName, final File file) {
 		// AWS S3 전송 객체 생성
 		final TransferManager transferManager = new TransferManager(this.amazonS3Client);
 		// 요청 객체 생성
@@ -178,4 +178,5 @@ public class S3FileUploadService {
 			e.printStackTrace();
 		}
 	}
+	
 }
