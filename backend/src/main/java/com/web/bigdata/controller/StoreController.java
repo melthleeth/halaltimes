@@ -325,7 +325,7 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
-	@ApiOperation(value = "이미지 삽입", notes = "S3에 이미지를 저장 하고 store 테이블에 이미지url 삽입 ", response = HashMap.class)
+	@ApiOperation(value = "이미지 삽입", notes = "S3에 이미지를 저장 하고 store 테이블에 이미지url 삽입 - 1회용", response = HashMap.class)
 	@PutMapping("/insertImg")
 	public ResponseEntity<Map<String, Object>> insertImg() throws Exception {
 		logger.info("insertImg - 호출");
@@ -334,9 +334,10 @@ public class StoreController {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 
-		for(int index=0; index<3; index++) {
+		for(int index=0; index<347; index++) {
 			String id_store = storeService.getIdStore(index);
-			String path = "C:\\Users\\yhs\\Desktop\\싸피\\2학기\\특화 플젝\\imgtest";
+//			System.out.println(id_store);
+			String path = "C:\\Users\\yhs\\Desktop\\싸피\\2학기\\특화 플젝\\image";
 			path = path + "\\"+index;
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -353,8 +354,9 @@ public class StoreController {
 				final String origName = imgName.substring(path.length()+1,imgName.length());
 				map.put("id_store", id_store);
 				map.put("origName", origName);
-				map.put("saveFileName", saveFileName);
-				storeService.insertImgUrl(map);
+				map.put("saveFileName", "https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/"+saveFileName);
+//				System.out.println(map);
+//				storeService.insertImgUrl(map);
 			}
 		}
 		
