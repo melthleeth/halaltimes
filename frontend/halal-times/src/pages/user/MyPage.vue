@@ -11,7 +11,7 @@
           class="mt-1 mx-5 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md my-3"
         >
           <div class="space-y-1 my-10 mx-10 text-center">
-             <svg
+            <svg
               class="mx-auto h-12 w-12 text-gray-400"
               stroke="currentColor"
               fill="none"
@@ -122,11 +122,14 @@ export default {
       user: {},
       bookmarks: {},
       reviews: {},
+      //
+      isLoading: false,
+      userInfo: null
     };
   },
   components: {
     ReviewDesign,
-    BookmarkDesign,
+    BookmarkDesign
   },
   computed: {
     currDate() {
@@ -135,16 +138,17 @@ export default {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric',
+        day: 'numeric'
       };
       return event.toLocaleDateString(undefined, options);
     },
-    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole']),
+    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole'])
   },
   created() {
+    this.loadMyInfo();
     const params = new URLSearchParams();
     params.append('email', this.getUserEmail);
-    axios.get(`${SERVER_URL}/user`, { params }).then((response) => {
+    axios.get(`${SERVER_URL}/user`, { params }).then(response => {
       console.log(response);
       //   this.user = null;
       this.user = response.data.info;
@@ -167,14 +171,28 @@ export default {
     //   });
   },
   methods: {
-    addProfile: function (input) {
+    //
+    async loadMyInfo(refresh = true) {
+      this.isLoading = true;
+      console.log('loadMyInfo 메소드 들어옴');
+      try {
+        await this.$store.dispatch('account/loadMyInfo', {
+          forceRefresh: refresh
+        });
+      } catch (error) {
+        this.error =
+          error.message || '내 정보를 불러오는데 문제가 발생했습니다.';
+      }
+      this.isLoading = false;
+    },
+    addProfile: function(input) {
       if (input.target.files[0]) {
         if (this.user.profile_image) {
           const params = new URLSearchParams();
           params.append('email', this.user.email);
           axios
             .get(`${SERVER_URL}/user/profilepic/delete`, { params })
-            .then((response) => {
+            .then(response => {
               console.log(response);
             });
           // .catch((err) => {
@@ -191,27 +209,27 @@ export default {
         axios
           .post(`${SERVER_URL}/user/profilepic/upload`, frm, {
             headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+              'Content-Type': 'multipart/form-data'
+            }
           })
-          .then((response) => {
+          .then(response => {
             console.log(response);
             alert('프로필 업로드 완료');
             const params = new URLSearchParams();
             params.append('email', this.getUserEmail);
             axios
               .get(`${SERVER_URL}/user`, { params })
-              .then((response) => {
+              .then(response => {
                 console.log(response);
                 this.user.profile_image =
                   'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
                   response.data.info.profile_image;
                 console.log('check' + this.user.profile_image);
               })
-              .catch((error) => {
+              .catch(error => {
                 this.$router.push({
                   path: '/Error',
-                  query: { status: error.response.status },
+                  query: { status: error.response.status }
                 });
               });
           });
@@ -230,20 +248,20 @@ export default {
       axios
         .put(`${SERVER_URL}/user/nickname`, {
           email: this.user.email,
-          nickname: this.user.nickname,
+          nickname: this.user.nickname
         })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           //   this.modify = false;
         })
-        .catch((error) => {
+        .catch(error => {
           this.$router.push({
             path: '/Error',
-            query: { status: error.response.status },
+            query: { status: error.response.status }
           });
         });
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
