@@ -11,7 +11,7 @@
           class="mt-1 mx-5 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md my-3"
         >
           <div class="space-y-1 my-10 mx-10 text-center">
-            <!-- <svg
+             <svg
               class="mx-auto h-12 w-12 text-gray-400"
               stroke="currentColor"
               fill="none"
@@ -24,14 +24,14 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
-            </svg> -->
-            <img
+            </svg>
+            <!-- <img
               id="blah"
               :src="user.profile_image"
               onerror=""
               alt="프로필 이미지"
             />
-            <!-- <input id="pic" class="pis" @change="addProfile" type="file" /> -->
+             <input id="pic" class="pis" @change="addProfile" type="file" /> -->
             <div class="flex text-sm text-gray-600">
               <label
                 for="file-upload"
@@ -148,7 +148,7 @@ export default {
       console.log(response);
       //   this.user = null;
       this.user = response.data.info;
-      if (this.user.gender == 0) {
+      if (this.user.gender == 1) {
         this.user.gender = '여성';
       } else {
         this.user.gender = '남성';
