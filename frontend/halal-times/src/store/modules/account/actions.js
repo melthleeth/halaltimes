@@ -67,13 +67,13 @@ export default {
   // 회원가입
   async signupRegister(_, payload) {
     console.log("payload: ", payload)
-    const signupData = {
-      email: payload.email,
-      password: payload.password,
-      nickname: payload.nickname,
-      born_year: payload.born_year,
-      gender: payload.gender,
-    }
+    // const signupData = {
+    //   email: payload.email,
+    //   password: payload.password,
+    //   nickname: payload.nickname,
+    //   born_year: payload.born_year,
+    //   gender: payload.gender,
+    // }
 
     const response = await fetch(`${SERVER_URL}/user`, {
       headers: {
@@ -83,7 +83,7 @@ export default {
         'Access-Control-Allow-Headers': '*',
       },
       method: "POST",
-      body: JSON.stringify(signupData),
+      body: JSON.stringify(payload),
     });
 
     console.log("res: ", response)
