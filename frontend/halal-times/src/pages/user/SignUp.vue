@@ -109,13 +109,11 @@
             >중복 확인</base-button
           >
         </article>
-        <article>
           <span class="checkMessageColor">{{ nicknamemessage }}</span>
           <p class="alertText">
             * 닉네임은 최소 2자, 최대 12자까지 입력이 가능합니다.<br />*
             회원가입 후에도 자유롭게 변경할 수 있습니다.
           </p>
-        </article>
       </section>
       <section class="flex flex-col">
         <article class="form-control">
@@ -156,7 +154,7 @@
       <section class="flex w-full justify-center space-x-1 pt-10">
         
         <input type="checkbox" v-model="checkAgree" required/><label class=""></label>
-        <span>모든
+        <span class="text-sm">모든
         <base-modal></base-modal>
         <span class="underline font-bold">이용약관</span>과
         <base-modal></base-modal>
