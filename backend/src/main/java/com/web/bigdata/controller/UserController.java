@@ -83,7 +83,7 @@ public class UserController {
 		return new ResponseEntity<Boolean>(userService.emailCheck(email), status);
 	}
 
-	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
+	@ApiOperation(value = "닉네임 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
 	@GetMapping("/nameCheck")
 	public ResponseEntity<Boolean> nameCheck(@RequestParam String nickname) {
 		logger.info("nameCheck - 호출");
@@ -98,16 +98,18 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> getInfo(@RequestParam String email, HttpServletRequest req)
 			throws Exception {
 		logger.info("getInfo - 호출");
-
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
 		// 회원 정보 조회
 		try {
 			String id_user = userService.findUserInfo(email).getId_user();
+			System.out.println(id_user);
 			resultMap.put("info", userService.findUserInfo(email));
 			resultMap.put("reviewList", userService.getReviewList(email));
 			resultMap.put("bookmarkList", userService.getBookmarkList(id_user));
+			System.out.println(resultMap.get("reviewList"));
+			System.out.println(resultMap.get("bookmarkList"));
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());

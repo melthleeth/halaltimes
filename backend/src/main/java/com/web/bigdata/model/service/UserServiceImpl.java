@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<BookmarkDto> getBookmarkList(String email) throws SQLException {
-		return userMapper.getBookmarkList(email);
+	public List<BookmarkDto> getBookmarkList(String id_user) throws SQLException {
+		return userMapper.getBookmarkList(id_user);
 	}
 }

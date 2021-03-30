@@ -104,24 +104,25 @@ export default {
       return 'SUCCESS';
     }
   },
-  async loadMyInfo(context, payload) {
-    console.log('loadMyInfo - action 들어옴');
-    if (!payload.forceRefresh && !context.getters.shouldUpdate) {
-      return;
-    }
-    console.log('payload : ' + payload);
-    const response = await fetch(`${SERVER_URL}/user`, {
+  async loadMyInfo(context) {
+    const email = context.rootGetters.getUserEmail;
+    // context : 변수x, 모듈의 상태
+    console.log('email : ' + email);
+    const response = await fetch(`${SERVER_URL}/user?email=${email}`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*'
       },
-
       method: 'GET'
-      // body: JSON.stringify(signupData)
     });
-    console.log('response : ' + response);
+    const responseData = await response.json();
+    console.log(responseData);
+
+    context.commit('setUserInfo', responseData);
+    //커밋 : 뷰엑스에 집어넣음 무조건 뮤테이션
+    //컴퓨티드 무조건 리턴값을 가져야함
     // const myInfos= [];
 
     // for (const key in responseData) {

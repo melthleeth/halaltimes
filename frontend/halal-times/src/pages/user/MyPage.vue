@@ -146,23 +146,24 @@ export default {
   },
   created() {
     this.loadMyInfo();
-    const params = new URLSearchParams();
-    params.append('email', this.getUserEmail);
-    axios.get(`${SERVER_URL}/user`, { params }).then(response => {
-      console.log(response);
-      //   this.user = null;
-      this.user = response.data.info;
-      if (this.user.gender == 1) {
-        this.user.gender = '여성';
-      } else {
-        this.user.gender = '남성';
-      }
-      this.reviews = response.data.reviewList;
-      this.bookmarks = response.data.bookmarkList;
-      this.user.profile_image =
-        'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
-        response.data.info.profile_image;
-    });
+    // const params = new URLSearchParams();
+    // params.append('email', this.getUserEmail);
+    // axios.get(`${SERVER_URL}/user`, { params }).then(response => {
+    //   // console.log(response);
+    //   //   this.user = null;
+    //   this.user = response.data.info;
+    //   if (this.user.gender == 1) {
+    //     this.user.gender = '여성';
+    //   } else {
+    //     this.user.gender = '남성';
+    //   }
+    //   this.reviews = response.data.reviewList;
+    //   this.bookmarks = response.data.bookmarkList;
+    //   this.user.profile_image =
+    //     'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
+    //     response.data.info.profile_image;
+    // });
+
     //   .catch(() => {
     //     this.$router.push({
     //       path: '/Error',
@@ -173,17 +174,28 @@ export default {
   methods: {
     //
     async loadMyInfo(refresh = true) {
+      //비동기
       this.isLoading = true;
-      console.log('loadMyInfo 메소드 들어옴');
       try {
         await this.$store.dispatch('account/loadMyInfo', {
+          // account 는 모듈의 이름. 폴더의 이름이 아니다.
+          // await : 응답을 가져올때 까지 기다림
+          // dispatch : 'account/loadMyInfo' 함수를 불러옴
           forceRefresh: refresh
+          //무쓸모
         });
       } catch (error) {
         this.error =
           error.message || '내 정보를 불러오는데 문제가 발생했습니다.';
       }
       this.isLoading = false;
+      let userInfo = this.$store.getters['account/userInfo'];
+      this.user = userInfo.info;
+      if (this.user.gender == 1) {
+        this.user.gender = '여성';
+      } else {
+        this.user.gender = '남성';
+      }
     },
     addProfile: function(input) {
       if (input.target.files[0]) {
