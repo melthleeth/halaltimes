@@ -3,11 +3,10 @@ import actions from './actions.js';
 import getters from './getters.js';
 
 export default {
-    state() {
-      return {
-      };
-    },
-    mutations,
-    actions,
-    getters,
-  };
+  state() {
+    return {};
+  },
+  mutations,
+  actions,
+  getters
+};
