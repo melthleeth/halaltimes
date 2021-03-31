@@ -9,7 +9,7 @@
       alt="restaurant image"
     />
     <section class="flex items-center mt-2 space-x-2">
-      <span class="font-bold text-xl text-center">{{ restaurantName }}</span>
+      <span class="font-bold text-lg text-center ">{{ restaurantName }}</span>
       <span class="G-market-sans-B color-primary">{{ averageScore }}</span>
     </section>
     <section

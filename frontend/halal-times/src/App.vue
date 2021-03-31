@@ -137,6 +137,10 @@ export default {
   color: #4F8163;
 }
 
+.color-important {
+  color: #FFF58C;
+}
+
 :root {
   --primary-color: #CF4F2E;
   --primary-color-hover: #903720;
