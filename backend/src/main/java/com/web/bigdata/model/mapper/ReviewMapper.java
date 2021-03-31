@@ -80,17 +80,8 @@ public interface ReviewMapper {
 	
 	/** File DB에서 지우기 */
 	public int deleteImage(String id_review_image) throws SQLException;
+	
+	/** 해당 store의 review들 가져오기 */
+	public List<ReviewDto> getStoreReviews(String id_store)throws SQLException;
 
-	// ReviewTempController
-//
-//	/** 임시저장 리뷰 목록 */
-//	public List<ReviewDto> getTempList(ReviewParameterDto reviewParameterDto) throws SQLException;
-//
-//	/** 임시저장 리뷰 수 */
-//	public int getTempCount(String email) throws SQLException;
-//
-//	/** 임시저장 리뷰 작성 */
-//	public int writeTemp(ReviewDto reviewDto) throws SQLException;
-//
-//	public int writeTemptoDB(ReviewDto review) throws SQLException;
 }
