@@ -107,7 +107,7 @@ export default {
   async loadMyInfo(context) {
     const email = context.rootGetters.getUserEmail;
     // context : 변수x, 모듈의 상태
-    console.log('email : ' + email);
+    // console.log('email : ' + email);
     const response = await fetch(`${SERVER_URL}/user?email=${email}`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -118,24 +118,36 @@ export default {
       method: 'GET'
     });
     const responseData = await response.json();
-    console.log(responseData);
-
+    // console.log(responseData);
     context.commit('setUserInfo', responseData);
-    //커밋 : 뷰엑스에 집어넣음 무조건 뮤테이션
-    //컴퓨티드 무조건 리턴값을 가져야함
-    // const myInfos= [];
+    //commit : 뷰엑스에 집어넣음 무조건 뮤테이션
+    //computed : 무조건 리턴값을 가져야함
+  },
 
-    // for (const key in responseData) {
-    //   const myInfo = {
-    //     id_user: responseData[key].id_user,
-    //     email: responseData[key].email,
-    //     profile_image: responseData[key].profile_image,
-    //     password: responseData[key].password,
-    //     nickname: responseData[key].nickname,
-    //     born_year: responseData[key].born_year,
-    //     gender: responseData[key].gender,
-    //   }
-
-    // }
+  // 닉네임 변경
+  async modifyNickname(_, payload) {
+    // _ 없으면 안됨..
+    const modifiedData = {
+      email: payload.email,
+      nickname: payload.nickname
+    };
+    // context : 변수x, 모듈의 상태
+    const response = await fetch(`${SERVER_URL}/user/nickname`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'PUT',
+      body: JSON.stringify(modifiedData)
+    });
+    const responseData = await response.json();
+    console.log('responseData: ' + responseData);
+    if (responseData) {
+      return 'SUCCESS';
+    } else {
+      return 'FAIL';
+    }
   }
 };

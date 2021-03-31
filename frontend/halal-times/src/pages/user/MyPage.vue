@@ -30,8 +30,8 @@
               :src="user.profile_image"
               onerror=""
               alt="프로필 이미지"
-            />
-             <input id="pic" class="pis" @change="addProfile" type="file" /> -->
+            /> 
+            <input id="pic" class="pis" @change="addProfile" type="file" /> -->
             <div class="flex text-sm text-gray-600">
               <label
                 for="file-upload"
@@ -146,43 +146,14 @@ export default {
   },
   created() {
     this.loadMyInfo();
-    // const params = new URLSearchParams();
-    // params.append('email', this.getUserEmail);
-    // axios.get(`${SERVER_URL}/user`, { params }).then(response => {
-    //   // console.log(response);
-    //   //   this.user = null;
-    //   this.user = response.data.info;
-    //   if (this.user.gender == 1) {
-    //     this.user.gender = '여성';
-    //   } else {
-    //     this.user.gender = '남성';
-    //   }
-    //   this.reviews = response.data.reviewList;
-    //   this.bookmarks = response.data.bookmarkList;
-    //   this.user.profile_image =
-    //     'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
-    //     response.data.info.profile_image;
-    // });
-
-    //   .catch(() => {
-    //     this.$router.push({
-    //       path: '/Error',
-    //       query: { status: error.response.status },
-    //     });
-    //   });
   },
   methods: {
-    //
     async loadMyInfo(refresh = true) {
       //비동기
       this.isLoading = true;
       try {
         await this.$store.dispatch('account/loadMyInfo', {
-          // account 는 모듈의 이름. 폴더의 이름이 아니다.
-          // await : 응답을 가져올때 까지 기다림
-          // dispatch : 'account/loadMyInfo' 함수를 불러옴
           forceRefresh: refresh
-          //무쓸모
         });
       } catch (error) {
         this.error =
@@ -196,6 +167,11 @@ export default {
       } else {
         this.user.gender = '남성';
       }
+      this.user.profile_image =
+        'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
+        this.user.profile_image;
+      this.reviews = userInfo.reviewList;
+      this.bookmarks = userInfo.bookmarkList;
     },
     addProfile: function(input) {
       if (input.target.files[0]) {
@@ -207,12 +183,6 @@ export default {
             .then(response => {
               console.log(response);
             });
-          // .catch((err) => {
-          //   this.$router.push({
-          //     path: '/Error',
-          //     query: { status: error.response.status },
-          //   });
-          // });
         }
         var frm = new FormData();
         var photoFile = input.target.files[0];
@@ -245,33 +215,46 @@ export default {
                 });
               });
           });
-        // .catch((error) => {
-        //   this.$router.push({
-        //     path: '/Error',
-        //     query: { status: error.response.status },
-        //   });
-        // });
       }
     },
-    // showmodifyForm: function() {
-    //   //   this.modify = true;
-    // },
-    modifyNickname() {
-      axios
-        .put(`${SERVER_URL}/user/nickname`, {
-          email: this.user.email,
-          nickname: this.user.nickname
-        })
-        .then(response => {
-          console.log(response);
-          //   this.modify = false;
-        })
-        .catch(error => {
-          this.$router.push({
-            path: '/Error',
-            query: { status: error.response.status }
-          });
-        });
+    async modifyNickname() {
+      let nicknameCheck;
+      try {
+        nicknameCheck = await this.$store.dispatch(
+          'account/nicknameCheck',
+          this.user.nickname
+          // account 는 모듈의 이름. 폴더의 이름이 아니다.
+          // await : 응답을 가져올때 까지 기다림
+          // dispatch : 'account/nicknameCheck' 함수를 불러옴
+        );
+      } catch (error) {
+        this.error =
+          error.message || '닉네임 중복 확인하는데 문제가 발생했습니다.';
+      }
+
+      if (nicknameCheck == 'FAIL') {
+        alert('중복된 닉네임입니다.');
+      } else {
+        let result;
+        try {
+          const modifiedData = {
+            nickname: this.user.nickname,
+            email: this.user.email
+          };
+          result = await this.$store.dispatch(
+            'account/modifyNickname',
+            modifiedData
+          );
+        } catch (error) {
+          this.error =
+            error.message || '닉네임을 변경하는데 문제가 발생했습니다.';
+        }
+        if (result == 'SUCCESS') {
+          alert('닉네임 변경 완료');
+        } else {
+          alert('닉네임 변경 실패!');
+        }
+      }
     }
   }
 };

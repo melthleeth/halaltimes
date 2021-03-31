@@ -7,7 +7,7 @@
       <div class="flex flex-row text-xs">{{ value.score }}</div>
       <div class="flex flex-row text-xs mx-5">|</div>
       <div class="flex flex-row text-xs">{{ value.address }}</div>
-    </div>    
+    </div>
   </div>
 </template>
 <script>
@@ -19,13 +19,13 @@ export default {
   props: {
     value: {
       type: Object,
-      default: () => ({}),
-    },
+      default: () => ({})
+    }
   },
   methods: {
     goDetail() {
       this.$router.push('/store/' + this.value.id_bookmark);
-    },
+    }
   },
   computed: {
     imgSrc1: function() {
@@ -33,8 +33,8 @@ export default {
         'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
         this.value.thumb_image;
       return src;
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
