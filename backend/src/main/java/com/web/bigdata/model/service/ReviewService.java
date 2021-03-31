@@ -70,6 +70,9 @@ public interface ReviewService {
 	/** File DB에서 지우기 */
 	public boolean deleteImage(String id_review_image) throws Exception;
 
+	/** 해당 store의 review들 가져오기 */
+	public List<ReviewDto> getStoreReviews(String id_store) throws Exception;
+
 	// PostTempController
 
 //	/** 임시저장 리뷰 목록 */
