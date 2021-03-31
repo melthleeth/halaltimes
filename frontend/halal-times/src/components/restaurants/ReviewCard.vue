@@ -1,6 +1,6 @@
 <template>
   <div
-    class="G-market-sans font-color-black-400 bg-white card-corner border-line-full my-3 p-4 pt-2 transition duration-200 ease-in-out transform hover:scale-105"
+    class="G-market-sans font-color-black-400 bg-white card-corner border-line-full my-3 p-4 pt-2"
   >
     <section id="user-info" class="flex items-center">
       <img
@@ -29,8 +29,21 @@
           >
         </div>
       </article>
-        <article class="justify-self-end text-sm">
-      <base-button>추천 {{ likeCnt }}</base-button>
+      <article class="flex ml-auto justify-self-end text-sm">
+        <div
+          class="btn-like flex items-center justify-center cursor-pointer transition duration-100 ease-in-out transform hover:scale-105"
+          :class="{ liked: liked }"
+          @click="isLiked"
+        >
+          <img
+            src="@/assets/icon/like@0.75x.png"
+            alt="like icon"
+            class="object-contain w-5 h-5"
+          />
+          <span class="G-market-sans-B text-xs ml-2 mt-1">
+            {{ likeCount }}
+          </span>
+        </div>
       </article>
     </section>
     <section id="user-review" class="flex">
@@ -52,17 +65,27 @@ export default {
   ],
   data() {
     return {
-      ratingWidth: null
+      ratingWidth: null,
+      liked: false,
+      likeCount: null,
     };
   },
   computed: {
     ratingToPercent() {
-    //   const score = +this.score * 0.2;
-    const score = +this.score * 20;
-    return score + 1.5;
+      //   const score = +this.score * 0.2;
+      const score = +this.score * 20;
+      return score + 1.5;
     }
   },
+  created() {
+      this.likeCount = this.likeCnt;
+  },
   methods: {
+      isLiked() {
+          this.liked = !this.liked;
+          if (this.liked) this.likeCount += 1;
+          else this.likeCount -= 1;
+      }
   }
 };
 </script>
@@ -71,8 +94,20 @@ export default {
   border-radius: 0 0 30px 0;
 }
 
+.btn-like {
+    width: 5.25rem;
+    color: #293644;
+    background-color: #E1EEDF;
+    border-radius: 50px;
+    padding: 0.5rem 0.875rem;
+}
+
+.liked {
+    background-color: #96CF90;
+}
+
 .star-ratings {
-  color: #aaa9a9;
+  color: #aaa9a9; 
   position: relative;
   unicode-bidi: bidi-override;
   width: max-content;
