@@ -62,5 +62,14 @@ public interface UserMapper {
 	public List<ReviewDto> getReviewList(String email) throws SQLException;
 
 	public List<BookmarkDto> getBookmarkList(String id_user) throws SQLException;
+	
+	/** id_store에 해당하는 store_name 가져오기*/
+	public String getStoreNameByIdStore(String id_store) throws SQLException;
+	
+	/** id_store에 해당하는 store_name 가져오기*/
+	public String getStoreAvgScore(String id_store) throws SQLException;
+	
+	/** id_store에 해당하는 store_name 가져오기*/
+	public String getStoreAddress(String id_store) throws SQLException;
 
 }

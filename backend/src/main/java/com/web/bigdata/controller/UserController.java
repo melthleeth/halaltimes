@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.service.UserService;
 import com.web.bigdata.model.service.S3FileUploadService;
@@ -104,12 +105,17 @@ public class UserController {
 		// 회원 정보 조회
 		try {
 			String id_user = userService.findUserInfo(email).getId_user();
-			System.out.println(id_user);
 			resultMap.put("info", userService.findUserInfo(email));
 			resultMap.put("reviewList", userService.getReviewList(email));
-			resultMap.put("bookmarkList", userService.getBookmarkList(id_user));
-			System.out.println(resultMap.get("reviewList"));
-			System.out.println(resultMap.get("bookmarkList"));
+			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
+			for(BookmarkDto bookmark : bookmarkList) {
+				bookmark.setStore_name(userService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(userService.getStoreAvgScore(bookmark.getId_store()));
+				score = Math.round(score*100)/100.0;
+				bookmark.setScore(score+"");
+				bookmark.setAddress(userService.getStoreAddress(bookmark.getId_store()));
+			}
+			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -119,7 +125,7 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "별명 수정", notes = "회원의 별명을 수정한다.", response = Boolean.class)
+	@ApiOperation(value = "닉네임 수정", notes = "회원의 닉네임을 수정한다.", response = Boolean.class)
 	@PutMapping("/nickname")
 	public ResponseEntity<Boolean> modifyNickname(@RequestBody Map<String, String> map) {
 		logger.info("modifyNickname - 호출");
