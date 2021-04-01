@@ -57,7 +57,13 @@ public class StoreController {
 		storeParameterDto.setSortBy(sortBy);
 		logger.info("getList - 호출, " + storeParameterDto);
 		List<StoreDto> storeList = storeService.getList(storeParameterDto);
-		return new ResponseEntity<List<StoreDto>>(storeService.getList(storeParameterDto), HttpStatus.OK);
+		
+		for(StoreDto store : storeList) {
+//			System.out.println(store.getId_store());
+			store.setReviews(reviewService.getReviewCount(store.getId_store()));
+		}
+		
+		return new ResponseEntity<List<StoreDto>>(storeList, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "해당 숫자의 순서의 Store", notes = "해당 게시글의 정보 반환한다.", response = List.class)
@@ -85,8 +91,8 @@ public class StoreController {
 			
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
+			System.out.println(storeDto);
 			resultMap.put("storeInfo", storeDto);
-			System.out.println(resultMap);
 			
 			// like(bookmark) 했는지 확인
 			likeCheckMap.put("email", email);
@@ -101,7 +107,6 @@ public class StoreController {
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
-			System.out.println(resultMap);
 			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
 			resultMap.put("reviewList", reviewList);

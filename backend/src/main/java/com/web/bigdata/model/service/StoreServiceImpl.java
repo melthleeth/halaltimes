@@ -175,4 +175,5 @@ public class StoreServiceImpl implements StoreService {
 	public int hitsUp(String id_store) throws Exception {
 		return storeMapper.hitsUp(id_store);
 	}
+	
 }

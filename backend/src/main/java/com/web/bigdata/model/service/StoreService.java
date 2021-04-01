@@ -90,4 +90,5 @@ public interface StoreService {
 
 	/** store 클릭시 조회수 증가 */
 	public int hitsUp(String id_store) throws Exception;
+	
 }

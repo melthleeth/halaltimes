@@ -84,4 +84,7 @@ public interface ReviewMapper {
 	/** 해당 store의 review들 가져오기 */
 	public List<ReviewDto> getStoreReviews(String id_store)throws SQLException;
 
+	/** 해당 store의 review 갯수 가져오기 */
+	public int getReviewCount(String id_store)throws SQLException;
+
 }

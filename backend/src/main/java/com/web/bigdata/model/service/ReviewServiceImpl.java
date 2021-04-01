@@ -151,4 +151,9 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewDto> getStoreReviews(String id_store) throws Exception {
 		return reviewMapper.getStoreReviews(id_store);
 	}
+
+	@Override
+	public int getReviewCount(String id_store) throws Exception {
+		return reviewMapper.getReviewCount(id_store);
+	}
 }
