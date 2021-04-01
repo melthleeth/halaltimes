@@ -5,7 +5,7 @@ import authModule from './modules/auth/index.js';
 import restaurantModule from './modules/restaurants/index.js';
 import accountModule from './modules/account/index.js';
 
-const SERVER_URL = process.env.VUE_APP_SERVER_URL;
+// const SERVER_URL = process.env.VUE_APP_SERVER_URL;
 
 const store = createStore({
   modules: {
