@@ -35,7 +35,6 @@ public class StoreDto {
 	private double averageScore;
 	
 	
-	
 	public void setReviews(int reviews) {
 		this.reviews = reviews;
 	}
@@ -167,7 +166,6 @@ public class StoreDto {
 	public void setAverageScore(double averageScore) {
 		this.averageScore = averageScore;
 	}
-	
 	@Override
 	public String toString() {
 		return "StoreDto [id_store=" + id_store + ", store_name=" + store_name + ", muslim_friendly=" + muslim_friendly

@@ -7,6 +7,7 @@ public class BookmarkDto {
 	private String store_name;
 	private String score;
 	private String address;
+	private int active;
 	
 	
 	public String getScore() {
@@ -27,7 +28,6 @@ public class BookmarkDto {
 	public void setStore_name(String store_name) {
 		this.store_name = store_name;
 	}
-	private int active;
 	
 	public String getId_bookmark() {
 		return id_bookmark;

@@ -102,10 +102,12 @@ public class StoreController {
 			resultMap.put("storeInfo", storeDto);
 			
 			// like(bookmark) 했는지 확인
-			likeCheckMap.put("email", email);
+			String id_user = userService.getIdUser(email);
+			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-
+//			storeDto.setIsBookmarked(bookmark);
+			System.out.println(bookmarkDto);
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
@@ -116,7 +118,6 @@ public class StoreController {
 			}
 			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
-			String id_user = userService.getIdUser(email); 
 			for(ReviewDto review : reviewList) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
@@ -289,14 +290,14 @@ public class StoreController {
 
 	@ApiOperation(value = "식당 북마크", notes = "store_id에 해당하는 식당의 북마크를 토글한다.", response = HashMap.class)
 	@PutMapping("/bookmark")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String id_user) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> resultMap = new HashMap<>();
-
 		try {
+			String id_user = userService.getIdUser(email);
 			map.put("id_store", id_store);
 			map.put("id_user", id_user);
 
