@@ -31,13 +31,16 @@ export default {
         // averageScore: responseData[key].average_score,
         averageScore: 4.1,
         locationRegion: responseData[key].location_region,
-        // hits: responseData[key].hits,
-        hits: 41,
-        // reviewCounts: responseData[key].review_counts,
-        reviewCounts: 26,
-        muslimFriendly: responseData[key].muslim_friendly,
         foodCategory: responseData[key].food_category,
-        address: "",
+        address: responseData[key].address,
+        tel: responseData[key].tel,
+        working_time: responseData[key].working_time,
+        days_closed: responseData[key].days_closed === null ? "없음" : responseData[key].days_closed,
+        parking: responseData[key].parking === "1" ? "가능" : "불가능",
+        hits: responseData[key].hits,
+        // reviews: responseData[key].reviews,
+        reviews: 26,
+        muslimFriendly: responseData[key].muslim_friendly,
       };
       // console.log(key, responseData[key].img_path);
       restaurants.push(restaurant);
@@ -69,6 +72,7 @@ export default {
       const review = {
         id_review: responseData[key].id_review,
         id_user: responseData[key].id_user,
+        nickname: responseData[key].nickname,
         id_store: responseData[key].id_store,
         store_name: responseData[key].store_name,
         score: +responseData[key].score,

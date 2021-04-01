@@ -1,5 +1,5 @@
 <template>
-  <div id="map" class="map"></div>
+  <div id="map" class="map border-line-full"></div>
 </template>
 <script>
 export default {
@@ -8,20 +8,32 @@ export default {
       type: Object,
       default: () => {
         return {
-          store_name: "어쨌든 한식 식당임",
-          food_category: "한식",
+          store_name: '어쨌든 한식 식당임',
+          food_category: '한식',
           lat: 37.5477,
-          lng: 126.9229,
+          lng: 126.9229
         };
-      },
-    },
+      }
+    }
   },
   data() {
     return {};
   },
+  mounted() {
+    window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
+  },
+  updated() {
+    // this.initMap();
+  },
   methods: {
+    addScript() {
+      const script = document.createElement('script');
+      script.onload = () => kakao.maps.load(this.initMap);
+      script.src = `http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_API_KEY}`;
+      document.head.appendChild(script);
+    },
     initMap() {
-      var mapContainer = document.getElementById("map");
+      var mapContainer = document.getElementById('map');
 
       // var markerImageSrcs = [
       //   require("@/assets/map/marker/western_marker.png"),
@@ -41,7 +53,7 @@ export default {
       console.log(this.storeInfo, initLat, initLng);
       var mapOption = {
         center: new kakao.maps.LatLng(initLat, initLng),
-        level: 3,
+        level: 3
       };
 
       var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -62,32 +74,18 @@ export default {
       // );
 
       var marker = new kakao.maps.Marker({
-        position: markerPosition,
+        position: markerPosition
         // image: markerImage,
       });
 
       marker.setMap(map);
-    },
-  },
-  mounted() {
-    if (window.kakao && window.kakao.maps) {
-      this.initMap();
-    } else {
-      const script = document.createElement("script");
-      script.onload = () => kakao.maps.load(this.initMap);
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=2fe1212d76cf65fda0093720e74185d0";
-      document.head.appendChild(script);
     }
-  },
-  updated() {
-    this.initMap();
-  },
+  }
 };
 </script>
 <style scoped>
 .map {
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 16rem;
 }
 </style>

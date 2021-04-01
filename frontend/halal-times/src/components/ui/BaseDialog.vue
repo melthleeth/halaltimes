@@ -56,6 +56,11 @@ dialog {
   align-items: center;
 }
 
+.width-wide {
+  width: 40rem;
+  left: calc(50% - 20rem);
+}
+
 .modal-enter-active {
   animation: modal 0.3s ease-out;
 }

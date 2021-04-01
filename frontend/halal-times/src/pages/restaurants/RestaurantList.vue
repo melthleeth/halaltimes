@@ -33,9 +33,9 @@
           :imgpath="restaurant.imgpath"
           :restaurantName="restaurant.restaurantName"
           :averageScore="restaurant.averageScore"
-          :locationRegion="restaurant.locationRegion"
+          :address="restaurant.address"
           :hits="restaurant.hits"
-          :reviewCounts="restaurant.reviewCounts"
+          :reviews="restaurant.reviews"
           :foodCategory="restaurant.foodCategory"
           :muslimFriendly="restaurant.muslimFriendly"
         >

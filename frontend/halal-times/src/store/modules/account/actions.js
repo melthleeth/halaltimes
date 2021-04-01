@@ -89,7 +89,7 @@ export default {
         'Access-Control-Allow-Headers': '*'
       },
       method: 'POST',
-      body: JSON.stringify(signupData)
+      body: JSON.stringify(payload)
     });
 
     console.log('res: ', response);
