@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.service.UserService;
 import com.web.bigdata.model.service.S3FileUploadService;
@@ -83,7 +84,7 @@ public class UserController {
 		return new ResponseEntity<Boolean>(userService.emailCheck(email), status);
 	}
 
-	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
+	@ApiOperation(value = "닉네임 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
 	@GetMapping("/nameCheck")
 	public ResponseEntity<Boolean> nameCheck(@RequestParam String nickname) {
 		logger.info("nameCheck - 호출");
@@ -98,7 +99,6 @@ public class UserController {
 	public ResponseEntity<Map<String, Object>> getInfo(@RequestParam String email, HttpServletRequest req)
 			throws Exception {
 		logger.info("getInfo - 호출");
-
 		Map<String, Object> resultMap = new HashMap<>();
 		HttpStatus status = HttpStatus.ACCEPTED;
 
@@ -107,7 +107,15 @@ public class UserController {
 			String id_user = userService.findUserInfo(email).getId_user();
 			resultMap.put("info", userService.findUserInfo(email));
 			resultMap.put("reviewList", userService.getReviewList(email));
-			resultMap.put("bookmarkList", userService.getBookmarkList(id_user));
+			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
+			for(BookmarkDto bookmark : bookmarkList) {
+				bookmark.setStore_name(userService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(userService.getStoreAvgScore(bookmark.getId_store()));
+				score = Math.round(score*100)/100.0;
+				bookmark.setScore(score+"");
+				bookmark.setAddress(userService.getStoreAddress(bookmark.getId_store()));
+			}
+			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
 			resultMap.put("message", e.getMessage());
@@ -117,7 +125,7 @@ public class UserController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
-	@ApiOperation(value = "별명 수정", notes = "회원의 별명을 수정한다.", response = Boolean.class)
+	@ApiOperation(value = "닉네임 수정", notes = "회원의 닉네임을 수정한다.", response = Boolean.class)
 	@PutMapping("/nickname")
 	public ResponseEntity<Boolean> modifyNickname(@RequestBody Map<String, String> map) {
 		logger.info("modifyNickname - 호출");

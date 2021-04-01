@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.bigdata.model.BookmarkDto;
+import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
 import com.web.bigdata.model.service.StoreService;
 
@@ -41,6 +43,9 @@ public class StoreController {
 	
 	@Autowired
 	private StoreService storeService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
@@ -95,26 +100,9 @@ public class StoreController {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
 			System.out.println(resultMap);
-			// store_image 테이블이 필요할듯
-//			List<ImgDto> storeImgs = storeService.getImages(id_store);
-//			for (ImgDto img : storeImgs) {
-//				// 이름에 url 붙여주기
-//				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
-//				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
-//			}
-////			resultMap.put("voteCount", voteService.getVoteCountofPost(postNo));
-//			resultMap.put("fileList", storeImgs);
 			
-
-//			// 투표했었는지 찾기
-//			PostVoteDto voteSearch = new PostVoteDto();
-//			voteSearch.setEmail(email);
-//			voteSearch.setPostNo(postNo);
-//			PostVoteDto voteCheck = voteService.getVoteInfo(voteSearch);
-//			// 투표한 적 있으면 투표한 사진 번호 체크
-//			if(voteCheck != null) {
-//				resultMap.put("votedPicNo", voteCheck.getPicNo());
-//			}
+			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
+			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());

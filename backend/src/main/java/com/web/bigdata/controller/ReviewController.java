@@ -55,7 +55,10 @@ public class ReviewController {
 			@RequestParam(required = false) String sortBy) throws Exception {
 		reviewParameterDto.setSortBy(sortBy);
 		logger.info("getList - 호출, " + reviewParameterDto);
-
+		List<ReviewDto> reviewList = reviewService.getList(reviewParameterDto);
+		for(ReviewDto x : reviewList) {
+			System.out.println(x);
+		}
 		return new ResponseEntity<List<ReviewDto>>(reviewService.getList(reviewParameterDto), HttpStatus.OK);
 	}
 
@@ -67,10 +70,10 @@ public class ReviewController {
 		return new ResponseEntity<ReviewDto>(reviewService.getLikeReview(id_review), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "리뷰 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
+	@ApiOperation(value = "리뷰 상세 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
 	@GetMapping
 	public ResponseEntity<Map<String, Object>> getReviewDetail(@RequestParam String id_review,
-			@RequestParam String email) throws Exception {
+			@RequestParam(required = false) String email) throws Exception {
 		logger.info("getOne - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -80,6 +83,7 @@ public class ReviewController {
 		try {
 			// 리뷰 정보
 			ReviewDto reviewDto = reviewService.getDetail(id_review);
+			System.out.println("reviewDto : " + reviewDto);
 			resultMap.put("reviewInfo", reviewDto);
 
 			// like 했는지 확인
@@ -104,18 +108,8 @@ public class ReviewController {
 				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
 				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
 			}
-//			resultMap.put("voteCount", voteService.getVoteCountofPost(ID_REVIEW));
 			resultMap.put("fileList", review_image);
 
-			// 투표했었는지 찾기
-//			ReviewVoteDto voteSearch = new ReviewVoteDto();
-//			voteSearch.setEmail(email);
-//			voteSearch.setID_REVIEW(ID_REVIEW);
-//			ReviewVoteDto voteCheck = voteService.getVoteInfo(voteSearch);
-			// 투표한 적 있으면 투표한 사진 번호 체크
-//			if (voteCheck != null) {
-//				resultMap.put("votedPicNo", voteCheck.getPicNo());
-//			}
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -142,12 +136,6 @@ public class ReviewController {
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
-
-//				// 임시저장했던 리뷰이었다면
-//				if (reviewDto.getID_REVIEW() != -1) {
-//					// postNo 바꿔주기
-//					ID_REVIEW = reviewDto.getID_REVIEW();
-//				}
 
 				// 삭제한 파일이 있다면
 				if (unmodified != null && unmodified.size() > 0) {
@@ -322,47 +310,5 @@ public class ReviewController {
 
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-
-//	@ApiOperation(value = "투표", notes = "리뷰의 이미지 중 하나를 투표한다.", response = HashMap.class)
-//	@PostMapping("/vote")
-//	public ResponseEntity<Map<String, Object>> vote(ReviewVoteDto voteInfo) {
-//		logger.info("vote - 호출, " + voteInfo);
-//		HttpStatus status = HttpStatus.OK;
-//
-//		Map<String, Object> resultMap = new HashMap<>();
-//
-//		try {
-//			// 투표했었는지 찾기
-//			ReviewVoteDto voteCheck = voteService.getVoteInfo(voteInfo);
-//
-//			// 투표 안했었다면
-//			if (voteCheck == null) {
-//				voteService.insertVotePost(voteInfo);
-//			}
-//			// 투표 했었다면
-//			else {
-//				voteInfo.setvNo(voteCheck.getvNo());
-//				voteService.updateVotePost(voteInfo);
-//			}
-//
-//			List<ImgDto> imgList = reviewService.getImages(voteInfo.getID_REVIEW());
-//			for (ImgDto img : imgList) {
-//				// 이름에 url 붙여주기
-//				img.setModPicName(s3FileUploadService.getDefaultUrl() + img.getModPicName());
-//				img.setThumbnail(s3FileUploadService.getDefaultUrl() + img.getThumbnail());
-//			}
-//
-//			resultMap.put("voteCount", voteService.getVoteCountofPost(voteInfo.getID_REVIEW()));
-//			resultMap.put("fileList", imgList);
-//
-//			status = HttpStatus.OK;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			resultMap.put("message", e.getMessage());
-//			status = HttpStatus.INTERNAL_SERVER_ERROR;
-//		}
-//
-//		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-//	}
 
 }

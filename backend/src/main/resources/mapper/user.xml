@@ -117,7 +117,8 @@
 		using(id_user)
 		where email = #{email} and r.active = 1
 	</select>
-	
+
+<!--	
 	<select id="getBookmarkList" parameterType="string" resultType="BookmarkDto">
 		select  id_store, id_bookmark,
 			(
@@ -140,6 +141,31 @@
 		from bookmark b join user
 		using(id_user)
 		where id_user = #{id_user} and b.active = 1;
+	</select> -->
+	
+	<select id="getBookmarkList" parameterType="string" resultType="BookmarkDto">
+		select  id_store, id_bookmark,id_user
+		from bookmark b join user
+		using(id_user)
+		where id_user = #{id_user} and b.active = 1;
+	</select>
+	
+	<select id="getStoreNameByIdStore" parameterType="string" resultType="string">
+		select store_name
+		from store
+		where id_store = #{id_store} and active = 1;
+	</select>
+	
+	<select id="getStoreAvgScore" parameterType="string" resultType="string">
+		select avg(score)
+		from review
+		where id_store = #{id_store} and active = 1;
+	</select>
+	
+	<select id="getStoreAddress" parameterType="string" resultType="string">
+		select address
+		from store
+		where id_store = #{id_store} and active = 1;
 	</select>
 	
 </mapper>

@@ -14,12 +14,19 @@ public class ReviewDto {
 	private String upload_date;
 	private String update_date;
 	private int likeCnt;
-//	private int temp;
 	private List<MultipartFile> files;
 	private List<String> unmodified;
 	private String thumbnail;
-//	private String THUMBNAILTwo;
-//	private int commentCnt;
+	
+	private String nickname;
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
 
 	public List<String> getUnmodified() {
 		return unmodified;
@@ -119,34 +126,9 @@ public class ReviewDto {
 
 	@Override
 	public String toString() {
-		return "ReviewDto [id_review=" + id_review + ", id_user=" + id_user + ", id_store=" + id_store + ", score="
-				+ score + ", content=" + content + ", upload_date=" + upload_date + ", update_date=" + update_date
-				+ ", likeCnt=" + likeCnt + ", files=" + files + ", unmodified=" + unmodified + ", thumbnail="
-				+ thumbnail + "]";
+		return "ReviewDto [id_review=" + id_review + ", id_user=" + id_user + ", id_store=" + id_store + ", store_name="
+				+ store_name + ", score=" + score + ", content=" + content + ", upload_date=" + upload_date
+				+ ", update_date=" + update_date + ", likeCnt=" + likeCnt + ", files=" + files + ", unmodified="
+				+ unmodified + ", thumbnail=" + thumbnail + ", nickname=" + nickname + "]";
 	}
-
-//	public int getTemp() {
-//		return temp;
-//	}
-//
-//	public void setTemp(int temp) {
-//		this.temp = temp;
-//	}
-
-//	public String getThumbnailTwo() {
-//		return thumbnailTwo;
-//	}
-//
-//	public void setThumbnailTwo(String thumbnailTwo) {
-//		this.thumbnailTwo = thumbnailTwo;
-//	}
-
-//	public int getCommentCnt() {
-//		return commentCnt;
-//	}
-//
-//	public void setCommentCnt(int commentCnt) {
-//		this.commentCnt = commentCnt;
-//	}
-
 }
