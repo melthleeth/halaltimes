@@ -5,4 +5,7 @@ export default {
     keyword(state) {
         return state.keyword;
     },
+    reviews(state) {
+        return state.reviews;
+    },
 };

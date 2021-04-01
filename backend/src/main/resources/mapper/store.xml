@@ -8,7 +8,7 @@
 	<select id="getList" parameterType="map" resultType="StoreDto">
 		select id_store, store_name, muslim_friendly, location_region,
 			food_category, address, tel, working_time, days_closed, parking,
-			image, thumb_image, lat, lng, active
+			image, thumb_image, lat, lng, hits, active
 		from store
 		where active = 1
 	</select>
@@ -70,7 +70,12 @@
 	</select>
 	
 	<select id="getDetail" parameterType="String" resultType="StoreDto">
-		select p.*
+		select p.*,
+		(
+			select count(*) 
+			from review
+			where id_store = #{id_store}
+		) as reviews
 		from store p
 		where id_store = #{id_store} and active = 1
 	</select>
@@ -195,4 +200,12 @@
 		insert into store_image(id_store, original_image, modified_image)
 		values (#{id_store}, #{origName}, #{saveFileName})
 	</insert>
+	
+	<update id="hitsUp" parameterType="String">
+		update store
+		set hits = hits+1
+		where id_store = #{id_store}
+	</update>
+	
+	
 </mapper>

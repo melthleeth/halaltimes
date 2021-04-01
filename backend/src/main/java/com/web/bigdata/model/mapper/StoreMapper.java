@@ -84,6 +84,9 @@ public interface StoreMapper {
 	public String getIdStore(int index) throws Exception;	
 	
 	/** 임시저장글 작성 */
-	public int insertImgUrl(Map<String, Object> map) throws Exception;	
+	public int insertImgUrl(Map<String, Object> map) throws Exception;
+
+	/** store 클릭시 조회수 증가 */
+	public int hitsUp(String id_store) throws Exception;	
 	
 }

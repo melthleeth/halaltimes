@@ -90,7 +90,7 @@
 	</select>
 	
 	<select id="getCount" resultType="int">
-		select count(id_review)
+		select count(*)
 		from review
 		where active = 1
 	</select>
@@ -235,6 +235,12 @@
  		from review as r
  		join store using(id_store)
  		where id_store = #{id_store} and r.active = 1
+ 	</select>
+ 	
+ 	<select id="getReviewCount" parameterType="string" resultType="int">
+ 		select count(*)
+		from review
+		where id_store = #{id_store} and active = 1
  	</select>
 	
 </mapper>

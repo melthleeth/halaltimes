@@ -72,14 +72,14 @@ export default {
 
   // 회원가입
   async signupRegister(_, payload) {
-    console.log('payload: ', payload);
-    const signupData = {
-      email: payload.email,
-      password: payload.password,
-      nickname: payload.nickname,
-      born_year: payload.born_year,
-      gender: payload.gender
-    };
+    console.log("payload: ", payload)
+    // const signupData = {
+    //   email: payload.email,
+    //   password: payload.password,
+    //   nickname: payload.nickname,
+    //   born_year: payload.born_year,
+    //   gender: payload.gender,
+    // }
 
     const response = await fetch(`${SERVER_URL}/user`, {
       headers: {
