@@ -118,31 +118,6 @@
 		where email = #{email} and r.active = 1
 	</select>
 
-<!--	
-	<select id="getBookmarkList" parameterType="string" resultType="BookmarkDto">
-		select  id_store, id_bookmark,
-			(
-				select store_name
-				from store join bookmark r
-				using(id_store)
-				where id_user = #{id_user} and r.active = 1
-			) as store_name,
-			(
-				select avg(score)
-				from review r2 join store s
-				where s.id_store = r2.id_store and r2.active = 1
-			) as score,
-			(
-				select address
-				from store join bookmark r
-				using(id_store)
-				where id_user = #{id_user} and r.active = 1
-			) as address							
-		from bookmark b join user
-		using(id_user)
-		where id_user = #{id_user} and b.active = 1;
-	</select> -->
-	
 	<select id="getBookmarkList" parameterType="string" resultType="BookmarkDto">
 		select  id_store, id_bookmark,id_user
 		from bookmark b join user
@@ -150,22 +125,10 @@
 		where id_user = #{id_user} and b.active = 1;
 	</select>
 	
-	<select id="getStoreNameByIdStore" parameterType="string" resultType="string">
-		select store_name
-		from store
-		where id_store = #{id_store} and active = 1;
-	</select>
-	
-	<select id="getStoreAvgScore" parameterType="string" resultType="string">
-		select avg(score)
-		from review
-		where id_store = #{id_store} and active = 1;
-	</select>
-	
-	<select id="getStoreAddress" parameterType="string" resultType="string">
-		select address
-		from store
-		where id_store = #{id_store} and active = 1;
+	<select id="getIdUser" parameterType="string" resultType="string">
+		select id_user
+		from user
+		where email = #{email} and active = 1;
 	</select>
 	
 </mapper>

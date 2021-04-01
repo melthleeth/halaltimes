@@ -207,5 +207,23 @@
 		where id_store = #{id_store}
 	</update>
 	
+	<select id="getStoreNameByIdStore" parameterType="string" resultType="string">
+		select store_name
+		from store
+		where id_store = #{id_store} and active = 1;
+	</select>
+	
+	<select id="getStoreAvgScore" parameterType="string" resultType="string">
+		select avg(score)
+		from review
+		where id_store = #{id_store} and active = 1;
+	</select>
+	
+	<select id="getStoreAddress" parameterType="string" resultType="string">
+		select address
+		from store
+		where id_store = #{id_store} and active = 1;
+	</select>
+	
 	
 </mapper>

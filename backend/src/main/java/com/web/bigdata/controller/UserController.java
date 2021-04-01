@@ -29,6 +29,7 @@ import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.service.UserService;
 import com.web.bigdata.model.service.S3FileUploadService;
+import com.web.bigdata.model.service.StoreService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -42,6 +43,9 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	StoreService storeService;
+	
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
 
@@ -109,11 +113,11 @@ public class UserController {
 			resultMap.put("reviewList", userService.getReviewList(email));
 			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
 			for(BookmarkDto bookmark : bookmarkList) {
-				bookmark.setStore_name(userService.getStoreNameByIdStore(bookmark.getId_store()));
-				double score = Double.parseDouble(userService.getStoreAvgScore(bookmark.getId_store()));
+				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
 				score = Math.round(score*100)/100.0;
 				bookmark.setScore(score+"");
-				bookmark.setAddress(userService.getStoreAddress(bookmark.getId_store()));
+				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
 			}
 			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;

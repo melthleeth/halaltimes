@@ -20,6 +20,9 @@ public class ReviewDto {
 	
 	private String nickname;
 
+	// likeCheck
+	private int likeCheck;
+	
 	public String getNickname() {
 		return nickname;
 	}
@@ -124,11 +127,19 @@ public class ReviewDto {
 		this.thumbnail = thumbnail;
 	}
 
+	public int getLikeCheck() {
+		return likeCheck;
+	}
+
+	public void setLikeCheck(int likeCheck) {
+		this.likeCheck = likeCheck;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewDto [id_review=" + id_review + ", id_user=" + id_user + ", id_store=" + id_store + ", store_name="
 				+ store_name + ", score=" + score + ", content=" + content + ", upload_date=" + upload_date
 				+ ", update_date=" + update_date + ", likeCnt=" + likeCnt + ", files=" + files + ", unmodified="
-				+ unmodified + ", thumbnail=" + thumbnail + ", nickname=" + nickname + "]";
+				+ unmodified + ", thumbnail=" + thumbnail + ", nickname=" + nickname + ", likeCheck=" + likeCheck + "]";
 	}
 }

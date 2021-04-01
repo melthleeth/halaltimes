@@ -28,6 +28,7 @@ import com.web.bigdata.model.StoreParameterDto;
 import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
 import com.web.bigdata.model.service.StoreService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +47,9 @@ public class StoreController {
 	
 	@Autowired
 	private ReviewService reviewService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
@@ -92,6 +96,9 @@ public class StoreController {
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
 			System.out.println(storeDto);
+			double score = Double.parseDouble(storeService.getStoreAvgScore(id_store));
+			score = Math.round(score*100)/100.0;
+			storeDto.setAverageScore(score);
 			resultMap.put("storeInfo", storeDto);
 			
 			// like(bookmark) 했는지 확인
@@ -109,6 +116,13 @@ public class StoreController {
 			}
 			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
+			String id_user = userService.getIdUser(email); 
+			for(ReviewDto review : reviewList) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("id_review", review.getId_review());
+				map.put("id_user",id_user);
+				review.setLikeCheck(reviewService.likeCheck(map));
+			}
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
