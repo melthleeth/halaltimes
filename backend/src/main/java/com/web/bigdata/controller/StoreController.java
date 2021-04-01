@@ -56,7 +56,7 @@ public class StoreController {
 			@RequestParam(required = false) String sortBy) throws Exception {
 		storeParameterDto.setSortBy(sortBy);
 		logger.info("getList - 호출, " + storeParameterDto);
-		
+		List<StoreDto> storeList = storeService.getList(storeParameterDto);
 		return new ResponseEntity<List<StoreDto>>(storeService.getList(storeParameterDto), HttpStatus.OK);
 	}
 	
@@ -80,16 +80,18 @@ public class StoreController {
 		Map<String, Object> likeCheckMap = new HashMap<>();
 
 		try {
+			// 조회수  증가
+			storeService.hitsUp(id_store);
+			
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
 			resultMap.put("storeInfo", storeDto);
 			System.out.println(resultMap);
+			
 			// like(bookmark) 했는지 확인
 			likeCheckMap.put("email", email);
 			likeCheckMap.put("id_store", id_store);
-
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-			System.out.println(bookmarkDto);
 
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {

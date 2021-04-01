@@ -136,7 +136,7 @@ public class ReviewController {
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
-
+				
 				// 삭제한 파일이 있다면
 				if (unmodified != null && unmodified.size() > 0) {
 					deleteFiles(unmodified);
