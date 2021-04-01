@@ -5,4 +5,7 @@ export default {
     setKeyword(state, payload) {
         state.keyword = payload;
     },
+    setReviews(state, payload) {
+        state.reviews = payload;
+    },
 };
