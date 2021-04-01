@@ -176,4 +176,19 @@ public class StoreServiceImpl implements StoreService {
 		return storeMapper.hitsUp(id_store);
 	}
 	
+	@Override
+	public String getStoreNameByIdStore(String id_store) throws Exception {
+		return storeMapper.getStoreNameByIdStore(id_store);
+	}
+
+	@Override
+	public String getStoreAvgScore(String id_store) throws Exception {
+		return storeMapper.getStoreAvgScore(id_store);
+	}
+
+	@Override
+	public String getStoreAddress(String id_store) throws Exception {
+		return storeMapper.getStoreAddress(id_store);
+	}
+	
 }

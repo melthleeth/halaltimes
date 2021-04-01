@@ -132,18 +132,9 @@ public class UserServiceImpl implements UserService {
 		return userMapper.getBookmarkList(id_user);
 	}
 
-	@Override
-	public String getStoreNameByIdStore(String id_store) throws Exception {
-		return userMapper.getStoreNameByIdStore(id_store);
-	}
 
 	@Override
-	public String getStoreAvgScore(String id_store) throws Exception {
-		return userMapper.getStoreAvgScore(id_store);
-	}
-
-	@Override
-	public String getStoreAddress(String id_store) throws Exception {
-		return userMapper.getStoreAddress(id_store);
+	public String getIdUser(String email) throws Exception {
+		return userMapper.getIdUser(email);
 	}
 }

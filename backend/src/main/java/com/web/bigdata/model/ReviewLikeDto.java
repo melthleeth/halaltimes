@@ -1,8 +1,6 @@
 package com.web.bigdata.model;
 
 public class ReviewLikeDto {
-//	private int pmLikeNo;
-//	private int postNo;
 	private String id_review_like;
 	private String id_review;
 	private String id_user;

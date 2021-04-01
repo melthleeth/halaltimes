@@ -31,6 +31,11 @@ public class StoreDto {
 	private int hits;
 	private int reviews;
 	
+	// 평균 평점
+	private double averageScore;
+	
+	
+	
 	public void setReviews(int reviews) {
 		this.reviews = reviews;
 	}
@@ -155,6 +160,14 @@ public class StoreDto {
 	public int getReviews() {
 		return reviews;
 	}
+	
+	public double getAverageScore() {
+		return averageScore;
+	}
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
+	
 	@Override
 	public String toString() {
 		return "StoreDto [id_store=" + id_store + ", store_name=" + store_name + ", muslim_friendly=" + muslim_friendly
@@ -162,8 +175,6 @@ public class StoreDto {
 				+ ", tel=" + tel + ", working_time=" + working_time + ", days_closed=" + days_closed + ", parking="
 				+ parking + ", image=" + image + ", thumb_image=" + thumb_image + ", lat=" + lat + ", lng=" + lng
 				+ ", active=" + active + ", files=" + files + ", unmodified=" + unmodified + ", thumbnail=" + thumbnail
-				+ ", hits=" + hits + ", reviews=" + reviews + "]";
+				+ ", hits=" + hits + ", reviews=" + reviews + ", averageScore=" + averageScore + "]";
 	}
-	
-	
 }

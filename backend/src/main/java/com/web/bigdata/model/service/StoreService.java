@@ -91,4 +91,14 @@ public interface StoreService {
 	/** store 클릭시 조회수 증가 */
 	public int hitsUp(String id_store) throws Exception;
 	
+	/** id_store으로 store_name 가져오기*/
+	public String getStoreNameByIdStore(String id_store) throws Exception;
+	
+	/** 해당 음식점의 평균 평점 가져오기*/
+	public String getStoreAvgScore(String id_store) throws Exception;
+	
+	/** 해당 음식점의 주소 가져오기*/
+	public String getStoreAddress(String id_store) throws Exception;
+
+	
 }

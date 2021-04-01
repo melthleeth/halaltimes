@@ -1,5 +1,6 @@
 package com.web.bigdata.model.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -88,5 +89,14 @@ public interface StoreMapper {
 
 	/** store 클릭시 조회수 증가 */
 	public int hitsUp(String id_store) throws Exception;	
+	
+	/** id_store으로 store_name 가져오기*/
+	public String getStoreNameByIdStore(String id_store) throws SQLException;
+	
+	/** 해당 음식점의 평균 평점 가져오기*/
+	public String getStoreAvgScore(String id_store) throws SQLException;
+	
+	/** 해당 음식점의 주소 가져오기*/
+	public String getStoreAddress(String id_store) throws SQLException;
 	
 }
