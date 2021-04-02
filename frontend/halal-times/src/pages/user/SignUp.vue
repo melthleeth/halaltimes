@@ -109,11 +109,11 @@
             >중복 확인</base-button
           >
         </article>
-          <span class="checkMessageColor">{{ nicknamemessage }}</span>
-          <p class="alertText">
-            * 닉네임은 최소 2자, 최대 12자까지 입력이 가능합니다.<br />*
-            회원가입 후에도 자유롭게 변경할 수 있습니다.
-          </p>
+        <span class="checkMessageColor">{{ nicknamemessage }}</span>
+        <p class="alertText">
+          * 닉네임은 최소 2자, 최대 12자까지 입력이 가능합니다.<br />* 회원가입
+          후에도 자유롭게 변경할 수 있습니다.
+        </p>
       </section>
       <section class="flex flex-col">
         <article class="form-control">
@@ -152,14 +152,17 @@
         <span class="checkMessageColor">{{ passwordconfirmmessage }}</span>
       </section>
       <section class="flex w-full justify-center space-x-1 pt-10">
-        
-        <input type="checkbox" v-model="checkAgree" required/><label class=""></label>
-        <span class="text-sm">모든
-        <base-modal></base-modal>
-        <span class="underline font-bold">이용약관</span>과
-        <base-modal></base-modal>
-        <span class="underline font-bold">개인정보이용정책</span>에 동의합니다.</span>
-        
+        <input type="checkbox" v-model="checkAgree" required /><label
+          class=""
+        ></label>
+        <span class="text-sm"
+          >모든
+          <base-modal></base-modal>
+          <span class="underline font-bold">이용약관</span>과
+          <base-modal></base-modal>
+          <span class="underline font-bold">개인정보이용정책</span>에
+          동의합니다.</span
+        >
       </section>
       <section class="flex w-full justify-center space-x-4 pb-2">
         <!-- v-bind:disabled="registerSignup" -->
@@ -206,7 +209,7 @@ export default {
         alert('인증코드가 전송되었습니다.');
         this.codeAuth = false;
       } else {
-        alert('인증코드 전송을 실패했습니다.');
+        alert('이미 사용중인 이메일입니다.');
         this.codeAuth = true;
       }
     },
@@ -413,5 +416,4 @@ input[type='text']:focus {
 [type='radio']:checked + div {
   background: #4f8163;
 }
-
 </style>
