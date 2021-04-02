@@ -7,6 +7,8 @@ export default {
   state() {
     return {
       keyword: null,
+      bookmarked: '',
+      storeInfo: '',
       restaurants: [
         {
           restaurantId: 1,

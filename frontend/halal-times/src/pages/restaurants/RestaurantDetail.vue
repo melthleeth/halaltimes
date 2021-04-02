@@ -49,7 +49,7 @@
         </article>
       </section>
       <section class="flex flex-col w-5/12 h-auto mx-2">
-        <kakao-map></kakao-map>
+        <kakao-map storeInfo="storeInfo"></kakao-map>
         <!-- <img
           src="@/assets/resources/default.png"
           alt="map"
@@ -85,11 +85,55 @@
               class="flex flex-col justify-items-center z-40"
             >
               <span
-                class="flex justify-self-end ml-auto cursor-pointer text-2xl mr-2" @click="closeReviewDialog"
+                class="flex justify-self-end ml-auto cursor-pointer text-2xl mr-2"
+                @click="closeReviewDialog"
                 >X</span
               >
               <span class="text-2xl font-bold mt-2 mb-4">리뷰 작성하기</span>
-              <section class="flex flex-col space-y-4 w-full">
+              <section class="flex flex-col space-y-4 w-full justify-center">
+                <div class="star-rating space-x-4 mx-auto">
+                  {{ ratingEmoji }}
+                  <input
+                    type="radio"
+                    id="5-stars"
+                    name="rating"
+                    value="5"
+                    v-model="ratings"
+                  />
+                  <label for="5-stars" class="star pr-4">★</label>
+                  <input
+                    type="radio"
+                    id="4-stars"
+                    name="rating"
+                    value="4"
+                    v-model="ratings"
+                  />
+                  <label for="4-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="3-stars"
+                    name="rating"
+                    value="3"
+                    v-model="ratings"
+                  />
+                  <label for="3-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="2-stars"
+                    name="rating"
+                    value="2"
+                    v-model="ratings"
+                  />
+                  <label for="2-stars" class="star">★</label>
+                  <input
+                    type="radio"
+                    id="1-star"
+                    name="rating"
+                    value="1"
+                    v-model="ratings"
+                  />
+                  <label for="1-star" class="star">★</label>
+                </div>
                 <textarea
                   class="input-base"
                   rows="8"
@@ -99,7 +143,6 @@
               </section>
               <section class="flex space-x-2 mt-6 mb-4">
                 <base-button
-                  
                   type="submit"
                   @click="register"
                   mode="primary"
@@ -150,15 +193,21 @@
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">전화번호</span>
-            {{ tel }}
+            <span class="text-sm">
+              {{ tel }}
+            </span>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">주차</span>
-            {{ parking }}
+            <span class="text-sm">
+              {{ parking }}
+            </span>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">영업시간</span>
-            {{ workingTime }}
+            <span class="text-sm">
+              {{ workingTime }}
+            </span>
           </div>
         </article>
         <article class="flex mx-auto">
@@ -171,6 +220,7 @@
 <script>
 import ReviewCard from '../../components/restaurants/ReviewCard.vue';
 import KakaoMap from '../../components/ui/KakaoMap.vue';
+
 export default {
   components: {
     ReviewCard,
@@ -185,7 +235,14 @@ export default {
       tagColor: 1,
       score: null,
       bookmarked: true,
-      reviewContents: ''
+      reviewContents: '',
+      ratings: 0,
+      storeInfo: {
+        store_name: '',
+        food_category: '',
+        lat: 37.5477,
+        lng: 126.9229
+      }
     };
   },
   computed: {
@@ -225,10 +282,10 @@ export default {
       return this.restaurant.averageScore;
     },
     foodCategory() {
-      return this.restaurant.foodCategory;
+      return this.restaurant.food_category;
     },
     muslimFriendly() {
-      return this.restaurant.muslimFriendly;
+      return this.restaurant.muslim_friendly;
     },
     tel() {
       return this.restaurant.tel;
@@ -238,15 +295,26 @@ export default {
     },
     workingTime() {
       return this.restaurant.working_time;
+    },
+    ratingEmoji() {
+      if (this.ratings === '5') return '😍';
+      else if (this.ratings === '4') return '😎';
+      else if (this.ratings === '3') return '😄';
+      else if (this.ratings === '2') return '😒';
+      else if (this.ratings === '1') return '😠';
+      else return '';
     }
   },
   created() {
     console.log('id: ', this.restaurantId);
-    this.restaurant = this.$store.getters['restaurants/restaurants'].find(
-      restaurant => restaurant.restaurantId.toString() === this.restaurantId
-    );
-
+    // this.restaurant = this.$store.getters['restaurants/restaurants'].find(
+    //   restaurant => restaurant.restaurantId.toString() === this.restaurantId
+    // );
+    this.loadStoreInfoReviews();
+    this.restaurant = this.$store.getters['restaurants/storeinfo'];
     this.score = this.restaurant.averageScore;
+    this.bookmarked = this.$store.getters['restaurants/bookmarked'];
+    this.initStoreInfo();
 
     // this.loadReviews();
     switch (this.muslimFriendly) {
@@ -265,23 +333,44 @@ export default {
     goPreviousPage() {
       this.$router.go(-1);
     },
-    async loadReviews() {
+    setRating(rating) {
+      this.rating = rating;
+    },
+    async loadStoreInfoReviews() {
       this.isLoading = true;
       try {
-        await this.$store.dispatch('restaurants/loadRestaurants');
+        await this.$store.dispatch('restaurants/loadStoreInfoReviews');
       } catch (error) {
-        this.error = error.message || '리뷰를 불러오는데 문제가 발생했습니다.';
+        //
       }
       this.isLoading = false;
     },
+    // async loadReviews() {
+    //   this.isLoading = true;
+    //   try {
+    //     await this.$store.dispatch('restaurants/loadRestaurants');
+    //   } catch (error) {
+    //     this.error = error.message || '리뷰를 불러오는데 문제가 발생했습니다.';
+    //   }
+    //   this.isLoading = false;
+    // },
     register() {},
-    bookmarkRestaurant() {
-      this.bookmarked = !this.bookmarked;
+    async bookmarkRestaurant() {
+      try {
+        await this.$store.dispatch(
+          'restaurants/toggleBookmark',
+          this.restaurantId
+        );
+      } catch (error) {
+        this.error = error.message || '북마크 중 문제가 발생했습니다.';
+      }
+      this.bookmarked = this.$store.getters['restaurants/bookmarked'];
     },
     writeReview() {
       this.reviewDialogIsVisible = true;
     },
     closeReviewDialog() {
+      this.reviewContents = '';
       this.reviewDialogIsVisible = false;
     }
   }
@@ -322,4 +411,44 @@ export default {
   z-index: 0;
   padding: 0;
 }
+
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+  width: 5em;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2.3px;
+  -webkit-text-stroke-color: #2b2a29;
+  cursor: pointer;
+}
+
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #fff58c;
+}
+
+/*
+How it works
+The stars are labels which each reference a radio button. They are written in the code in reverse order, 5-1.
+
+By using display:flex and flex-direction:row-reverse on their container they appear in the browser the opposite way around, 1-5.
+
+We can now use the general sibling selector ~ to style any subsequent elements - the ones that appear before on screen.
+*/
 </style>

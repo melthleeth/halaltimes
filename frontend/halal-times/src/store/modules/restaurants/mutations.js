@@ -8,4 +8,10 @@ export default {
     setReviews(state, payload) {
         state.reviews = payload;
     },
+    setBookmarked(state, payload) {
+        state.bookmarked = payload;
+    },
+    setStoreInfo(state, payload) {
+        state.restaurantItem = payload;
+    },
 };

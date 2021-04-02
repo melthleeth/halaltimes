@@ -8,4 +8,10 @@ export default {
     reviews(state) {
         return state.reviews;
     },
+    bookmarked(state) {
+        return state.bookmarked;
+    },
+    storeInfo(state) {
+        return state.restaurantItem;
+    }
 };
