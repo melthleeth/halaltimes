@@ -170,4 +170,25 @@ public class StoreServiceImpl implements StoreService {
 	public int insertImgUrl(Map<String, Object> map) throws Exception {
 		return storeMapper.insertImgUrl(map);
 	}
+
+	@Override
+	public int hitsUp(String id_store) throws Exception {
+		return storeMapper.hitsUp(id_store);
+	}
+	
+	@Override
+	public String getStoreNameByIdStore(String id_store) throws Exception {
+		return storeMapper.getStoreNameByIdStore(id_store);
+	}
+
+	@Override
+	public String getStoreAvgScore(String id_store) throws Exception {
+		return storeMapper.getStoreAvgScore(id_store);
+	}
+
+	@Override
+	public String getStoreAddress(String id_store) throws Exception {
+		return storeMapper.getStoreAddress(id_store);
+	}
+	
 }

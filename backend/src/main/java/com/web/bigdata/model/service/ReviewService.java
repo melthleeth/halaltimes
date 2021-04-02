@@ -73,15 +73,7 @@ public interface ReviewService {
 	/** 해당 store의 review들 가져오기 */
 	public List<ReviewDto> getStoreReviews(String id_store) throws Exception;
 
-	// PostTempController
-
-//	/** 임시저장 리뷰 목록 */
-//	public List<ReviewDto> getTempList(ReviewParameterDto postParameterDto) throws Exception;
-//
-//	/** 임시저장 리뷰 수 */
-//	public int getTempCount(String email) throws Exception;
-//
-//	/** 임시저장글 작성 */
-//	public boolean writeTemp(ReviewDto postDto) throws Exception;
+	/** 해당 store의 review 갯수 가져오기 */
+	public int getReviewCount(String id_store) throws Exception;
 
 }

@@ -28,6 +28,7 @@ import com.web.bigdata.model.StoreParameterDto;
 import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
 import com.web.bigdata.model.service.StoreService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +49,9 @@ public class StoreController {
 	private ReviewService reviewService;
 	
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private S3FileUploadService s3FileUploadService;
 	
 	@ApiOperation(value = "식당 목록", notes = "모든 식당의 정보를 반환한다.", response = List.class)
@@ -56,8 +60,14 @@ public class StoreController {
 			@RequestParam(required = false) String sortBy) throws Exception {
 		storeParameterDto.setSortBy(sortBy);
 		logger.info("getList - 호출, " + storeParameterDto);
+		List<StoreDto> storeList = storeService.getList(storeParameterDto);
 		
-		return new ResponseEntity<List<StoreDto>>(storeService.getList(storeParameterDto), HttpStatus.OK);
+		for(StoreDto store : storeList) {
+//			System.out.println(store.getId_store());
+			store.setReviews(reviewService.getReviewCount(store.getId_store()));
+		}
+		
+		return new ResponseEntity<List<StoreDto>>(storeList, HttpStatus.OK);
 	}
 	
 	@ApiOperation(value = "해당 숫자의 순서의 Store", notes = "해당 게시글의 정보 반환한다.", response = List.class)
@@ -80,17 +90,24 @@ public class StoreController {
 		Map<String, Object> likeCheckMap = new HashMap<>();
 
 		try {
+			// 조회수  증가
+			storeService.hitsUp(id_store);
+			
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
+			System.out.println(storeDto);
+			double score = Double.parseDouble(storeService.getStoreAvgScore(id_store));
+			score = Math.round(score*100)/100.0;
+			storeDto.setAverageScore(score);
 			resultMap.put("storeInfo", storeDto);
-			System.out.println(resultMap);
+			
 			// like(bookmark) 했는지 확인
-			likeCheckMap.put("email", email);
+			String id_user = userService.getIdUser(email);
+			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
-
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
+//			storeDto.setIsBookmarked(bookmark);
 			System.out.println(bookmarkDto);
-
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
@@ -99,9 +116,14 @@ public class StoreController {
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
-			System.out.println(resultMap);
 			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
+			for(ReviewDto review : reviewList) {
+				Map<String, Object> map = new HashMap<>();
+				map.put("id_review", review.getId_review());
+				map.put("id_user",id_user);
+				review.setLikeCheck(reviewService.likeCheck(map));
+			}
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
@@ -268,14 +290,14 @@ public class StoreController {
 
 	@ApiOperation(value = "식당 북마크", notes = "store_id에 해당하는 식당의 북마크를 토글한다.", response = HashMap.class)
 	@PutMapping("/bookmark")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String id_user) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> resultMap = new HashMap<>();
-
 		try {
+			String id_user = userService.getIdUser(email);
 			map.put("id_store", id_store);
 			map.put("id_user", id_user);
 

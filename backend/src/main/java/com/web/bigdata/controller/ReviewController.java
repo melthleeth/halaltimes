@@ -46,9 +46,6 @@ public class ReviewController {
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
 
-//	@Autowired
-//	private VoteService voteService;
-
 	@ApiOperation(value = "리뷰 목록", notes = "모든 리뷰의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list")
 	public ResponseEntity<List<ReviewDto>> getList(ReviewParameterDto reviewParameterDto,
@@ -62,13 +59,13 @@ public class ReviewController {
 		return new ResponseEntity<List<ReviewDto>>(reviewService.getList(reviewParameterDto), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "해당 숫자의 순서의 Post", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
-	@GetMapping("/list/{id_review}")
-	public ResponseEntity<ReviewDto> getLikeReview(@PathVariable String id_review) throws Exception {
-		logger.info("getOne - 호출, " + id_review);
-
-		return new ResponseEntity<ReviewDto>(reviewService.getLikeReview(id_review), HttpStatus.OK);
-	}
+//	@ApiOperation(value = "해당 숫자의 순서의 Review", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
+//	@GetMapping("/list/{id_review}")
+//	public ResponseEntity<ReviewDto> getLikeReview(@PathVariable String id_review) throws Exception {
+//		logger.info("getOne - 호출, " + id_review);
+//
+//		return new ResponseEntity<ReviewDto>(reviewService.getLikeReview(id_review), HttpStatus.OK);
+//	}
 
 	@ApiOperation(value = "리뷰 상세 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
 	@GetMapping
@@ -136,7 +133,7 @@ public class ReviewController {
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
-
+				
 				// 삭제한 파일이 있다면
 				if (unmodified != null && unmodified.size() > 0) {
 					deleteFiles(unmodified);
