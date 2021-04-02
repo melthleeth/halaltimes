@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,12 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.BookmarkDto;
-import com.web.bigdata.model.ReviewDto;
-import com.web.bigdata.model.service.UserService;
+import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.service.ETCService;
 import com.web.bigdata.model.service.S3FileUploadService;
+import com.web.bigdata.model.service.StoreService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -42,6 +41,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	StoreService storeService;
 	
 	@Autowired
 	ETCService etcService;
@@ -125,11 +127,11 @@ public class UserController {
 			resultMap.put("reviewList", userService.getReviewList(email));
 			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
 			for(BookmarkDto bookmark : bookmarkList) {
-				bookmark.setStore_name(userService.getStoreNameByIdStore(bookmark.getId_store()));
-				double score = Double.parseDouble(userService.getStoreAvgScore(bookmark.getId_store()));
+				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
 				score = Math.round(score*100)/100.0;
 				bookmark.setScore(score+"");
-				bookmark.setAddress(userService.getStoreAddress(bookmark.getId_store()));
+				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
 			}
 			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;

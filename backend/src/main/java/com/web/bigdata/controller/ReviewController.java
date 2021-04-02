@@ -26,6 +26,7 @@ import com.web.bigdata.model.ReviewLikeDto;
 import com.web.bigdata.model.ReviewParameterDto;
 import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,6 +44,9 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 
+	@Autowired
+	private UserService userService;
+	
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
 
@@ -264,7 +268,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 like", notes = "리뷰 번호에 해당하는 리뷰의 like를 토글한다.", response = HashMap.class)
 	@PutMapping("/like")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String id_user) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -272,6 +276,7 @@ public class ReviewController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		try {
+			String id_user = userService.getIdUser(email);
 			map.put("id_review", id_review);
 			map.put("id_user", id_user);
 
