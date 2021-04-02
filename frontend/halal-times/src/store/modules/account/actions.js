@@ -3,7 +3,7 @@ export default {
   // 인증메일 전송
   async sendCodeCheck(_, payload) {
     const response = await fetch(
-      `${SERVER_URL}/service/mail?email=${payload}`,
+      `${SERVER_URL}/user/emailCheck?email=${payload}`,
       {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -16,7 +16,7 @@ export default {
     );
     const responseData = await response.text();
 
-    if (responseData === '1') {
+    if (responseData === 'true') {
       return 'FAIL';
     } else {
       return 'SUCCESS';
@@ -72,7 +72,7 @@ export default {
 
   // 회원가입
   async signupRegister(_, payload) {
-    console.log("payload: ", payload)
+    console.log('payload: ', payload);
     // const signupData = {
     //   email: payload.email,
     //   password: payload.password,

@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,11 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.BookmarkDto;
-import com.web.bigdata.model.ReviewDto;
-import com.web.bigdata.model.service.UserService;
+import com.web.bigdata.model.UserDto;
+import com.web.bigdata.model.service.ETCService;
 import com.web.bigdata.model.service.S3FileUploadService;
+import com.web.bigdata.model.service.StoreService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -41,6 +41,12 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	StoreService storeService;
+	
+	@Autowired
+	ETCService etcService;
 
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
@@ -75,13 +81,25 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이메일로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
-	@GetMapping("/emailCheck")
+	@PostMapping("/emailCheck")
 	public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
 		logger.info("emailCheck - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
-
-		return new ResponseEntity<Boolean>(userService.emailCheck(email), status);
+		 
+		boolean isExisted = userService.emailCheck(email);
+		System.out.println("존재하는 이메일인지 확인 : " + isExisted);
+		if(!isExisted) {
+			try {
+				System.out.println("확인해 보자");
+				etcService.sendSimpleMessage(email);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return new ResponseEntity<Boolean>(isExisted, status);
 	}
 
 	@ApiOperation(value = "닉네임 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
@@ -109,11 +127,11 @@ public class UserController {
 			resultMap.put("reviewList", userService.getReviewList(email));
 			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
 			for(BookmarkDto bookmark : bookmarkList) {
-				bookmark.setStore_name(userService.getStoreNameByIdStore(bookmark.getId_store()));
-				double score = Double.parseDouble(userService.getStoreAvgScore(bookmark.getId_store()));
+				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
 				score = Math.round(score*100)/100.0;
 				bookmark.setScore(score+"");
-				bookmark.setAddress(userService.getStoreAddress(bookmark.getId_store()));
+				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
 			}
 			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;

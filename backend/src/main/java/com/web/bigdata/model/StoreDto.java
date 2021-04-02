@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public class StoreDto {
+	// store table
 	private String id_store;
 	private String store_name;
 	private String muslim_friendly;
@@ -26,7 +27,17 @@ public class StoreDto {
 	private List<String> unmodified;
 	private String thumbnail;
 
+	// 조회수, 리뷰수
+	private int hits;
+	private int reviews;
 	
+	// 평균 평점
+	private double averageScore;
+	
+	
+	public void setReviews(int reviews) {
+		this.reviews = reviews;
+	}
 	public String getId_store() {
 		return id_store;
 	}
@@ -137,12 +148,31 @@ public class StoreDto {
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
+
+	// 조회수 리뷰수
+	public int getHits() {
+		return hits;
+	}
+	public void setHits(int hits) {
+		this.hits = hits;
+	}
+	public int getReviews() {
+		return reviews;
+	}
+	
+	public double getAverageScore() {
+		return averageScore;
+	}
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
 	@Override
 	public String toString() {
-		return "StoreDto [store_name=" + store_name + ", muslim_friendly=" + muslim_friendly + ", location_region="
-				+ location_region + ", food_category=" + food_category + ", address=" + address + ", tel=" + tel
-				+ ", working_time=" + working_time + ", days_closed=" + days_closed + ", parking=" + parking
-				+ ", image=" + image + ", thumb_image=" + thumb_image + ", lat=" + lat + ", lng=" + lng + ", active="
-				+ active + "]";
+		return "StoreDto [id_store=" + id_store + ", store_name=" + store_name + ", muslim_friendly=" + muslim_friendly
+				+ ", location_region=" + location_region + ", food_category=" + food_category + ", address=" + address
+				+ ", tel=" + tel + ", working_time=" + working_time + ", days_closed=" + days_closed + ", parking="
+				+ parking + ", image=" + image + ", thumb_image=" + thumb_image + ", lat=" + lat + ", lng=" + lng
+				+ ", active=" + active + ", files=" + files + ", unmodified=" + unmodified + ", thumbnail=" + thumbnail
+				+ ", hits=" + hits + ", reviews=" + reviews + ", averageScore=" + averageScore + "]";
 	}
 }

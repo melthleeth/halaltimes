@@ -26,6 +26,7 @@ import com.web.bigdata.model.ReviewLikeDto;
 import com.web.bigdata.model.ReviewParameterDto;
 import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
+import com.web.bigdata.model.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,10 +45,10 @@ public class ReviewController {
 	private ReviewService reviewService;
 
 	@Autowired
+	private UserService userService;
+	
+	@Autowired
 	private S3FileUploadService s3FileUploadService;
-
-//	@Autowired
-//	private VoteService voteService;
 
 	@ApiOperation(value = "리뷰 목록", notes = "모든 리뷰의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list")
@@ -62,13 +63,13 @@ public class ReviewController {
 		return new ResponseEntity<List<ReviewDto>>(reviewService.getList(reviewParameterDto), HttpStatus.OK);
 	}
 
-	@ApiOperation(value = "해당 숫자의 순서의 Post", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
-	@GetMapping("/list/{id_review}")
-	public ResponseEntity<ReviewDto> getLikeReview(@PathVariable String id_review) throws Exception {
-		logger.info("getOne - 호출, " + id_review);
-
-		return new ResponseEntity<ReviewDto>(reviewService.getLikeReview(id_review), HttpStatus.OK);
-	}
+//	@ApiOperation(value = "해당 숫자의 순서의 Review", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
+//	@GetMapping("/list/{id_review}")
+//	public ResponseEntity<ReviewDto> getLikeReview(@PathVariable String id_review) throws Exception {
+//		logger.info("getOne - 호출, " + id_review);
+//
+//		return new ResponseEntity<ReviewDto>(reviewService.getLikeReview(id_review), HttpStatus.OK);
+//	}
 
 	@ApiOperation(value = "리뷰 상세 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
 	@GetMapping
@@ -136,7 +137,7 @@ public class ReviewController {
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
-
+				
 				// 삭제한 파일이 있다면
 				if (unmodified != null && unmodified.size() > 0) {
 					deleteFiles(unmodified);
@@ -267,7 +268,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 like", notes = "리뷰 번호에 해당하는 리뷰의 like를 토글한다.", response = HashMap.class)
 	@PutMapping("/like")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String id_user) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -275,6 +276,7 @@ public class ReviewController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		try {
+			String id_user = userService.getIdUser(email);
 			map.put("id_review", id_review);
 			map.put("id_user", id_user);
 
