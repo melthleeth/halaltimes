@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.service.UserService;
+import com.web.bigdata.model.service.ETCService;
 import com.web.bigdata.model.service.S3FileUploadService;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,6 +41,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	ETCService etcService;
 
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
@@ -74,16 +78,28 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이메일로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
-	@GetMapping("/emailCheck")
+	@PostMapping("/emailCheck")
 	public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
 		logger.info("emailCheck - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
-
-		return new ResponseEntity<Boolean>(userService.emailCheck(email), status);
+		 
+		boolean isExisted = userService.emailCheck(email);
+		System.out.println("존재하는 이메일인지 확인 : " + isExisted);
+		if(!isExisted) {
+			try {
+				System.out.println("확인해 보자");
+				etcService.sendSimpleMessage(email);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return new ResponseEntity<Boolean>(isExisted, status);
 	}
 
-	@ApiOperation(value = "이메일 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
+	@ApiOperation(value = "닉네임 중복 체크", notes = "같은 이름으로 가입한 사용자가 있는지 확인한다.", response = Boolean.class)
 	@GetMapping("/nameCheck")
 	public ResponseEntity<Boolean> nameCheck(@RequestParam String nickname) {
 		logger.info("nameCheck - 호출");

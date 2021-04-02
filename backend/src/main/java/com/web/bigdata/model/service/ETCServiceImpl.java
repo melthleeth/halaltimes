@@ -52,11 +52,12 @@ public class ETCServiceImpl implements ETCService {
 
 		try {
 			emailSender.send(message);
+			System.out.println("메일 보냄");
 		} catch (MailException es) {
 			es.printStackTrace();
 			throw new IllegalArgumentException();
 		}
-
+		
 	}
 
 	@Override
