@@ -147,24 +147,8 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewMapper.deleteAllImage(id_review) == 1;
 	}
 
-//	@Override
-//	public boolean writeTemp(ReviewDto reviewDto) throws Exception {
-//		if (reviewDto.getTitle() == null || reviewDto.getContent() == null) {
-//			throw new Exception("No title or No Content!");
-//		}
-//		if (reviewDto.getEmail() == null || "".equals(reviewDto.getEmail())) {
-//			throw new Exception("You are not Logged In!!");
-//		}
-//		return reviewMapper.writeTemp(reviewDto) == 1;
-//	}
-//
-//	@Override
-//	public List<ReviewDto> getTempList(ReviewParameterDto reviewParameterDto) throws Exception {
-//		return reviewMapper.getTempList(reviewParameterDto);
-//	}
-//
-//	@Override
-//	public int getTempCount(String email) throws Exception {
-//		return reviewMapper.getTempCount(email);
-//	}
+	@Override
+	public List<ReviewDto> getStoreReviews(String id_store) throws Exception {
+		return reviewMapper.getStoreReviews(id_store);
+	}
 }

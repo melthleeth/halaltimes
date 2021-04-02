@@ -6,12 +6,12 @@
 
 	<!-- ReviewController -->
 	<select id="getList" parameterType="map" resultType="ReviewDto">
-		select id_review, content, nickname, likeCnt, score
+		select id_review, content, nickname, likeCnt, score,
 			case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(upload_date, '%H:%i:%s')
 							else date_format(upload_date, '%y.%m.%d')
 							end upload_date,
-							case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
+			case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(update_date, '%H:%i:%s')
 							else date_format(update_date, '%y.%m.%d')
 							end update_date,
@@ -107,7 +107,7 @@
 		select r.id_review, r.id_store,  r.content, r.score, r.upload_date, r.update_date, u.nickname
 		from review r join user u
 			using(id_user)
-		where id_review = 1 and r.active = 1
+		where id_review = #{id_review} and r.active = 1
 	</select>
 	
 	<insert id="write" parameterType="ReviewDto">
@@ -229,39 +229,12 @@
 		where id_review = #{id_review}
 	</update>
 	
-	<!-- PostTempController -->
-	
-<!-- 	<select id="getTempList" parameterType="map" resultType="ReviewDto"> -->
-<!-- 		select id_review, title, content, temp,  -->
-<!-- 				case when date_format(uploadDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(uploadDate, '%H:%i:%s') -->
-<!-- 				else date_format(uploadDate, '%y.%m.%d') -->
-<!-- 				end uploadDate, -->
-<!-- 				case when date_format(modifyDate, '%Y%m%d') = date_format(now(), '%Y%m%d') -->
-<!-- 				then date_format(modifyDate, '%H:%i:%s') -->
-<!-- 				else date_format(modifyDate, '%y.%m.%d') -->
-<!-- 				end modifyDate, -->
-<!-- 				likeCnt, email, name -->
-<!-- 		from post join member using(email) -->
-<!-- 		where temp = 1 and email = #{email} -->
-<!-- 		order by id_review desc, modifyDate desc -->
-<!-- 	</select> -->
-	
-<!-- 	<select id="getTempCount" parameterType="string" resultType="int"> -->
-<!-- 		select count(postNo) -->
-<!-- 		from post -->
-<!-- 		where temp = 1 and email = #{email} -->
-<!-- 	</select> -->
-	
-<!-- 	<insert id="writeTemp" parameterType="ReviewDto"> -->
-<!-- 		insert into post (title, content, email, temp) -->
-<!-- 		values (#{title}, #{content}, #{email}, 1) -->
-<!-- 	</insert> -->
-	
-<!-- 	<update id="writeTemptoDB" parameterType="ReviewDto"> -->
-<!-- 		update post -->
-<!-- 		set temp = 0, title = #{title}, content = #{content}, uploadDate = current_timestamp, modifyDate = current_timestamp -->
-<!-- 		where postNo = #{postNo} -->
-<!-- 	</update> -->
+	<select id="getStoreReviews" parameterType="String" resultType="reviewDto">
+ 		select id_review, id_user, id_store, store_name, score, content, upload_date, update_date,
+ 		likeCnt
+ 		from review as r
+ 		join store using(id_store)
+ 		where id_store = #{id_store} and r.active = 1
+ 	</select>
 	
 </mapper>
