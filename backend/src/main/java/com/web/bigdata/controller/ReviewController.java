@@ -73,7 +73,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 상세 보기", notes = "리뷰 번호에 해당하는 리뷰의 정보를 반환한다.", response = ReviewDto.class)
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getReviewDetail(@RequestParam String id_review,
+	public ResponseEntity<Map<String, Object>> getReviewDetail(@RequestParam int id_review,
 			@RequestParam(required = false) String email) throws Exception {
 		logger.info("getOne - 호출");
 		HttpStatus status = HttpStatus.OK;
@@ -174,7 +174,7 @@ public class ReviewController {
 
 		List<MultipartFile> files = review.getFiles();
 		List<String> unmodified = review.getUnmodified();
-		String id_review = review.getId_review();
+		int id_review = review.getId_review();
 
 		if (reviewService.modify(review)) {
 			// 삭제한 파일이 있다면
@@ -199,18 +199,18 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 삭제", notes = "리뷰 번호에 해당하는 리뷰의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@DeleteMapping
-	public ResponseEntity<String> delete(@RequestParam String ID_REVIEW) {
+	public ResponseEntity<String> delete(@RequestParam int id_review) {
 		logger.info("delete - 호출");
 
 		try {
 			// ec2 파일 삭제
-			for (ImgDto imgDto : reviewService.getImages(ID_REVIEW)) {
+			for (ImgDto imgDto : reviewService.getImages(id_review)) {
 				s3FileUploadService.delete(imgDto.getModified_image());
 				s3FileUploadService.delete(imgDto.getThumb_image());
 			}
 
 			// db review 삭제 --cascade--> review images 삭제
-			if (reviewService.delete(ID_REVIEW)) {
+			if (reviewService.delete(id_review)) {
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -223,7 +223,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "이미지 저장", notes = "리뷰의 이미지를 저장한다.")
 	@PostMapping("/imgs/save")
-	private ResponseEntity<String> saveFiles(String id_review, List<MultipartFile> files) {
+	private ResponseEntity<String> saveFiles(int id_review, List<MultipartFile> files) {
 //		logger.info("saveFiles 호출, " + files.size());
 		System.out.println(id_review);
 		System.out.println(files);
@@ -268,7 +268,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 like", notes = "리뷰 번호에 해당하는 리뷰의 like를 토글한다.", response = HashMap.class)
 	@PutMapping("/like")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_review, @RequestParam String email) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam int id_review, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -276,7 +276,7 @@ public class ReviewController {
 		Map<String, Object> resultMap = new HashMap<>();
 
 		try {
-			String id_user = userService.getIdUser(email);
+			int id_user = userService.getIdUser(email);
 			map.put("id_review", id_review);
 			map.put("id_user", id_user);
 

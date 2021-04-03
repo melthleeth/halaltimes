@@ -34,7 +34,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public StoreDto getDetail(String id_store) throws Exception {
+	public StoreDto getDetail(int id_store) throws Exception {
 		return storeMapper.getDetail(id_store);
 	}
 
@@ -172,22 +172,22 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public int hitsUp(String id_store) throws Exception {
+	public int hitsUp(int id_store) throws Exception {
 		return storeMapper.hitsUp(id_store);
 	}
 	
 	@Override
-	public String getStoreNameByIdStore(String id_store) throws Exception {
+	public String getStoreNameByIdStore(int id_store) throws Exception {
 		return storeMapper.getStoreNameByIdStore(id_store);
 	}
 
 	@Override
-	public String getStoreAvgScore(String id_store) throws Exception {
+	public String getStoreAvgScore(int id_store) throws Exception {
 		return storeMapper.getStoreAvgScore(id_store);
 	}
 
 	@Override
-	public String getStoreAddress(String id_store) throws Exception {
+	public String getStoreAddress(int id_store) throws Exception {
 		return storeMapper.getStoreAddress(id_store);
 	}
 	

@@ -122,7 +122,7 @@ public class UserController {
 
 		// 회원 정보 조회
 		try {
-			String id_user = userService.findUserInfo(email).getId_user();
+			int id_user = userService.findUserInfo(email).getId_user();
 			resultMap.put("info", userService.findUserInfo(email));
 			resultMap.put("reviewList", userService.getReviewList(email));
 			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);

@@ -27,7 +27,7 @@ public interface UserService {
 	/** 인자로 받은 name의 중복 여부 */
 	public boolean nameCheck(String name);
 
-	/** 인자로 받은 email의 비밀번호를 반환 */
+	/** 인자로 받은 email에 해당하는 유저 정보를 반환 */
 	public UserDto findUserInfo(String email) throws Exception;
 	
 	public boolean updateNickname(UserDto userDto) throws Exception;
@@ -53,10 +53,10 @@ public interface UserService {
 //	/** 게시글 리스트 */
 	public List<ReviewDto> getReviewList(String email) throws SQLException;
 
-	public List<BookmarkDto> getBookmarkList(String email) throws SQLException;
+	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
 	
 	/** email 로 id_user 가져오기*/
-	public String getIdUser(String email)throws Exception;
+	public int getIdUser(String email)throws Exception;
 
 
 }

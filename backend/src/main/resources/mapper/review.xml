@@ -121,13 +121,13 @@
 		where id_review = #{id_review} and active = 1
 	</update>
 	
-	<update id="delete" parameterType="string">
+	<update id="delete" parameterType="int">
 		update review
 		set active = 0
 		where id_review = #{id_review} and active = 1
 	</update>
 	
- 	<select id="likeCount" parameterType="String" resultType="int">
+ 	<select id="likeCount" parameterType="int" resultType="int">
  		select count(id_review_like)
  		from review_like
  		where id_review = #{id_review} and active = 1
@@ -173,13 +173,13 @@
 		where id_review = #{id_review} and id_user = #{id_user}
 	</update>
 	
-	<update id="likeCntUp" parameterType="String">
+	<update id="likeCntUp" parameterType="int">
 		update review
 		set likeCnt = likeCnt + 1
 		where id_review = #{id_review}
 	</update>
 	
-	<update id="likeCntDown" parameterType="String">
+	<update id="likeCntDown" parameterType="int">
 		update review
 		set likeCnt = likeCnt - 1
 		where id_review = #{id_review}
@@ -193,7 +193,7 @@
 <!-- 		, #{PICSIZE}) -->
 	</insert>
 	
-	<select id="getImages" parameterType="String" resultType="ImgDto">
+	<select id="getImages" parameterType="int" resultType="ImgDto">
 		select id_review_image, id_review, original_image, modified_image, thumb_image
 <!-- 		PICSIZE, -->
 <!-- 			date_format(upload_date, '%Y%m%d') as upload_date, -->
@@ -229,7 +229,7 @@
 		where id_review = #{id_review}
 	</update>
 	
-	<select id="getStoreReviews" parameterType="String" resultType="reviewDto">
+	<select id="getStoreReviews" parameterType="int" resultType="reviewDto">
  		select id_review, id_user, id_store, store_name, score, content, upload_date, update_date,
  		likeCnt
  		from review as r
@@ -237,7 +237,7 @@
  		where id_store = #{id_store} and r.active = 1
  	</select>
  	
- 	<select id="getReviewCount" parameterType="string" resultType="int">
+ 	<select id="getReviewCount" parameterType="int" resultType="int">
  		select count(*)
 		from review
 		where id_store = #{id_store} and active = 1

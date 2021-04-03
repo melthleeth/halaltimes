@@ -2,8 +2,8 @@ package com.web.bigdata.model;
 
 public class ImgDto {
 
-	private String id_review_image;
-	private String id_review;
+	private int id_review_image;
+	private int id_review;
 	private String image;
 	private String original_image; // 실제 파일
 	private String modified_image; // 저장할 파일
@@ -32,19 +32,19 @@ public class ImgDto {
 //	}
 //
 
-	public String getId_review_image() {
+	public int getId_review_image() {
 		return id_review_image;
 	}
 
-	public void setId_review_image(String id_review_image) {
+	public void setId_review_image(int id_review_image) {
 		this.id_review_image = id_review_image;
 	}
 
-	public String getId_review() {
+	public int getId_review() {
 		return id_review;
 	}
 
-	public void setId_review(String id_review) {
+	public void setId_review(int id_review) {
 		this.id_review = id_review;
 	}
 

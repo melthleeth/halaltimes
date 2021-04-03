@@ -21,7 +21,7 @@ public interface StoreMapper {
 	public StoreDto getLikeStore(int no) throws Exception;
 
 	/** 하나의 게시글 정보 */
-	public StoreDto getDetail(String id_store) throws Exception;
+	public StoreDto getDetail(int id_store) throws Exception;
 
 	/** 마지막으로 작성한 게시글 번호 */
 	public String getLastIdStore(String email) throws Exception;
@@ -88,15 +88,15 @@ public interface StoreMapper {
 	public int insertImgUrl(Map<String, Object> map) throws Exception;
 
 	/** store 클릭시 조회수 증가 */
-	public int hitsUp(String id_store) throws Exception;	
+	public int hitsUp(int id_store) throws Exception;	
 	
 	/** id_store으로 store_name 가져오기*/
-	public String getStoreNameByIdStore(String id_store) throws SQLException;
+	public String getStoreNameByIdStore(int id_store) throws SQLException;
 	
 	/** 해당 음식점의 평균 평점 가져오기*/
-	public String getStoreAvgScore(String id_store) throws SQLException;
+	public String getStoreAvgScore(int id_store) throws SQLException;
 	
 	/** 해당 음식점의 주소 가져오기*/
-	public String getStoreAddress(String id_store) throws SQLException;
+	public String getStoreAddress(int id_store) throws SQLException;
 	
 }

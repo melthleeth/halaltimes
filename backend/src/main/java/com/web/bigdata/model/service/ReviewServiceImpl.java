@@ -33,7 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public ReviewDto getDetail(String id_review) throws Exception {
+	public ReviewDto getDetail(int id_review) throws Exception {
 		return reviewMapper.getOne(id_review);
 	}
 
@@ -54,9 +54,9 @@ public class ReviewServiceImpl implements ReviewService {
 //			return reviewMapper.writeTemptoDB(reviewDto) == 1;
 //		}
 
-		if (reviewDto.getId_user() == null || "".equals(reviewDto.getId_user())) {
-			throw new Exception("You are not Logged In!!");
-		}
+//		if (reviewDto.getId_user() == 0 || "".equals(reviewDto.getId_user())) {
+//			throw new Exception("You are not Logged In!!");
+//		}
 
 		return reviewMapper.write(reviewDto) == 1;
 	}
@@ -69,12 +69,12 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	@Transactional
-	public boolean delete(String id_review) throws Exception {
+	public boolean delete(int id_review) throws Exception {
 		return reviewMapper.delete(id_review) == 1;
 	}
 
 	@Override
-	public int likeCount(String id_review) throws Exception {
+	public int likeCount(int id_review) throws Exception {
 		return reviewMapper.likeCount(id_review);
 	}
 
@@ -110,13 +110,13 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	@Transactional
-	public int likeCntUp(String id_review) throws Exception {
+	public int likeCntUp(int id_review) throws Exception {
 		return reviewMapper.likeCntUp(id_review);
 	}
 
 	@Override
 	@Transactional
-	public int likeCntDown(String id_review) throws Exception {
+	public int likeCntDown(int id_review) throws Exception {
 		return reviewMapper.likeCntDown(id_review);
 	}
 
@@ -126,7 +126,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<ImgDto> getImages(String id_review) throws Exception {
+	public List<ImgDto> getImages(int id_review) throws Exception {
 		return reviewMapper.getImages(id_review);
 	}
 
@@ -148,12 +148,12 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<ReviewDto> getStoreReviews(String id_store) throws Exception {
+	public List<ReviewDto> getStoreReviews(int id_store) throws Exception {
 		return reviewMapper.getStoreReviews(id_store);
 	}
 
 	@Override
-	public int getReviewCount(String id_store) throws Exception {
+	public int getReviewCount(int id_store) throws Exception {
 		return reviewMapper.getReviewCount(id_store);
 	}
 }
