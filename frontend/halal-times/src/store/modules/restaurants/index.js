@@ -8,7 +8,7 @@ export default {
     return {
       keyword: null,
       bookmarked: '',
-      storeInfo: '',
+      storeInfo: null,
       restaurants: [
         {
           restaurantId: 1,

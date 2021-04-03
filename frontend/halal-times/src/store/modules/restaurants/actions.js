@@ -53,12 +53,10 @@ export default {
     context.commit("setKeyword", payload);
   },
   async loadStoreInfoReviews(context, payload) {
-    const storeUserData = {
-      id_store: payload,
-      email: context.rootGetters.getUserEmail
-    };
+    const id_store = payload;
+    const email = context.rootGetters.getUserEmail;
 
-    const response = await fetch(`${SERVER_URL}/store`, {
+    const response = await fetch(`${SERVER_URL}/store?id_store=${id_store}&email=${email}`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
@@ -66,12 +64,32 @@ export default {
         'Access-Control-Allow-Headers': '*'
       },
       method: 'GET',
-      body: JSON.stringify(storeUserData),
     });
     const responseData = await response.json();
+    console.log(responseData);
+
     if (!response.ok) {
-      // error..
+      console.log("통신 error");
     }
+
+    // console.log("storeInfo from actions: ", responseData.storeInfo);
+    // console.log("like from actions: ", responseData.like);
+
+    const storeInfo = {
+      id_store: responseData.storeInfo.id_store,
+      store_name: responseData.storeInfo.store_name,
+      muslim_friendly: responseData.storeInfo.muslim_friendly,
+      food_category: responseData.storeInfo.food_category,
+      address: responseData.storeInfo.address,
+      tel: responseData.storeInfo.tel,
+      working_time: responseData.storeInfo.working_time,
+      parking: responseData.storeInfo.parking,
+      // imgpath: responseData.storeInfo.image,
+      imgpath: "https://i.stack.imgur.com/y9DpT.jpg",
+      lat: +responseData.storeInfo.lat,
+      lng: +responseData.storeInfo.lng,
+      averageScore: +responseData.storeInfo.averageScore,
+    };
 
     const reviews = [];
 
@@ -90,8 +108,8 @@ export default {
       reviews.push(review);
     }
     context.commit('setReviews', reviews);
-    context.commit('setStoreInfo', responseData.storeInfo);
     context.commit('setBookmarked', responseData.like);
+    context.commit('setStoreInfo', storeInfo);
   },
   async loadReviews(context) {
     const response = await fetch(`${SERVER_URL}/review/list`, {

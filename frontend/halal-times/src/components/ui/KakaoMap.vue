@@ -4,6 +4,16 @@
 <script>
 export default {
   props: {
+    lat: {
+      type: Number,
+      required: false,
+      default: 37.5477
+    },
+    lng: {
+      type: Number,
+      required: false,
+      default: 126.9229
+    },
     storeInfo: {
       type: Object,
       default: () => {
@@ -23,7 +33,7 @@ export default {
     window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
   },
   updated() {
-    // this.initMap();
+    this.initMap();
   },
   methods: {
     addScript() {
@@ -48,8 +58,8 @@ export default {
       //   require("@/assets/map/marker/japanese_marker.png"),
       // ];
 
-      let initLat = this.storeInfo.lat,
-        initLng = this.storeInfo.lng;
+      const initLat = this.lat;
+      const initLng = this.lng;
       console.log(this.storeInfo, initLat, initLng);
       var mapOption = {
         center: new kakao.maps.LatLng(initLat, initLng),

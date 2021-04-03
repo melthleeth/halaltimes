@@ -71,7 +71,7 @@ export default {
   computed: {
     filteredRestaurants() {
       let restaurants = this.$store.getters['restaurants/restaurants'];
-      console.log(restaurants);
+      // console.log(restaurants);
 
       if (this.keyword !== '') {
         restaurants = restaurants.filter(restaurantItem => {

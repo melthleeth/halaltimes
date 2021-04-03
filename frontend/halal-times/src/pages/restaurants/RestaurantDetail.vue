@@ -10,7 +10,7 @@
           restaurantName
         }}</span>
       </section>
-      <span class="text-lg font-color-black-200 my-2">{{ address }}</span>
+      <span class="text-lg font-color-black-200 my-2">{{ restaurant.address }}</span>
     </div>
     <div id="center-contents" class="flex">
       <section id="left-contents" class="w-7/12">
@@ -48,8 +48,8 @@
           >
         </article>
       </section>
-      <section class="flex flex-col w-5/12 h-auto mx-2">
-        <kakao-map storeInfo="storeInfo"></kakao-map>
+      <section v-if="!isLoading" class="flex flex-col w-5/12 h-auto mx-2">
+        <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map>
         <!-- <img
           src="@/assets/resources/default.png"
           alt="map"
@@ -62,7 +62,7 @@
             @click="bookmarkRestaurant"
           >
             <img
-              v-if="!bookmarked"
+              v-if="bookmarked === 0"
               src="@/assets/icon/heart.png"
               alt="bookmark icon"
               class="object-contain w-8 h-8"
@@ -167,16 +167,16 @@
                 >{{ foodCategory }}</span
               >
               <span
-                v-if="muslimFriendly"
+                v-if="restaurant.muslim_friendly"
                 class="w-max inline-block rounded-full px-3 py-1 text-sm text-white"
                 :class="getTagColor"
-                >{{ muslimFriendly }}</span
+                >{{ restaurant.muslim_friendly }}</span
               >
             </article>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">평점</span>
-            <div class="star-ratings" ref="stars">
+            <div class="star-ratings">
               <div
                 class="star-ratings-fill space-x-2 text-lg"
                 :style="{ width: ratingToPercent + '%' }"
@@ -189,7 +189,7 @@
                 ><span>★</span>
               </div>
             </div>
-            <span class="text-sm ml-4">({{ score }})</span>
+            <span class="text-sm ml-4">({{ restaurant.averageScore }})</span>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">전화번호</span>
@@ -234,7 +234,7 @@ export default {
       reviewDialogIsVisible: false,
       tagColor: 1,
       score: null,
-      bookmarked: true,
+      bookmarked: 0,
       reviewContents: '',
       ratings: 0,
       storeInfo: {
@@ -254,7 +254,7 @@ export default {
     },
     ratingToPercent() {
       //   const score = +this.score * 0.2;
-      const score = +this.score * 20;
+      const score = +this.restaurant.averageScore * 20;
       return score + 1.5;
     },
     restaurantname() {
@@ -265,7 +265,8 @@ export default {
       return this.restaurant.address;
     },
     imgsrc() {
-      return this.restaurant.imgpath;
+      // return this.restaurant.imgpath;
+      return "https://i.stack.imgur.com/y9DpT.jpg";
     },
     reviews() {
       const reviews = this.$store.getters['restaurants/reviews'].filter(
@@ -284,14 +285,14 @@ export default {
     foodCategory() {
       return this.restaurant.food_category;
     },
-    muslimFriendly() {
-      return this.restaurant.muslim_friendly;
-    },
+    // muslimFriendly() {
+    //   return this.restaurant.muslim_friendly;
+    // },
     tel() {
       return this.restaurant.tel;
     },
     parking() {
-      return this.restaurant.parking;
+      return this.restaurant.parking === "0" ? "불가능" : "가능";
     },
     workingTime() {
       return this.restaurant.working_time;
@@ -311,10 +312,11 @@ export default {
     //   restaurant => restaurant.restaurantId.toString() === this.restaurantId
     // );
     this.loadStoreInfoReviews();
-    this.restaurant = this.$store.getters['restaurants/storeinfo'];
-    this.score = this.restaurant.averageScore;
-    this.bookmarked = this.$store.getters['restaurants/bookmarked'];
-    this.initStoreInfo();
+    // this.restaurant = this.$store.getters['restaurants/storeInfo'];
+    // console.log('restaurant: ', this.restaurant);
+    // this.bookmarked = this.$store.getters['restaurants/bookmarked'];
+    // this.score = this.restaurant.averageScore;
+    // this.initStoreInfo();
 
     // this.loadReviews();
     switch (this.muslimFriendly) {
@@ -329,6 +331,7 @@ export default {
         break;
     }
   },
+  
   methods: {
     goPreviousPage() {
       this.$router.go(-1);
@@ -338,12 +341,41 @@ export default {
     },
     async loadStoreInfoReviews() {
       this.isLoading = true;
-      try {
-        await this.$store.dispatch('restaurants/loadStoreInfoReviews');
-      } catch (error) {
-        //
+      // try {
+      //   await this.$store.dispatch('restaurants/loadStoreInfoReviews', this.restaurantId);
+      // } catch (error) {
+      //   //
+      // }
+
+      const id_store = this.restaurantId;
+      const email = this.$store.getters.getUserEmail;
+
+      const response = await fetch(
+        `${process.env.VUE_APP_SERVER_URL}/store?id_store=${id_store}&email=${email}`,
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json;',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*'
+          },
+          method: 'GET'
+        }
+      );
+      const responseData = await response.json();
+      console.log(responseData);
+
+      if (!response.ok) {
+        console.log('통신 error');
       }
       this.isLoading = false;
+
+      this.restaurant = responseData.storeInfo;
+      this.bookmarked = responseData.like;
+
+      this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
+      this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
+      console.log(this.restaurant.lat, this.restaurant.lng);
     },
     // async loadReviews() {
     //   this.isLoading = true;
@@ -354,6 +386,12 @@ export default {
     //   }
     //   this.isLoading = false;
     // },
+    initStoreInfo() {
+      this.storeInfo.store_name = this.restaurant.store_name;
+      this.storeInfo.food_category = this.restaurant.food_category;
+      this.storeInfo.lat = this.restaurant.lat;
+      this.storeInfo.lng = this.restaurant.lng;
+    },
     register() {},
     async bookmarkRestaurant() {
       try {

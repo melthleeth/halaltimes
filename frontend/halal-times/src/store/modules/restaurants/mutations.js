@@ -12,6 +12,7 @@ export default {
         state.bookmarked = payload;
     },
     setStoreInfo(state, payload) {
-        state.restaurantItem = payload;
+        console.log("payload: ", payload);
+        state.storeInfo = payload;
     },
 };

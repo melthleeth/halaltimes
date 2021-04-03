@@ -12,6 +12,6 @@ export default {
         return state.bookmarked;
     },
     storeInfo(state) {
-        return state.restaurantItem;
+        return state.storeInfo;
     }
 };
