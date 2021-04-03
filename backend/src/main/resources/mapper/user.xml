@@ -118,14 +118,14 @@
 		where email = #{email} and r.active = 1
 	</select>
 
-	<select id="getBookmarkList" parameterType="string" resultType="BookmarkDto">
+	<select id="getBookmarkList" parameterType="int" resultType="BookmarkDto">
 		select  id_store, id_bookmark,id_user
 		from bookmark b join user
 		using(id_user)
 		where id_user = #{id_user} and b.active = 1;
 	</select>
 	
-	<select id="getIdUser" parameterType="string" resultType="string">
+	<select id="getIdUser" parameterType="string" resultType="int">
 		select id_user
 		from user
 		where email = #{email} and active = 1;

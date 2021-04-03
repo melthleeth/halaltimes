@@ -61,10 +61,10 @@ public interface UserMapper {
 	/** 게시글 리스트 */
 	public List<ReviewDto> getReviewList(String email) throws SQLException;
 
-	public List<BookmarkDto> getBookmarkList(String id_user) throws SQLException;
+	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
 	
 
 	/** email 로 id_user 가져오기*/
-	public String getIdUser(String email)throws SQLException;
+	public int getIdUser(String email)throws SQLException;
 
 }
