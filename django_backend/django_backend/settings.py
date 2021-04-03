@@ -133,6 +133,7 @@ STATIC_URL = '/static/'
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:8081",
     "http://j4a206.p.ssafy.io",
 ]
 
