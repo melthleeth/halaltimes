@@ -7,6 +7,8 @@ export default {
   state() {
     return {
       keyword: null,
+      bookmarked: '',
+      storeInfo: null,
       restaurants: [
         {
           restaurantId: 1,
@@ -52,6 +54,7 @@ export default {
         {
           id_review: 1,
           id_user: 'max@gmail.com',
+          nickname: '맥스',
           id_store: 'aba38fa3-8e09-11eb-aeb0-020358a1ded6',
           store_name: '우스마니아',
           score: 4.0,
@@ -62,6 +65,7 @@ export default {
         {
           id_review: 2,
           id_user: 'bruce@gmail.com',
+          nickname: '브루스',
           id_store: 'aba38fa3-8e09-11eb-aeb0-020358a1ded6',
           store_name: '우스마니아',
           score: 3.0,
@@ -72,6 +76,7 @@ export default {
         {
           id_review: 3,
           id_user: 'kelly@gmail.com',
+          nickname: '켈리',
           id_store: 'aba38fa3-8e09-11eb-aeb0-020358a1ded6',
           store_name: '우스마니아',
           score: 1.0,
@@ -82,6 +87,7 @@ export default {
         {
           id_review: 4,
           id_user: 'kelly@gmail.com',
+          nickname: '켈리',
           id_store: 'aba39760-8e09-11eb-aeb0-020358a1ded6',
           store_name: '카파도키아',
           score: 3.5,
@@ -92,12 +98,13 @@ export default {
         {
           id_review: 5,
           id_user: 'karl@gmail.com',
+          nickname: '칼',
           id_store: 'aba39760-8e09-11eb-aeb0-020358a1ded6',
           store_name: '카파도키아',
           score: 1.5,
           content: '그럭저럭',
           upload_date: '2021.01.29.',
-          likeCnt: 12
+          likeCnt: 2
         },
       ]
     };

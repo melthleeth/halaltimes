@@ -12,11 +12,14 @@
       <span class="font-bold text-xl text-center truncate">{{ restaurantName }}</span>
       <span class="G-market-sans-B color-primary">{{ averageScore }}</span>
     </section>
+    <section class="flex space-x-2 text-xs font-color-black-200">
+      <span>{{ shortenAddress }}</span>
+    </section>
     <section
       class="G-market-sans-L flex space-x-2 text-xs font-color-black-200"
     >
       <span>조회 {{ hits }}</span>
-      <span>리뷰 {{ reviewCounts }}</span>
+      <span>리뷰 {{ reviews }}</span>
     </section>
     <section id="tag-and-bookmark" class="flex items-center w-full mt-3 mb-1">
       <article class="space-x-2">
@@ -45,10 +48,10 @@ export default {
     'restaurantId',
     'imgpath',
     'restaurantName',
+    'address',
     'averageScore',
-    'locationRegion',
     'hits',
-    'reviewCounts',
+    'reviews',
     'foodCategory',
     'muslimFriendly'
   ],
@@ -64,6 +67,10 @@ export default {
       else if (this.tagColor === 2) return 'tag-color-2';
       else if (this.tagColor === 3) return 'tag-color-3';
       else return 'tag-color-4';
+    },
+    shortenAddress() {
+      const address = this.address.split(" ");
+      return `${address[0]} ${address[1]}`;
     }
   },
   created() {
@@ -93,20 +100,4 @@ export default {
 };
 </script>
 <style scoped>
-.card-corner {
-  border-radius: 0 0 30px 0;
-}
-
-.tag-color-1 {
-  background-color: #3d1f5d;
-}
-.tag-color-2 {
-  background-color: #3a9cff;
-}
-.tag-color-3 {
-  background-color: #ff4900;
-}
-.tag-color-4 {
-  background-color: #ff9400;
-}
 </style>
