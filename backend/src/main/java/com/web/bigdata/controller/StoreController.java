@@ -95,7 +95,7 @@ public class StoreController {
 			
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
-			System.out.println("storeDto 는 => "+storeDto);
+//			System.out.println("storeDto 는 => "+storeDto);
 			String scoreStr = storeService.getStoreAvgScore(id_store);
 			double score = scoreStr == null ? 0 : Double.parseDouble(scoreStr);
 			score = Math.round(score*100)/100.0;
@@ -126,6 +126,7 @@ public class StoreController {
 				map.put("id_review", review.getId_review());
 				map.put("id_user",id_user);
 				review.setLikeCheck(reviewService.likeCheck(map));
+				review.setNickname(userService.getNickName(review.getId_user()));
 			}
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
@@ -133,7 +134,7 @@ public class StoreController {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-
+		System.out.println(resultMap);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 
@@ -320,7 +321,7 @@ public class StoreController {
 				active = 1;
 //				storeService.likeCntUp(id_store); // like 갯수 증가
 			} else {
-				storeService.unlike(map);
+				storeService.unlike(map);	
 				active = 0;
 //				storeService.likeCntDown(id_store); // like 갯수 감소
 			}

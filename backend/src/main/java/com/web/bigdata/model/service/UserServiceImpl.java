@@ -137,4 +137,9 @@ public class UserServiceImpl implements UserService {
 	public Integer getIdUser(String email) throws SQLException {
 		return userMapper.getIdUser(email);
 	}
+
+	@Override
+	public String getNickName(int id_user) throws SQLException {
+		return userMapper.getNickName(id_user);
+	}
 }

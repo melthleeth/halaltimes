@@ -63,8 +63,10 @@ public interface UserMapper {
 
 	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
 	
-
 	/** email 로 id_user 가져오기*/
 	public Integer getIdUser(String email)throws SQLException;
+
+	/** id_user 로 nickname 가져오기*/
+	public String getNickName(int id_user)throws SQLException;
 
 }
