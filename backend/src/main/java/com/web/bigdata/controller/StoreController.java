@@ -95,26 +95,26 @@ public class StoreController {
 			
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
-			System.out.println(storeDto);
-			double score = Double.parseDouble(storeService.getStoreAvgScore(id_store));
+			System.out.println("storeDto 는 => "+storeDto);
+			String scoreStr = storeService.getStoreAvgScore(id_store);
+			double score = scoreStr == null ? 0 : Double.parseDouble(scoreStr);
 			score = Math.round(score*100)/100.0;
-			System.out.println(score);
-			System.out.println(score);
-			System.out.println(score);
-			System.out.println(score);
 			storeDto.setAverageScore(score);
 			resultMap.put("storeInfo", storeDto);
+			
 			// like(bookmark) 했는지 확인
-			int id_user = userService.getIdUser(email);
+			Integer id_user_temp = userService.getIdUser(email);
+			int id_user = id_user_temp == null ? 0 : id_user_temp; 
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-//			storeDto.setIsBookmarked(bookmark);
-			System.out.println(bookmarkDto);
+
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
+				System.out.println("zzz");
 			}
+			
 			// like를 누른 적이 있으면
 			else {
 				resultMap.put("like", bookmarkDto.getActive());

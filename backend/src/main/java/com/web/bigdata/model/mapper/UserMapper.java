@@ -65,6 +65,6 @@ public interface UserMapper {
 	
 
 	/** email 로 id_user 가져오기*/
-	public int getIdUser(String email)throws SQLException;
+	public Integer getIdUser(String email)throws SQLException;
 
 }
