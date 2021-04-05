@@ -27,7 +27,7 @@
         class="grid grid-cols-3 grid-flow-row gap-1 mx-auto"
       >
         <restaurant-card
-          v-for="restaurant in filteredRestaurants"
+          v-for="restaurant in filteredRestaurants.slice(0, 6)"
           :key="restaurant.restaurantId"
           :restaurantId="restaurant.restaurantId"
           :imgpath="restaurant.imgpath"

@@ -28,7 +28,7 @@
           </div>
           <div v-else-if="reviews.length > 0">
             <review-card
-              v-for="reviewItem in reviews"
+              v-for="reviewItem in reviews.slice(0, 6)"
               :key="reviewItem.id_review"
               :id_review="reviewItem.id_review"
               :id_user="reviewItem.id_user"
@@ -49,7 +49,8 @@
         </article>
       </section>
       <section v-if="!isLoading" class="flex flex-col w-5/12 h-auto mx-2">
-        <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map>
+        <!-- <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map> -->
+        <!-- <naver-map :lat="+restaurant.lat" :lng="+restaurant.lng"></naver-map> -->
         <!-- <img
           src="@/assets/resources/default.png"
           alt="map"
@@ -219,12 +220,14 @@
 </template>
 <script>
 import ReviewCard from '../../components/restaurants/ReviewCard.vue';
-import KakaoMap from '../../components/ui/KakaoMap.vue';
+// import KakaoMap from '../../components/ui/KakaoMap.vue';
+// import NaverMap from '../../components/ui/NaverMap.vue';
 
 export default {
   components: {
     ReviewCard,
-    KakaoMap
+    // NaverMap,
+    // KakaoMap
   },
   props: ['restaurantId', 'restaurantName'],
   data() {
@@ -351,7 +354,7 @@ export default {
       const email = this.$store.getters.getUserEmail;
 
       const response = await fetch(
-        `${process.env.VUE_APP_SERVER_URL}/store?id_store=${id_store}&email=${email}`,
+        `${process.env.VUE_APP_SERVER_URL}/store?id_store=${+id_store}&email=${email}`,
         {
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -372,6 +375,8 @@ export default {
 
       this.restaurant = responseData.storeInfo;
       this.bookmarked = responseData.like;
+
+      console.log(this.restaurant);
 
       this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
       this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
