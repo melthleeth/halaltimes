@@ -30,7 +30,7 @@ public interface ReviewMapper {
 	public String getLastReview(String id_user) throws SQLException;
 
 	/** 하나의 리뷰 정보 */
-	public ReviewDto getOne(String id_review) throws SQLException;
+	public ReviewDto getOne(int id_review) throws SQLException;
 
 	/** 리뷰 작성 */
 	public int write(ReviewDto reviewDto) throws SQLException;
@@ -39,10 +39,10 @@ public interface ReviewMapper {
 	public int modify(ReviewDto reviewDto) throws SQLException;
 
 	/** 리뷰 삭제 */
-	public int delete(String id_review) throws SQLException;
+	public int delete(int id_review) throws SQLException;
 
 	/** 해당 리뷰의 좋아요 수 */
-	public int likeCount(String id_review) throws SQLException;
+	public int likeCount(int id_review) throws SQLException;
 
 	/** 좋아요 했는지 조회 */
 	public int likeCheck(Map<String, Object> map) throws SQLException;
@@ -63,15 +63,15 @@ public interface ReviewMapper {
 	public int unlike(Map<String, Object> map) throws SQLException;
 
 	/** 리뷰의 좋아요 수 갱신 */
-	public int likeCntUp(String id_review) throws SQLException;
+	public int likeCntUp(int id_review) throws SQLException;
 
-	public int likeCntDown(String id_review) throws SQLException;
+	public int likeCntDown(int id_review) throws SQLException;
 
 	/** File insert to DB */
 	public int uploadFile(ImgDto img) throws SQLException;
 
 	/** 리뷰의 이미지 가져오기 */
-	public List<ImgDto> getImages(String id_review) throws SQLException;
+	public List<ImgDto> getImages(int id_review) throws SQLException;
 
 	/** 사진 정보 */
 	public ImgDto getImgInfo(String id_review_image) throws SQLException;
@@ -82,9 +82,9 @@ public interface ReviewMapper {
 	public int deleteImage(String id_review_image) throws SQLException;
 	
 	/** 해당 store의 review들 가져오기 */
-	public List<ReviewDto> getStoreReviews(String id_store)throws SQLException;
+	public List<ReviewDto> getStoreReviews(int id_store)throws SQLException;
 
 	/** 해당 store의 review 갯수 가져오기 */
-	public int getReviewCount(String id_store)throws SQLException;
+	public int getReviewCount(int id_store)throws SQLException;
 
 }

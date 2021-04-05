@@ -1,7 +1,7 @@
 package com.web.bigdata.model;
 
 public class UserDto {
-	private String id_user;
+	private int id_user;
 	private String email;
 	private String password;
 	private String nickname;
@@ -15,7 +15,7 @@ public class UserDto {
 		super();
 	}
 
-	protected UserDto(String id_user, String email, String password, String nickname, String born_year,
+	protected UserDto(int id_user, String email, String password, String nickname, String born_year,
 			String profile_image, String gender, String prePwd, String role) {
 		super();
 		this.id_user = id_user;
@@ -29,11 +29,13 @@ public class UserDto {
 		this.role = role;
 	}
 
-	public String getId_user() {
+	
+
+	public int getId_user() {
 		return id_user;
 	}
 
-	public void setId_user(String id_user) {
+	public void setId_user(int id_user) {
 		this.id_user = id_user;
 	}
 

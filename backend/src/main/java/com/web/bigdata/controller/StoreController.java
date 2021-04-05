@@ -81,7 +81,7 @@ public class StoreController {
 
 	@ApiOperation(value = "음식점 상세 보기", notes = "음식점 번호에 해당하는 음식점의 정보를 반환한다.", response = StoreDto.class)
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getStoreDetail(@RequestParam String id_store, @RequestParam(required = false) String email)
+	public ResponseEntity<Map<String, Object>> getStoreDetail(@RequestParam int id_store, @RequestParam(required = false) String email)
 			throws Exception {
 		logger.info("getDetail - 호출");
 		HttpStatus status = HttpStatus.OK;
@@ -98,11 +98,14 @@ public class StoreController {
 			System.out.println(storeDto);
 			double score = Double.parseDouble(storeService.getStoreAvgScore(id_store));
 			score = Math.round(score*100)/100.0;
+			System.out.println(score);
+			System.out.println(score);
+			System.out.println(score);
+			System.out.println(score);
 			storeDto.setAverageScore(score);
 			resultMap.put("storeInfo", storeDto);
-			
 			// like(bookmark) 했는지 확인
-			String id_user = userService.getIdUser(email);
+			int id_user = userService.getIdUser(email);
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
@@ -290,14 +293,14 @@ public class StoreController {
 
 	@ApiOperation(value = "식당 북마크", notes = "store_id에 해당하는 식당의 북마크를 토글한다.", response = HashMap.class)
 	@PutMapping("/bookmark")
-	public ResponseEntity<Map<String, Object>> like(@RequestParam String id_store, @RequestParam String email) {
+	public ResponseEntity<Map<String, Object>> like(@RequestParam int id_store, @RequestParam String email) {
 		logger.info("like - 호출");
 		HttpStatus status = HttpStatus.OK;
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
-			String id_user = userService.getIdUser(email);
+			int id_user = userService.getIdUser(email);
 			map.put("id_store", id_store);
 			map.put("id_user", id_user);
 

@@ -19,7 +19,7 @@ public interface ReviewService {
 	public ReviewDto getLikeReview(String id_review) throws Exception;
 
 	/** 하나의 리뷰 정보 */
-	public ReviewDto getDetail(String id_review) throws Exception;
+	public ReviewDto getDetail(int id_review) throws Exception;
 
 	/** 마지막으로 작성한 리뷰 번호 */
 	public String getLastReview(String id_user) throws Exception;
@@ -31,10 +31,10 @@ public interface ReviewService {
 	public boolean modify(ReviewDto reviewDto) throws Exception;
 
 	/** 리뷰 삭제 */
-	public boolean delete(String id_review) throws Exception;
+	public boolean delete(int id_review) throws Exception;
 
 	/** 해당 리뷰의 좋아요 수 */
-	public int likeCount(String id_review) throws Exception;
+	public int likeCount(int id_review) throws Exception;
 
 	/** 좋아요 했는지 조회 */
 	public int likeCheck(Map<String, Object> map) throws Exception;
@@ -52,15 +52,15 @@ public interface ReviewService {
 	public int unlike(Map<String, Object> map) throws Exception;
 
 	/** 리뷰의 좋아요 수 갱신 */
-	public int likeCntUp(String id_review) throws Exception;
+	public int likeCntUp(int id_review) throws Exception;
 
-	public int likeCntDown(String id_review) throws Exception;
+	public int likeCntDown(int id_review) throws Exception;
 
 	/** File insert to DB */
 	public boolean uploadFile(ImgDto img) throws Exception;
 
 	/** 리뷰의 이미지 가져오기 */
-	public List<ImgDto> getImages(String id_review) throws Exception;
+	public List<ImgDto> getImages(int id_review) throws Exception;
 
 	/** 사진 정보 */
 	public ImgDto getImgInfo(String id_review_image) throws Exception;
@@ -71,9 +71,9 @@ public interface ReviewService {
 	public boolean deleteImage(String id_review_image) throws Exception;
 
 	/** 해당 store의 review들 가져오기 */
-	public List<ReviewDto> getStoreReviews(String id_store) throws Exception;
+	public List<ReviewDto> getStoreReviews(int id_store) throws Exception;
 
 	/** 해당 store의 review 갯수 가져오기 */
-	public int getReviewCount(String id_store) throws Exception;
+	public int getReviewCount(int id_store) throws Exception;
 
 }

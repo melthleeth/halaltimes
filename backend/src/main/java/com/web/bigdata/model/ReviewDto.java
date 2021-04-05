@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ReviewDto {
-	private String id_review;
-	private String id_user;
-	private String id_store;
+	private int id_review;
+	private int id_user;
+	private int id_store;
 	private String store_name;
 	private float score;
 	private String content;
@@ -63,27 +63,27 @@ public class ReviewDto {
 		this.likeCnt = likeCnt;
 	}
 
-	public String getId_review() {
+	public int getId_review() {
 		return id_review;
 	}
 
-	public void setId_review(String id_review) {
+	public void setId_review(int id_review) {
 		this.id_review = id_review;
 	}
 
-	public String getId_user() {
+	public int getId_user() {
 		return id_user;
 	}
 
-	public void setId_user(String id_user) {
+	public void setId_user(int id_user) {
 		this.id_user = id_user;
 	}
 
-	public String getId_store() {
+	public int getId_store() {
 		return id_store;
 	}
 
-	public void setId_store(String id_store) {
+	public void setId_store(int id_store) {
 		this.id_store = id_store;
 	}
 

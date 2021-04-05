@@ -1,9 +1,9 @@
 package com.web.bigdata.model;
 
 public class BookmarkDto {
-	private String id_bookmark;
-	private String id_store;
-	private String id_user;
+	private int id_bookmark;
+	private int id_store;
+	private int id_user;
 	private String store_name;
 	private String score;
 	private String address;
@@ -29,22 +29,22 @@ public class BookmarkDto {
 		this.store_name = store_name;
 	}
 	
-	public String getId_bookmark() {
+	public int getId_bookmark() {
 		return id_bookmark;
 	}
-	public void setId_bookmark(String id_bookmark) {
+	public void setId_bookmark(int id_bookmark) {
 		this.id_bookmark = id_bookmark;
 	}
-	public String getId_user() {
+	public int getId_user() {
 		return id_user;
 	}
-	public void setId_user(String id_user) {
+	public void setId_user(int id_user) {
 		this.id_user = id_user;
 	}
-	public String getId_store() {
+	public int getId_store() {
 		return id_store;
 	}
-	public void setId_store(String id_store) {
+	public void setId_store(int id_store) {
 		this.id_store = id_store;
 	}
 	public int getActive() {

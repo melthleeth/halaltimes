@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class StoreDto {
 	// store table
-	private String id_store;
+	private int id_store;
 	private String store_name;
 	private String muslim_friendly;
 	private String location_region;
@@ -38,12 +38,15 @@ public class StoreDto {
 	public void setReviews(int reviews) {
 		this.reviews = reviews;
 	}
-	public String getId_store() {
+	
+	public int getId_store() {
 		return id_store;
 	}
-	public void setId_store(String id_store) {
+
+	public void setId_store(int id_store) {
 		this.id_store = id_store;
 	}
+
 	public String getStore_name() {
 		return store_name;
 	}

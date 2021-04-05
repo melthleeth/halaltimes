@@ -1,32 +1,32 @@
 package com.web.bigdata.model;
 
 public class ReviewLikeDto {
-	private String id_review_like;
-	private String id_review;
-	private String id_user;
+	private int id_review_like;
+	private int id_review;
+	private int id_user;
 	private int active;
 
-	public String getId_review_like() {
+	public int getId_review_like() {
 		return id_review_like;
 	}
 
-	public void setId_review_like(String id_review_like) {
+	public void setId_review_like(int id_review_like) {
 		this.id_review_like = id_review_like;
 	}
 
-	public String getId_review() {
+	public int getId_review() {
 		return id_review;
 	}
 
-	public void setId_review(String id_review) {
+	public void setId_review(int id_review) {
 		this.id_review = id_review;
 	}
 
-	public String getId_user() {
+	public int getId_user() {
 		return id_user;
 	}
 
-	public void setId_user(String id_user) {
+	public void setId_user(int id_user) {
 		this.id_user = id_user;
 	}
 
