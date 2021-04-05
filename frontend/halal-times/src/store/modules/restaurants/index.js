@@ -6,7 +6,10 @@ export default {
   namespaced: true,
   state() {
     return {
+      lastFetch: null,
       keyword: null,
+      restaurantId: 0,
+      restaurantName: "",
       bookmarked: '',
       storeInfo: null,
       restaurants: [

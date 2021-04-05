@@ -9,7 +9,9 @@
       alt="restaurant image"
     />
     <section class="flex items-center mt-2 space-x-2">
-      <span class="font-bold text-xl text-center truncate">{{ restaurantName }}</span>
+      <span class="font-bold text-xl text-center truncate">{{
+        restaurantName
+      }}</span>
       <span class="G-market-sans-B color-primary">{{ averageScore }}</span>
     </section>
     <section class="flex space-x-2 text-xs font-color-black-200">
@@ -28,7 +30,8 @@
           class="w-max bg-brown inline-block rounded-full px-3 py-1 text-xs text-white"
           >{{ foodCategory }}</span
         >
-        <span v-if="muslimFriendly.length > 0"
+        <span
+          v-if="muslimFriendly.length > 0"
           class="w-max inline-block rounded-full px-3 py-1 text-xs text-white"
           :class="getTagColor"
           >{{ muslimFriendly }}</span
@@ -69,7 +72,7 @@ export default {
       else return 'tag-color-4';
     },
     shortenAddress() {
-      const address = this.address.split(" ");
+      const address = this.address.split(' ');
       return `${address[0]} ${address[1]}`;
     }
   },
@@ -88,10 +91,14 @@ export default {
   },
   methods: {
     viewRetaurantDetail() {
+      this.$store.dispatch('restaurants/setRestaurantInfo', {
+        id: this.restaurantId,
+        name: this.restaurantName
+      });
       this.$router.push({
         name: 'RestaurantDetail',
         params: {
-          restaurantId: this.restaurantId,
+          // restaurantId: this.restaurantId,
           restaurantName: this.restaurantName
         }
       });
@@ -99,5 +106,4 @@ export default {
   }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

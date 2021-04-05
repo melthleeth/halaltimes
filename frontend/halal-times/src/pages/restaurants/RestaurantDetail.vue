@@ -7,10 +7,12 @@
     <div id="top-restaurant-title" class="flex flex-col text-center ">
       <section class="w-full border-line">
         <span class="G-market-sans-B text-3xl tracking-widest">{{
-          restaurantName
+          restaurant.restaurantName
         }}</span>
       </section>
-      <span class="text-lg font-color-black-200 my-2">{{ restaurant.address }}</span>
+      <span class="text-lg font-color-black-200 my-2">{{
+        restaurant.address
+      }}</span>
     </div>
     <div id="center-contents" class="flex">
       <section id="left-contents" class="w-7/12">
@@ -28,7 +30,7 @@
           </div>
           <div v-else-if="reviews.length > 0">
             <review-card
-              v-for="reviewItem in reviews.slice(0, 6)"
+              v-for="reviewItem in reviews"
               :key="reviewItem.id_review"
               :id_review="reviewItem.id_review"
               :id_user="reviewItem.id_user"
@@ -48,22 +50,22 @@
           >
         </article>
       </section>
-      <section v-if="!isLoading" class="flex flex-col w-5/12 h-auto mx-2">
+      <section class="flex flex-col w-5/12 h-auto mx-2">
         <!-- <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map> -->
         <!-- <naver-map :lat="+restaurant.lat" :lng="+restaurant.lng"></naver-map> -->
-        <!-- <img
+        <img
           src="@/assets/resources/default.png"
           alt="map"
           class="object-cover w-full h-64 border-line-full"
-        /> -->
+        />
         <span class="font-bold text-lg border-line mt-1 pl-1">위치</span>
         <div class="flex border-line text-sm my-2 px-2 pb-2">
           <article
             class="cursor-pointer transition duration-100 ease-in-out transform hover:scale-105"
-            @click="bookmarkRestaurant"
+            @click="bookmark"
           >
             <img
-              v-if="bookmarked === 0"
+              v-if="!isBookmark"
               src="@/assets/icon/heart.png"
               alt="bookmark icon"
               class="object-contain w-8 h-8"
@@ -163,15 +165,15 @@
             <span class="font-bold w-16 mr-4 text-right">태그</span>
             <article class="flex flex-col space-y-2">
               <span
-                v-if="foodCategory"
+                v-if="restaurant.foodCategory"
                 class="w-max bg-brown inline-block rounded-full px-3 py-1 text-sm text-white"
-                >{{ foodCategory }}</span
+                >{{ restaurant.foodCategory }}</span
               >
               <span
-                v-if="restaurant.muslim_friendly"
+                v-if="restaurant.muslimFriendly"
                 class="w-max inline-block rounded-full px-3 py-1 text-sm text-white"
                 :class="getTagColor"
-                >{{ restaurant.muslim_friendly }}</span
+                >{{ restaurant.muslimFriendly }}</span
               >
             </article>
           </div>
@@ -195,19 +197,19 @@
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">전화번호</span>
             <span class="text-sm">
-              {{ tel }}
+              {{ restaurant.tel }}
             </span>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">주차</span>
             <span class="text-sm">
-              {{ parking }}
+              {{ restaurant.parking }}
             </span>
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">영업시간</span>
             <span class="text-sm">
-              {{ workingTime }}
+              {{ restaurant.working_time }}
             </span>
           </div>
         </article>
@@ -225,30 +227,35 @@ import ReviewCard from '../../components/restaurants/ReviewCard.vue';
 
 export default {
   components: {
-    ReviewCard,
+    ReviewCard
     // NaverMap,
     // KakaoMap
   },
-  props: ['restaurantId', 'restaurantName'],
+  // props: ['restaurantId', 'restaurantName'],
   data() {
     return {
       isLoading: false,
-      restaurant: null,
       reviewDialogIsVisible: false,
+      restaurant: null,
+      bookmarked: true,
       tagColor: 1,
       score: null,
-      bookmarked: 0,
       reviewContents: '',
-      ratings: 0,
-      storeInfo: {
-        store_name: '',
-        food_category: '',
-        lat: 37.5477,
-        lng: 126.9229
-      }
+      ratings: 0
     };
   },
+  watch: {
+    // bookmarked(newValue) {
+    //   console.log("watch: bookmarked", newValue);
+    //   this.bookmarked = newValue;
+    // },
+  },
   computed: {
+    isBookmark() {
+      const newValue = this.$store.getters['restaurants/bookmarked'];
+      // if (this.bookmarked !== newValue) this.bookmarked = newValue;
+      return newValue;
+    },
     getTagColor() {
       if (this.tagColor === 1) return 'tag-color-1';
       else if (this.tagColor === 2) return 'tag-color-2';
@@ -260,45 +267,12 @@ export default {
       const score = +this.restaurant.averageScore * 20;
       return score + 1.5;
     },
-    restaurantname() {
-      console.log('음식점 이름: ', this.restaurantName);
-      return this.restaurantName;
-    },
-    address() {
-      return this.restaurant.address;
-    },
     imgsrc() {
       // return this.restaurant.imgpath;
-      return "https://i.stack.imgur.com/y9DpT.jpg";
+      return 'https://i.stack.imgur.com/y9DpT.jpg';
     },
     reviews() {
-      const reviews = this.$store.getters['restaurants/reviews'].filter(
-        review => {
-          console.log('review id: ', review.id_store);
-          console.log('restaurant id: ', this.restaurantId);
-          if (review.id_store === this.restaurantId) return true;
-        }
-      );
-      console.log(reviews);
-      return reviews;
-    },
-    averageScore() {
-      return this.restaurant.averageScore;
-    },
-    foodCategory() {
-      return this.restaurant.food_category;
-    },
-    // muslimFriendly() {
-    //   return this.restaurant.muslim_friendly;
-    // },
-    tel() {
-      return this.restaurant.tel;
-    },
-    parking() {
-      return this.restaurant.parking === "0" ? "불가능" : "가능";
-    },
-    workingTime() {
-      return this.restaurant.working_time;
+      return this.$store.getters['restaurants/reviews'];
     },
     ratingEmoji() {
       if (this.ratings === '5') return '😍';
@@ -310,18 +284,16 @@ export default {
     }
   },
   created() {
-    console.log('id: ', this.restaurantId);
-    // this.restaurant = this.$store.getters['restaurants/restaurants'].find(
-    //   restaurant => restaurant.restaurantId.toString() === this.restaurantId
-    // );
-    this.loadStoreInfoReviews();
-    // this.restaurant = this.$store.getters['restaurants/storeInfo'];
-    // console.log('restaurant: ', this.restaurant);
+    // console.log(this.$store.getters['restaurants/restaurantName'], '상세 정보');
+    const restaurantId = this.$store.getters['restaurants/restaurantId'];
+    // console.log("created: restaurantId", restaurantId);
+    this.restaurant = this.$store.getters['restaurants/restaurants'].find(
+      restaurant => restaurant.restaurantId === restaurantId
+    );
+    // console.log("created: this.restaurant", this.restaurant);
+    this.loadLikeReviews();
     // this.bookmarked = this.$store.getters['restaurants/bookmarked'];
-    // this.score = this.restaurant.averageScore;
-    // this.initStoreInfo();
 
-    // this.loadReviews();
     switch (this.muslimFriendly) {
       case '무슬림 자가 인증':
         this.tagColor = 2;
@@ -334,80 +306,39 @@ export default {
         break;
     }
   },
-  
   methods: {
     goPreviousPage() {
       this.$router.go(-1);
     },
-    setRating(rating) {
-      this.rating = rating;
-    },
-    async loadStoreInfoReviews() {
+    async loadLikeReviews() {
       this.isLoading = true;
-      // try {
-      //   await this.$store.dispatch('restaurants/loadStoreInfoReviews', this.restaurantId);
-      // } catch (error) {
-      //   //
-      // }
-
-      const id_store = this.restaurantId;
-      const email = this.$store.getters.getUserEmail;
-
-      const response = await fetch(
-        `${process.env.VUE_APP_SERVER_URL}/store?id_store=${+id_store}&email=${email}`,
-        {
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            Accept: 'application/json;',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*'
-          },
-          method: 'GET'
-        }
-      );
-      const responseData = await response.json();
-      console.log(responseData);
-
-      if (!response.ok) {
-        console.log('통신 error');
+      try {
+        await this.$store.dispatch('restaurants/loadLikeReviews');
+      } catch (error) {
+        this.error =
+          error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
       this.isLoading = false;
-
-      this.restaurant = responseData.storeInfo;
-      this.bookmarked = responseData.like;
-
-      console.log(this.restaurant);
-
-      this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
-      this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
-      console.log(this.restaurant.lat, this.restaurant.lng);
+      // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
+      // this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
+      // console.log(this.restaurant.lat, this.restaurant.lng);
     },
-    // async loadReviews() {
-    //   this.isLoading = true;
-    //   try {
-    //     await this.$store.dispatch('restaurants/loadRestaurants');
-    //   } catch (error) {
-    //     this.error = error.message || '리뷰를 불러오는데 문제가 발생했습니다.';
-    //   }
-    //   this.isLoading = false;
-    // },
-    initStoreInfo() {
-      this.storeInfo.store_name = this.restaurant.store_name;
-      this.storeInfo.food_category = this.restaurant.food_category;
-      this.storeInfo.lat = this.restaurant.lat;
-      this.storeInfo.lng = this.restaurant.lng;
-    },
-    register() {},
-    async bookmarkRestaurant() {
+    reviewRegister() {},
+    reviewModify() {},
+    reviewDelete() {},
+    async bookmark() {
+      // console.log("methods: bookmark/getUserEmail", this.$store.getters.getUserEmail);
+      if (this.$store.getters.getUserEmail === "") {
+        alert('로그인이 필요한 기능입니다.');
+        return;
+      }
+
       try {
         await this.$store.dispatch(
-          'restaurants/toggleBookmark',
-          this.restaurantId
-        );
+          'restaurants/toggleBookmark');
       } catch (error) {
         this.error = error.message || '북마크 중 문제가 발생했습니다.';
       }
-      this.bookmarked = this.$store.getters['restaurants/bookmarked'];
     },
     writeReview() {
       this.reviewDialogIsVisible = true;
