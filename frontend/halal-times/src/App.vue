@@ -92,10 +92,32 @@ export default {
   -webkit-text-stroke-color: #2b2a29;
 }
 
+.card-corner {
+  border-radius: 0 0 30px 0;
+}
+
+.tag-color-1 {
+  background-color: #3d1f5d;
+}
+.tag-color-2 {
+  background-color: #3a9cff;
+}
+.tag-color-3 {
+  background-color: #ff4900;
+}
+.tag-color-4 {
+  background-color: #ff9400;
+}
+
 .input-dialog {
   border: 3px solid #2b2a29;
   padding: 0.5rem 0.75rem;
   text-align: center;
+}
+
+.input-dialog:hover,
+.input-dialog:focus {
+  background-color: #FFF58C;
 }
 
 .input-base {

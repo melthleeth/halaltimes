@@ -56,7 +56,7 @@ public interface UserService {
 	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
 	
 	/** email 로 id_user 가져오기*/
-	public int getIdUser(String email)throws Exception;
+	public Integer getIdUser(String email)throws Exception;
 
 
 }

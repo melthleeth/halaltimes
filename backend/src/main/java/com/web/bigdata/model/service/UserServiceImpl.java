@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public int getIdUser(String email) throws Exception {
+	public Integer getIdUser(String email) throws SQLException {
 		return userMapper.getIdUser(email);
 	}
 }

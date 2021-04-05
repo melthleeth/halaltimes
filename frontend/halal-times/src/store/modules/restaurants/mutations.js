@@ -8,4 +8,11 @@ export default {
     setReviews(state, payload) {
         state.reviews = payload;
     },
+    setBookmarked(state, payload) {
+        state.bookmarked = payload;
+    },
+    setStoreInfo(state, payload) {
+        console.log("payload: ", payload);
+        state.storeInfo = payload;
+    },
 };

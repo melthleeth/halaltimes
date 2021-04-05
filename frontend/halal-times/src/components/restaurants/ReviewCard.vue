@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="flex space-x-2 items-center">
-          <span class="text-sm">{{ id_user }}</span
+          <span class="text-sm">{{ nickname }}</span
           ><span class="G-market-sans-L font-color-black-200 text-xs"
             >| {{ upload_date }}</span
           >
@@ -56,6 +56,7 @@ export default {
   props: [
     'id_review',
     'id_user',
+    'nickname',
     'id_store',
     'store_name',
     'score',
