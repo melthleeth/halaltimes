@@ -13,6 +13,20 @@
 		where active = 1
 	</select>
 	
+	<select id="getClusteredStores" parameterType="int" resultType="UserClusteredDto">
+		select id_store
+		from user_clustered
+		where clustered_no = #{clustered_no}		
+	</select>
+	
+	<select id="getRecommList" parameterType="int" resultType="StoreDto">
+		select id_store, store_name, muslim_friendly, location_region,
+			food_category, address, tel, working_time, days_closed, parking,
+			image, thumb_image, lat, lng, hits, active
+		from store
+		where active = 1 and id_store=#{id_store}
+	</select>
+		
 	<select id="getLikeStore" parameterType="int" resultType="StoreDto">
 		select id_review, content,
 				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
@@ -223,7 +237,6 @@
 		select address
 		from store
 		where id_store = #{id_store} and active = 1;
-	</select>
-	
+	</select>	
 	
 </mapper>
