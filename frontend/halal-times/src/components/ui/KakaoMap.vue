@@ -128,7 +128,7 @@ export default {
       };
 
       var map = new kakao.maps.Map(container, options);
-      map.setMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
+      // map.setMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
 
       var markerPosition = new kakao.maps.LatLng(this.lng, this.lat);
       var marker = new kakao.maps.Marker({
