@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -365,6 +367,36 @@ public class StoreController {
 
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
+	
+	@ApiOperation(value = "북마크 정보 조회", notes = "회원의 북마크 정보를 가지고 온다.", response = HashMap.class)
+	@GetMapping("/bookmark/all")
+	public ResponseEntity<List<BookmarkDto>> getBookmarks(@RequestParam String email, HttpServletRequest req)
+			throws Exception {
+		logger.info("getBookmarks - 호출");
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		
+		List<BookmarkDto> bookmarkList = new ArrayList<>();
+		// 회원 정보 조회
+		try {
+			int id_user = userService.findUserInfo(email).getId_user();
+			bookmarkList = userService.getBookmarkList(id_user);
+			for(BookmarkDto bookmark : bookmarkList) {
+				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
+				score = Math.round(score*100)/100.0;
+				bookmark.setScore(score+"");
+				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<List<BookmarkDto>>(bookmarkList, status);
+	}
+	
 
 	@ApiOperation(value = "이미지 삽입", notes = "S3에 이미지를 저장 하고 store 테이블에 이미지url 삽입 - 1회용", response = HashMap.class)
 	@PutMapping("/insertImg")
