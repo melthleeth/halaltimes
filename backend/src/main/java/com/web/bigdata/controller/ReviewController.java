@@ -168,9 +168,9 @@ public class ReviewController {
 
 		return new ResponseEntity<String>(result, status);
 	}
-
+	
 	@ApiOperation(value = "리뷰 수정", notes = "새로운 리뷰 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@PutMapping
+	@PutMapping("/modify")
 	public ResponseEntity<String> modify(@RequestBody ReviewDto reviewDto) throws Exception {
 		logger.info("modify - 호출");
 
@@ -206,7 +206,7 @@ public class ReviewController {
 	@PutMapping("/delete")
 	public ResponseEntity<String> delete(@RequestParam int id_review) {
 		logger.info("delete - 호출");
-
+		
 		try {
 			// ec2 파일 삭제
 			for (ImgDto imgDto : reviewService.getImages(id_review)) {
