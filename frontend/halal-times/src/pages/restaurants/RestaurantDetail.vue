@@ -293,6 +293,7 @@ export default {
     );
     // console.log("created: this.restaurant", this.restaurant);
     this.loadLikeReviews();
+    console.log('created: reviews', this.$store.getters['restaurants/reviews']);
     // this.bookmarked = this.$store.getters['restaurants/bookmarked'];
 
     switch (this.muslimFriendly) {
@@ -319,6 +320,7 @@ export default {
         this.error =
           error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
+
       this.isLoading = false;
       // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
       // this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
@@ -330,15 +332,17 @@ export default {
       try {
         result = await this.$store.dispatch('restaurants/registerReview', {
           content: this.reviewContents,
-          score: this.score
+          score: this.ratings
         });
       } catch (error) {
         this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';
       }
-      if (result === 'success') this.$toast.success(`🌞 리뷰 등록에 성공하였습니다.`);
+      if (result === 'success')
+        this.$toast.success(`🌞 리뷰 등록에 성공하였습니다.`);
       else this.$toast.error(`❌ 리뷰 등록에 실패하였습니다.`);
 
       this.closeReviewDialog();
+      this.loadLikeReviews();
     },
     modifyReview() {},
     deleteReview() {},

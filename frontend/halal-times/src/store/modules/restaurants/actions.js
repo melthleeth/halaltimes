@@ -63,7 +63,7 @@ export default {
     context.commit('setRestaurantName', payload.name);
   },
   async loadLikeReviews(context) {
-    // console.log("actions: loadLikeReviews/id_store", context.getters.restaurantId);
+    console.log("actions: loadLikeReviews/id_store", context.getters.restaurantId);
     const id_store = context.getters.restaurantId;
     const email = context.rootGetters.getUserEmail;
 
@@ -82,6 +82,7 @@ export default {
     const responseData = await response.json();
     // console.log('actions: loadLikeReviews/responseData', responseData);
     const reviewList = responseData.reviewList;
+    // console.log('actions: loadLikeReviews/reviewList', reviewList);
 
     if (!response.ok) {
       const error = new Error(
@@ -90,24 +91,24 @@ export default {
       throw error;
     }
 
-    const bookmarked = responseData.like === '1' ? true : false;
+    const bookmarked = +responseData.like === 1 ? true : false;
     const reviews = [];
     for (const key in reviewList) {
       const review = {
-        id_review: reviewList[key].id_review,
-        id_user: reviewList[key].id_user,
+        id_review: +reviewList[key].id_review,
+        id_user: +reviewList[key].id_user,
         nickname: reviewList[key].nickname,
-        id_store: reviewList[key].id_store,
+        id_store: +reviewList[key].id_store,
         store_name: reviewList[key].store_name,
         score: +reviewList[key].score,
         content: reviewList[key].content,
-        upload_date: responseData[key].upload_date,
+        upload_date: reviewList[key].upload_date,
         likeCnt: +reviewList[key].likeCnt,
         likeCheck: +reviewList[key].likeCheck === 1 ? true : false,
       };
       reviews.push(review);
     }
-    console.log('actions: loadLikeReviews/reviews', reviews);
+    // console.log('actions: loadLikeReviews/reviews', reviews);
     context.commit('setBookmarked', bookmarked);
     context.commit('setReviews', reviews);
   },
@@ -152,7 +153,7 @@ export default {
     // content, id_user, id_store, score
     const reviewData = {
       ...payload,
-      id_user: 8,
+      email: context.rootGetters.getUserEmail,
       nickname: context.rootGetters.getUserName,
       id_store: context.getters.restaurantId
     };
