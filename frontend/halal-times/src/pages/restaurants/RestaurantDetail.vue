@@ -92,7 +92,7 @@
                 @click="closeReviewDialog"
                 >X</span
               >
-              <span class="text-2xl font-bold mt-2 mb-4">리뷰 작성하기</span>
+              <span class="text-2xl font-bold mt-2 mb-4 icon-close">리뷰 작성하기</span>
               <section class="flex flex-col space-y-4 w-full justify-center">
                 <div class="star-rating space-x-4 mx-auto">
                   {{ ratingEmoji }}
@@ -344,8 +344,6 @@ export default {
       this.closeReviewDialog();
       this.loadLikeReviews();
     },
-    modifyReview() {},
-    deleteReview() {},
     async bookmark() {
       // console.log("methods: bookmark/getUserEmail", this.$store.getters.getUserEmail);
       if (this.$store.getters.getUserEmail === '') {
@@ -386,6 +384,10 @@ export default {
 
 #btn {
   width: 20rem;
+}
+
+.icon-close:hover {
+  color: #CF4F2E;
 }
 
 .star-ratings {

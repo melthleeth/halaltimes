@@ -29,7 +29,114 @@
           >
         </div>
       </article>
-      <article class="flex ml-auto justify-self-end text-sm">
+      <article class="flex ml-auto justify-self-end items-center text-sm">
+        <div v-if="identification" class="space-x-2 mr-2">
+          <base-button mode="small-round-brown" @click="openDialog('modify')"
+            >수정</base-button
+          >
+          <base-button mode="small-round-primary" @click="openDialog('delete')"
+            >삭제</base-button
+          >
+        </div>
+        <base-dialog
+          :open="modifyDialogIsVisible"
+          @close="closeDialog('modify')"
+          custom="width-wide"
+          class="flex flex-col justify-items-center z-40"
+        >
+          <span
+            class="flex justify-self-end ml-auto cursor-pointer text-2xl mr-2 icon-close"
+            @click="closeDialog('modify')"
+            >X</span
+          >
+          <span class="text-2xl font-bold mt-2 mb-4">리뷰 수정하기</span>
+          <section class="flex flex-col space-y-4 w-full justify-center">
+            <div class="star-rating space-x-4 mx-auto">
+              {{ ratingEmoji }}
+              <input
+                type="radio"
+                id="5-stars"
+                name="rating"
+                value="5"
+                v-model="ratings"
+              />
+              <label for="5-stars" class="star pr-4">★</label>
+              <input
+                type="radio"
+                id="4-stars"
+                name="rating"
+                value="4"
+                v-model="ratings"
+              />
+              <label for="4-stars" class="star">★</label>
+              <input
+                type="radio"
+                id="3-stars"
+                name="rating"
+                value="3"
+                v-model="ratings"
+              />
+              <label for="3-stars" class="star">★</label>
+              <input
+                type="radio"
+                id="2-stars"
+                name="rating"
+                value="2"
+                v-model="ratings"
+              />
+              <label for="2-stars" class="star">★</label>
+              <input
+                type="radio"
+                id="1-star"
+                name="rating"
+                value="1"
+                v-model="ratings"
+              />
+              <label for="1-star" class="star">★</label>
+            </div>
+            <textarea
+              class="input-base"
+              rows="8"
+              placeholder="리뷰를 작성하세요"
+              v-model.trim="reviewContents"
+            />
+            <!-- <input type="file" accept=".png, .jpg, .jpeg, .gif" @change="uploadImage" /> -->
+          </section>
+          <section class="flex space-x-2 mt-6 mb-4">
+            <base-button
+              type="submit"
+              @click="modifyReview"
+              mode="brown"
+              class="text-base"
+            >
+              수정하기</base-button
+            >
+          </section>
+        </base-dialog>
+        <base-dialog
+          :open="modifyDialogIsVisible"
+          @close="closeDialog('delete')"
+          class="flex flex-col justify-items-center z-40"
+        >
+          <span
+            class="flex justify-self-end ml-auto cursor-pointer text-2xl mr-2 icon-close"
+            @click="closeDialog('delete')"
+            >X</span
+          >
+          <span class="text-2xl font-bold mt-2 mb-4">리뷰 삭제</span>
+          <section class="flex flex-col space-y-4 w-full justify-center">
+            <span class="text-lg">정말 삭제하시겠어요?</span>
+            <span class="text-sm">되돌릴 수 없어요😭</span>
+          </section>
+          <base-button
+              type="submit"
+              @click="deleteReview"
+              mode="primary"
+              class="text-base"
+            >
+              삭제하기</base-button
+            >
+        </base-dialog>
         <div
           class="btn-like flex items-center justify-center cursor-pointer transition duration-100 ease-in-out transform hover:scale-105"
           :class="{ liked: liked }"
@@ -69,6 +176,10 @@ export default {
       ratingWidth: null,
       liked: false,
       likeCount: null,
+      modifyDialogIsVisible: false,
+      deleteDialogIsVisible: false,
+      ratings: 0,
+      reviewContents: ''
     };
   },
   computed: {
@@ -76,17 +187,69 @@ export default {
       //   const score = +this.score * 0.2;
       const score = +this.score * 20;
       return score + 1.5;
+    },
+    identification() {
+      return this.$store.getters.getUserEmail === '' ? false : true;
+    },
+    ratingEmoji() {
+      if (this.ratings === '5') return '😍';
+      else if (this.ratings === '4') return '😎';
+      else if (this.ratings === '3') return '😄';
+      else if (this.ratings === '2') return '😒';
+      else if (this.ratings === '1') return '😠';
+      else return '';
     }
   },
   created() {
-      this.likeCount = this.likeCnt;
+    this.likeCount = this.likeCnt;
   },
   methods: {
-      isLiked() {
-          this.liked = !this.liked;
-          if (this.liked) this.likeCount += 1;
-          else this.likeCount -= 1;
+    isLiked() {
+      this.liked = !this.liked;
+      if (this.liked) this.likeCount += 1;
+      else this.likeCount -= 1;
+    },
+    openDialog(type) {
+      if (type === 'modify') {
+        this.modifyDialogIsVisible = true;
+        this.ratings = this.score;
+        this.reviewContents = this.content;
+      } else this.deleteDialogIsVisible = true;
+    },
+    closeDialog(type) {
+      if (type === 'modify') this.modifyDialogIsVisible = false;
+      else this.deleteDialogIsVisible = false;
+    },
+    async modifyReview() {
+      let result;
+      try {
+        result = await this.$store.dispatch('restaurants/modifyReview', {
+          id_review: this.id_review,
+          content: this.reviewContents,
+          score: this.ratings
+        });
+      } catch (error) {
+        this.error = error.message || '리뷰를 수정하는 중 문제가 발생했습니다.';
       }
+      if (result === 'success')
+        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 수정되었습니다.</span>`);
+      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 수정에 실패하였습니다.</span>`);
+
+      this.closeDialog('modify');
+    },
+    async deleteReview() {
+      let result;
+      try {
+        result = await this.$store.dispatch('restaurants/deleteReview', this.id_review);
+      } catch (error) {
+        this.error = error.message || '리뷰를 삭제하는 중 문제가 발생했습니다.';
+      }
+      if (result === 'success')
+        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 삭제되었습니다.</span>`);
+      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 삭제에 실패하였습니다.</span>`);
+
+      this.closeDialog('delete');
+    },
   }
 };
 </script>
@@ -96,19 +259,23 @@ export default {
 }
 
 .btn-like {
-    width: 5.25rem;
-    color: #293644;
-    background-color: #E1EEDF;
-    border-radius: 50px;
-    padding: 0.5rem 0.875rem;
+  width: 5.25rem;
+  color: #293644;
+  background-color: #e1eedf;
+  border-radius: 50px;
+  padding: 0.5rem 0.875rem;
 }
 
 .liked {
-    background-color: #96CF90;
+  background-color: #96cf90;
+}
+
+.icon-close:hover {
+  color: #cf4f2e;
 }
 
 .star-ratings {
-  color: #aaa9a9; 
+  color: #aaa9a9;
   position: relative;
   unicode-bidi: bidi-override;
   width: max-content;
@@ -132,5 +299,36 @@ export default {
 .star-ratings-base {
   z-index: 0;
   padding: 0;
+}
+
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+  width: 5em;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2.3px;
+  -webkit-text-stroke-color: #2b2a29;
+  cursor: pointer;
+}
+
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #fff58c;
 }
 </style>

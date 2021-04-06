@@ -154,7 +154,6 @@ export default {
     const reviewData = {
       ...payload,
       email: context.rootGetters.getUserEmail,
-      nickname: context.rootGetters.getUserName,
       id_store: context.getters.restaurantId
     };
 
@@ -179,6 +178,63 @@ export default {
         );
         throw error;
     }
+    return responseData;
+  },
+  async modifyReview(context, payload) {
+    // id_review, content, score
+
+    console.log("actions: modifyReview/payload", payload);
+
+    const response = await fetch(`${SERVER_URL}/review`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'PUT',
+      body: JSON.stringify(payload)
+    });
+    const responseData = await response.text();
+
+    if (responseData === 'fail') {
+      alert('리뷰 수정 실패!');
+        const error = new Error(
+          responseData.message || 'actions: modifyReview 실패'
+        );
+        throw error;
+    }
+
+    context.commit('modifyReview', payload);
+
+    return responseData;
+  },
+  async deleteReview(context, payload) {
+    // id_review
+
+    console.log("actions: deleteReview/payload", payload);
+
+    const response = await fetch(`${SERVER_URL}/review?id_review=${payload}`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'POST'
+    });
+    const responseData = await response.text();
+
+    if (responseData === 'fail') {
+      alert('리뷰 삭제 실패!');
+        const error = new Error(
+          responseData.message || 'actions: deleteReview 실패'
+        );
+        throw error;
+    }
+
+    context.commit('deleteReview', payload);
+
     return responseData;
   },
 };
