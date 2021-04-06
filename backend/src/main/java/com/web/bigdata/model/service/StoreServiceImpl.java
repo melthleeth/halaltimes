@@ -12,6 +12,7 @@ import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.UserClusteredDto;
 import com.web.bigdata.model.mapper.StoreMapper;
 
 @Service
@@ -19,12 +20,25 @@ public class StoreServiceImpl implements StoreService {
 
 	@Autowired
 	private StoreMapper storeMapper;
-	
+
 	@Override
 	public List<StoreDto> getList(StoreParameterDto storeParameterDto) throws Exception {
 		int start = storeParameterDto.getPg() == 0 ? 0 : (storeParameterDto.getPg() - 1) * storeParameterDto.getSpp();
 		storeParameterDto.setStart(start);
 		return storeMapper.getList(storeParameterDto);
+	}
+
+	@Override
+	public StoreDto getRecommList(int id_store) throws Exception {
+		return storeMapper.getRecommList(id_store);
+	}
+
+	@Override
+	public List<UserClusteredDto> getClusteredStores(int clustered_no) throws Exception {
+		System.out.println("service");
+		System.out.println(clustered_no);
+		System.out.println("mapper"+storeMapper.getClusteredStores(clustered_no));
+		return storeMapper.getClusteredStores(clustered_no);
 	}
 
 	@Override
@@ -175,7 +189,7 @@ public class StoreServiceImpl implements StoreService {
 	public int hitsUp(int id_store) throws Exception {
 		return storeMapper.hitsUp(id_store);
 	}
-	
+
 	@Override
 	public String getStoreNameByIdStore(int id_store) throws Exception {
 		return storeMapper.getStoreNameByIdStore(id_store);
@@ -190,5 +204,5 @@ public class StoreServiceImpl implements StoreService {
 	public String getStoreAddress(int id_store) throws Exception {
 		return storeMapper.getStoreAddress(id_store);
 	}
-	
+
 }
