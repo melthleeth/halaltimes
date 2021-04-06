@@ -203,7 +203,7 @@ public class ReviewController {
 	}
 
 	@ApiOperation(value = "리뷰 삭제", notes = "리뷰 번호에 해당하는 리뷰의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-	@DeleteMapping
+	@PutMapping
 	public ResponseEntity<String> delete(@RequestParam int id_review) {
 		logger.info("delete - 호출");
 
