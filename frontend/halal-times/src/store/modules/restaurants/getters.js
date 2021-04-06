@@ -17,6 +17,9 @@ export default {
   bookmarked(state) {
     return state.bookmarked;
   },
+  averageScore(state) {
+    return state.averageScore;
+  },
   shouldUpdate(state) {
     const lastFetch = state.lastFetch;
     if (!lastFetch) {
