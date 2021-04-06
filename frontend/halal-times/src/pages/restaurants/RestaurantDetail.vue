@@ -51,13 +51,13 @@
         </article>
       </section>
       <section class="flex flex-col w-5/12 h-auto mx-2">
-        <!-- <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map> -->
+        <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map>
         <!-- <naver-map :lat="+restaurant.lat" :lng="+restaurant.lng"></naver-map> -->
-        <img
+        <!-- <img
           src="@/assets/resources/default.png"
           alt="map"
           class="object-cover w-full h-64 border-line-full"
-        />
+        /> -->
         <span class="font-bold text-lg border-line mt-1 pl-1">위치</span>
         <div class="flex border-line text-sm my-2 px-2 pb-2">
           <article
@@ -225,14 +225,14 @@
 </template>
 <script>
 import ReviewCard from '../../components/restaurants/ReviewCard.vue';
-// import KakaoMap from '../../components/ui/KakaoMap.vue';
+import KakaoMap from '../../components/ui/KakaoMap.vue';
 // import NaverMap from '../../components/ui/NaverMap.vue';
 
 export default {
   components: {
-    ReviewCard
-    // NaverMap,
-    // KakaoMap
+    ReviewCard,
+    // NaverMap
+    KakaoMap
   },
   // props: ['restaurantId', 'restaurantName'],
   data() {
