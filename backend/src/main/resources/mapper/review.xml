@@ -104,7 +104,7 @@
 	</select>
 	
 	<select id="getOne" parameterType="int" resultType="ReviewDto">
-		select r.id_review, r.id_store,  r.content, r.score, r.upload_date, r.update_date, u.nickname
+		select r.id_review as id_review, r.id_store as id_store,  r.content as content, r.score as score, r.upload_date as upload_date, r.update_date as update_date, u.nickname as nickname
 		from review r join user u
 			using(id_user)
 		where id_review = #{id_review} and r.active = 1

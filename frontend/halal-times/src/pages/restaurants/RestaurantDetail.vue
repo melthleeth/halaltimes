@@ -92,7 +92,9 @@
                 @click="closeReviewDialog"
                 >X</span
               >
-              <span class="text-2xl font-bold mt-2 mb-4">리뷰 작성하기</span>
+              <span class="text-2xl font-bold mt-2 mb-4 icon-close"
+                >리뷰 작성하기</span
+              >
               <section class="flex flex-col space-y-4 w-full justify-center">
                 <div class="star-rating space-x-4 mx-auto">
                   {{ ratingEmoji }}
@@ -269,8 +271,8 @@ export default {
       return score + 1.5;
     },
     imgsrc() {
-      // return this.restaurant.imgpath;
-      return 'https://i.stack.imgur.com/y9DpT.jpg';
+      return this.restaurant.imgpath;
+      // return 'https://i.stack.imgur.com/y9DpT.jpg';
     },
     reviews() {
       return this.$store.getters['restaurants/reviews'];
@@ -338,14 +340,17 @@ export default {
         this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';
       }
       if (result === 'success')
-        this.$toast.success(`🌞 리뷰 등록에 성공하였습니다.`);
-      else this.$toast.error(`❌ 리뷰 등록에 실패하였습니다.`);
+        this.$toast.success(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰 등록에 성공하였습니다.</span>`
+        );
+      else
+        this.$toast.error(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 등록에 실패하였습니다.</span>`
+        );
 
       this.closeReviewDialog();
       this.loadLikeReviews();
     },
-    modifyReview() {},
-    deleteReview() {},
     async bookmark() {
       // console.log("methods: bookmark/getUserEmail", this.$store.getters.getUserEmail);
       if (this.$store.getters.getUserEmail === '') {
@@ -358,6 +363,15 @@ export default {
       } catch (error) {
         this.error = error.message || '북마크 중 문제가 발생했습니다.';
       }
+
+      if (!this.$store.getters['restaurants/bookmarked'])
+        this.$toast.show(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 북마크한 식당으로 등록되었습니다.</span>`
+        );
+      else
+        this.$toast.show(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 북마크가 해제되었습니다.</span>`
+        );
     },
     writeReview() {
       if (this.$store.getters.getUserEmail === '') {
@@ -381,6 +395,10 @@ export default {
 
 #btn {
   width: 20rem;
+}
+
+.icon-close:hover {
+  color: #cf4f2e;
 }
 
 .star-ratings {

@@ -12,7 +12,8 @@
       <span class="font-bold text-xl text-center truncate">{{
         restaurantName
       }}</span>
-      <span class="G-market-sans-B color-primary">{{ averageScore }}</span>
+      <span v-if="averageScore > 0" class="G-market-sans-B color-primary">{{ averageScore }}</span>
+      <span v-else class="font-color-black-200 font-bold"> - </span>
     </section>
     <section class="flex space-x-2 text-xs font-color-black-200">
       <span>{{ shortenAddress }}</span>
