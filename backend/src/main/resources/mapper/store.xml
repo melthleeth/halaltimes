@@ -16,8 +16,7 @@
 	<select id="getClusteredStores" parameterType="int" resultType="UserClusteredDto">
 		select id_user_clustered, id_store
 		from user_clustered
-		where clustered_no = #{clustered_no}
-		limit 1
+		where clustered_no = #{clustered_no}		
 	</select>
 	
 	<select id="getRecommList" parameterType="int" resultType="StoreDto">
