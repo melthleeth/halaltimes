@@ -12,7 +12,7 @@
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mytest',
+        'NAME': 'halal_db',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': 'localhost',

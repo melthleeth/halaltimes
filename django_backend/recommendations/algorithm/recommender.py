@@ -58,7 +58,7 @@ class ItemBased(CollaborativeFiltering):
             self.dumpModel(model, pathDump)
         return model
     
-    def Recommendation(self, user, simMeasure = similarity.cosine, nNeighbors = 20, model = None, topN = 3):
+    def Recommendation(self, user, simMeasure = similarity.cosine, nNeighbors = 20, model = None, topN = 10):
 
         predictedScores = []
         for candidate in self.itemList:
