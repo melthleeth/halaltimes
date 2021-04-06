@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -122,7 +123,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 작성", notes = "새로운 리뷰 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping
-	public ResponseEntity<String> write(ReviewDto reviewDto) {
+	public ResponseEntity<String> write(@RequestBody ReviewDto reviewDto) {
 		logger.info("write - 호출");
 
 		String result = SUCCESS;
@@ -170,17 +171,17 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 수정", notes = "새로운 리뷰 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PutMapping
-	public ResponseEntity<String> modify(ReviewDto review) throws Exception {
+	public ResponseEntity<String> modify(@RequestBody ReviewDto reviewDto) throws Exception {
 		logger.info("modify - 호출");
 
 		String result = SUCCESS;
 		HttpStatus status = HttpStatus.OK;
 
-		List<MultipartFile> files = review.getFiles();
-		List<String> unmodified = review.getUnmodified();
-		int id_review = review.getId_review();
+		List<MultipartFile> files = reviewDto.getFiles();
+		List<String> unmodified = reviewDto.getUnmodified();
+		int id_review = reviewDto.getId_review();
 
-		if (reviewService.modify(review)) {
+		if (reviewService.modify(reviewDto)) {
 			// 삭제한 파일이 있다면
 			if (unmodified != null && unmodified.size() > 0) {
 				deleteFiles(unmodified);
