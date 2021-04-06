@@ -78,27 +78,24 @@ public class StoreController {
 
 	@ApiOperation(value = "추천 식당 목록", notes = "추천 받은 식당의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list/recomm")
-	public ResponseEntity<List<UserClusteredDto>> getRecommList(int clustered_no) throws Exception {
+	public ResponseEntity<List<StoreDto>> getRecommList(int clustered_no) throws Exception {
 		logger.info("getRecommList - 호출, " + clustered_no);
+		
 		List<UserClusteredDto> recomStore = storeService.getClusteredStores(clustered_no);
-		System.out.println("what" + storeService.getClusteredStores(clustered_no));
-		System.out.println("why" + recomStore);
-//		List<StoreDto> recomStoreList = new LinkedList<StoreDto>();
-//		for (UserClusteredDto storeDto : recomStore) {
-//			recomStoreList.add(storeService.getRecommList(storeDto.getId_store()));
-//		}
-//
-////		List<StoreDto> storeList = storeService.getList(storeParameterDto);
-//		for (StoreDto store : recomStoreList) {
-//			store.setReviews(reviewService.getReviewCount(store.getId_store()));
-//			String avgScoreStr = storeService.getStoreAvgScore(store.getId_store());
-//			double avgScore = avgScoreStr == null ? 0 : Double.parseDouble(avgScoreStr);
-//			store.setAverageScore(avgScore);
-//		}
-//		System.out.println(recomStoreList);
+		List<StoreDto> recomStoreList = new LinkedList<StoreDto>();
+		
+		for (UserClusteredDto storeDto : recomStore) {
+			recomStoreList.add(storeService.getRecommList(storeDto.getId_store()));
+		}
 
-		return new ResponseEntity<List<UserClusteredDto>>(recomStore, HttpStatus.OK);
-//		return new ResponseEntity<List<StoreDto>>(recomStoreList, HttpStatus.OK);
+		for (StoreDto store : recomStoreList) {
+			store.setReviews(reviewService.getReviewCount(store.getId_store()));
+			String avgScoreStr = storeService.getStoreAvgScore(store.getId_store());
+			double avgScore = avgScoreStr == null ? 0 : Double.parseDouble(avgScoreStr);
+			store.setAverageScore(avgScore);
+		}
+
+		return new ResponseEntity<List<StoreDto>>(recomStoreList, HttpStatus.OK);
 	}
 
 	@ApiOperation(value = "해당 숫자의 순서의 Store", notes = "해당 게시글의 정보 반환한다.", response = List.class)

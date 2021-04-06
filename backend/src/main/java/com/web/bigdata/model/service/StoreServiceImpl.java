@@ -35,9 +35,6 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public List<UserClusteredDto> getClusteredStores(int clustered_no) throws Exception {
-		System.out.println("service");
-		System.out.println(clustered_no);
-		System.out.println("mapper"+storeMapper.getClusteredStores(clustered_no));
 		return storeMapper.getClusteredStores(clustered_no);
 	}
 
