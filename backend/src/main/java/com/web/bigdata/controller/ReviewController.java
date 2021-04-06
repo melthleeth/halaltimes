@@ -128,12 +128,16 @@ public class ReviewController {
 		String result = SUCCESS;
 		HttpStatus status = HttpStatus.OK;
 		System.out.println("start " + reviewDto);
-
+		
+		
 		List<MultipartFile> files = reviewDto.getFiles();
 		List<String> unmodified = reviewDto.getUnmodified();
 
 		// 리뷰 작성 성공 시
 		try {
+			int id_user = userService.getIdUser(reviewDto.getEmail());
+			reviewDto.setId_user(id_user);
+			System.out.println(reviewDto.getId_user());
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
