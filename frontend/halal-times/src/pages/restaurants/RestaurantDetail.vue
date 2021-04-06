@@ -338,8 +338,8 @@ export default {
         this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';
       }
       if (result === 'success')
-        this.$toast.success(`🌞 리뷰 등록에 성공하였습니다.`);
-      else this.$toast.error(`❌ 리뷰 등록에 실패하였습니다.`);
+        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰 등록에 성공하였습니다.</span>`);
+      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 등록에 실패하였습니다.</span>`);
 
       this.closeReviewDialog();
       this.loadLikeReviews();
@@ -358,6 +358,11 @@ export default {
       } catch (error) {
         this.error = error.message || '북마크 중 문제가 발생했습니다.';
       }
+
+      if (!this.$store.getters['restaurants/bookmarked'])
+        this.$toast.show(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 북마크한 식당으로 등록되었습니다.</span>`);
+      else
+        this.$toast.show(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 북마크가 해제되었습니다.</span>`);
     },
     writeReview() {
       if (this.$store.getters.getUserEmail === '') {
