@@ -175,7 +175,7 @@ public class ReviewController {
 		logger.info("modify - 호출");
 
 		String result = SUCCESS;
-		HttpStatus status = HttpStatus.OK;
+		HttpStatus status = HttpStatus.OK; 
 
 		List<MultipartFile> files = reviewDto.getFiles();
 		List<String> unmodified = reviewDto.getUnmodified();
