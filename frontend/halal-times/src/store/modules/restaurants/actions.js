@@ -185,7 +185,7 @@ export default {
 
     console.log("actions: modifyReview/payload", payload);
 
-    const response = await fetch(`${SERVER_URL}/review`, {
+    const response = await fetch(`${SERVER_URL}/review/modify`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
@@ -214,14 +214,14 @@ export default {
 
     console.log("actions: deleteReview/payload", payload);
 
-    const response = await fetch(`${SERVER_URL}/review?id_review=${payload}`, {
+    const response = await fetch(`${SERVER_URL}/review/delete?id_review=${payload}`, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*'
       },
-      method: 'POST'
+      method: 'PUT'
     });
     const responseData = await response.text();
 

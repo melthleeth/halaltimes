@@ -114,7 +114,7 @@
           </section>
         </base-dialog>
         <base-dialog
-          :open="modifyDialogIsVisible"
+          :open="deleteDialogIsVisible"
           @close="closeDialog('delete')"
           class="flex flex-col justify-items-center z-40"
         >
@@ -124,15 +124,15 @@
             >X</span
           >
           <span class="text-2xl font-bold mt-2 mb-4">리뷰 삭제</span>
-          <section class="flex flex-col space-y-4 w-full justify-center">
+          <section class="flex flex-col space-y-2 mt-6 mb-12 w-full justify-center text-center">
             <span class="text-lg">정말 삭제하시겠어요?</span>
-            <span class="text-sm">되돌릴 수 없어요😭</span>
+            <span class="text-xs">(되돌릴 수 없어요😭)</span>
           </section>
           <base-button
               type="submit"
               @click="deleteReview"
               mode="primary"
-              class="text-base"
+              class="text-base mb-2"
             >
               삭제하기</base-button
             >
