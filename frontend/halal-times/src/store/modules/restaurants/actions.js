@@ -34,18 +34,20 @@ export default {
         averageScore: responseData[key].averageScore,
         locationRegion: responseData[key].location_region,
         foodCategory: responseData[key].food_category,
+        muslimFriendly: responseData[key].muslim_friendly,
         address: responseData[key].address,
         tel: responseData[key].tel,
         working_time: responseData[key].working_time,
         days_closed:
-          responseData[key].days_closed === null
+          responseData[key].days_closed === ""
             ? '없음'
             : responseData[key].days_closed,
         parking: responseData[key].parking === '1' ? '가능' : '불가능',
         hits: responseData[key].hits,
         reviews: responseData[key].reviews,
-        muslimFriendly: responseData[key].muslim_friendly
-      };
+        lat: responseData[key].lat,
+        lng: responseData[key].lng,
+      };     
       restaurants.push(restaurant);
     }
 
@@ -93,19 +95,19 @@ export default {
     for (const key in reviewList) {
       const review = {
         id_review: reviewList[key].id_review,
-        id_store: reviewList[key].id_store,
         id_user: reviewList[key].id_user,
         nickname: reviewList[key].nickname,
+        id_store: reviewList[key].id_store,
         store_name: reviewList[key].store_name,
         score: +reviewList[key].score,
         content: reviewList[key].content,
-        // upload_date: responseData[key].upload_date,
-        upload_date: '2021.04.',
-        likeCnt: +reviewList[key].likeCnt
+        upload_date: responseData[key].upload_date,
+        likeCnt: +reviewList[key].likeCnt,
+        likeCheck: +reviewList[key].likeCheck === 1 ? true : false,
       };
       reviews.push(review);
     }
-    // console.log('actions: loadLikeReviews/reviews', reviews);
+    console.log('actions: loadLikeReviews/reviews', reviews);
     context.commit('setBookmarked', bookmarked);
     context.commit('setReviews', reviews);
   },
@@ -140,10 +142,42 @@ export default {
         );
         throw error;
       }
-      // console.log('actions: toggleBookmark/value.active', value.active);
+      console.log('actions: toggleBookmark/value.active', value.active);
       const bookmarked = value.active === 1 ? true : false;
       // console.log('bookmarked', bookmarked);
       context.commit('setBookmarked', bookmarked);
     });
-  }
+  },
+  async registerReview(context, payload) {
+    // content, id_user, id_store, score
+    const reviewData = {
+      ...payload,
+      id_user: 8,
+      nickname: context.rootGetters.getUserName,
+      id_store: context.getters.restaurantId
+    };
+
+    console.log("actions: registerReview/reviewData", reviewData);
+
+    const response = await fetch(`${SERVER_URL}/review`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'POST',
+      body: JSON.stringify(reviewData)
+    });
+    const responseData = await response.text();
+
+    if (responseData === 'fail') {
+      alert('리뷰 작성 실패!');
+        const error = new Error(
+          responseData.message || 'actions: registerReview 실패'
+        );
+        throw error;
+    }
+    return responseData;
+  },
 };

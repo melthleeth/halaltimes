@@ -143,11 +143,12 @@
                   placeholder="리뷰를 작성하세요"
                   v-model.trim="reviewContents"
                 />
+                <!-- <input type="file" accept=".png, .jpg, .jpeg, .gif" @change="uploadImage" /> -->
               </section>
               <section class="flex space-x-2 mt-6 mb-4">
                 <base-button
                   type="submit"
-                  @click="register"
+                  @click="registerReview"
                   mode="primary"
                   class="text-base"
                 >
@@ -239,7 +240,7 @@ export default {
       restaurant: null,
       bookmarked: true,
       tagColor: 1,
-      score: null,
+      score: 0,
       reviewContents: '',
       ratings: 0
     };
@@ -323,24 +324,43 @@ export default {
       // this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
       // console.log(this.restaurant.lat, this.restaurant.lng);
     },
-    reviewRegister() {},
-    reviewModify() {},
-    reviewDelete() {},
+    async registerReview() {
+      // content, id_user, id_store, score
+      let result;
+      try {
+        result = await this.$store.dispatch('restaurants/registerReview', {
+          content: this.reviewContents,
+          score: this.score
+        });
+      } catch (error) {
+        this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';
+      }
+      if (result === 'success') this.$toast.success(`🌞 리뷰 등록에 성공하였습니다.`);
+      else this.$toast.error(`❌ 리뷰 등록에 실패하였습니다.`);
+
+      this.closeReviewDialog();
+    },
+    modifyReview() {},
+    deleteReview() {},
     async bookmark() {
       // console.log("methods: bookmark/getUserEmail", this.$store.getters.getUserEmail);
-      if (this.$store.getters.getUserEmail === "") {
+      if (this.$store.getters.getUserEmail === '') {
         alert('로그인이 필요한 기능입니다.');
         return;
       }
 
       try {
-        await this.$store.dispatch(
-          'restaurants/toggleBookmark');
+        await this.$store.dispatch('restaurants/toggleBookmark');
       } catch (error) {
         this.error = error.message || '북마크 중 문제가 발생했습니다.';
       }
     },
     writeReview() {
+      if (this.$store.getters.getUserEmail === '') {
+        alert('로그인이 필요한 기능입니다.');
+        return;
+      }
+
       this.reviewDialogIsVisible = true;
     },
     closeReviewDialog() {
