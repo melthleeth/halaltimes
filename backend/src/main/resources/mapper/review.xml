@@ -235,6 +235,7 @@
  		from review as r
  		join store using(id_store)
  		where id_store = #{id_store} and r.active = 1
+ 		order by upload_date desc
  	</select>
  	
  	<select id="getReviewCount" parameterType="int" resultType="int">
