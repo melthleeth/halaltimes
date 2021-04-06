@@ -65,6 +65,10 @@ public class StoreController {
 		for(StoreDto store : storeList) {
 //			System.out.println(store.getId_store());
 			store.setReviews(reviewService.getReviewCount(store.getId_store()));
+			String avgScoreStr = storeService.getStoreAvgScore(store.getId_store());
+//			System.out.println(avg);
+			double avgScore = avgScoreStr == null ? 0 : Double.parseDouble(avgScoreStr);
+			store.setAverageScore(avgScore);
 		}
 		
 		return new ResponseEntity<List<StoreDto>>(storeList, HttpStatus.OK);
@@ -112,7 +116,6 @@ public class StoreController {
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
-				System.out.println("zzz");
 			}
 			
 			// like를 누른 적이 있으면
@@ -134,7 +137,6 @@ public class StoreController {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		System.out.println(resultMap);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 

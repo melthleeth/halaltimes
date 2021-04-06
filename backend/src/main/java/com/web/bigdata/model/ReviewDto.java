@@ -23,6 +23,9 @@ public class ReviewDto {
 	// likeCheck
 	private int likeCheck;
 	
+	// email
+	private String email;
+	
 	public String getNickname() {
 		return nickname;
 	}
@@ -134,12 +137,24 @@ public class ReviewDto {
 	public void setLikeCheck(int likeCheck) {
 		this.likeCheck = likeCheck;
 	}
+	
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	@Override
 	public String toString() {
 		return "ReviewDto [id_review=" + id_review + ", id_user=" + id_user + ", id_store=" + id_store + ", store_name="
 				+ store_name + ", score=" + score + ", content=" + content + ", upload_date=" + upload_date
 				+ ", update_date=" + update_date + ", likeCnt=" + likeCnt + ", files=" + files + ", unmodified="
-				+ unmodified + ", thumbnail=" + thumbnail + ", nickname=" + nickname + ", likeCheck=" + likeCheck + "]";
+				+ unmodified + ", thumbnail=" + thumbnail + ", nickname=" + nickname + ", likeCheck=" + likeCheck
+				+ ", email=" + email + "]";
 	}
+
 }
