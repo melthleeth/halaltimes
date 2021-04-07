@@ -104,13 +104,13 @@ class User(models.Model):
 
 class DjangoUser(models.Model):
     id_django_user = models.AutoField(primary_key=True)
-    id_user = models.IntegerField()
+    id_user = models.IntegerField(unique=True)
     age = models.IntegerField(default=1)
     gender_m = models.BooleanField()
     gender_f = models.BooleanField()
     is_skeleton = models.BooleanField(default=False)
     review_cnt = models.IntegerField(default=0)
-    label = models.IntegerField()
+    label = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -124,3 +124,15 @@ class DjangoRecomm(models.Model):
     class Meta:
         managed = True
         db_table = 'django_recomm'
+
+
+class DjangoReview(models.Model):
+    id_django_review = models.AutoField(primary_key=True)
+    id_store = models.ForeignKey(Store, models.CASCADE, db_column='id_store')
+    id_user = models.IntegerField()
+    score = models.FloatField(blank=True, null=True, default=0)
+    is_skeleton = models.BooleanField(default=False)
+    
+    class Meta:
+        managed = True
+        db_table = 'django_review'
