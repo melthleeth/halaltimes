@@ -80,12 +80,12 @@ public class StoreController {
 
 	@ApiOperation(value = "추천 식당 목록", notes = "추천 받은 식당의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list/recomm")
-	public ResponseEntity<List<StoreDto>> getRecommList(int clustered_no) throws Exception {
-		logger.info("getRecommList - 호출, " + clustered_no);
-		
-		List<UserClusteredDto> recomStore = storeService.getClusteredStores(clustered_no);
+	public ResponseEntity<List<StoreDto>> getRecommList(String email) throws Exception {
+		logger.info("getRecommList - 호출, " + email);
+		int id_user = userService.findUserInfo(email).getId_user();
+		List<UserClusteredDto> recomStore = storeService.getClusteredStores(id_user);
 		List<StoreDto> recomStoreList = new LinkedList<StoreDto>();
-		
+
 		for (UserClusteredDto storeDto : recomStore) {
 			recomStoreList.add(storeService.getRecommList(storeDto.getId_store()));
 		}
