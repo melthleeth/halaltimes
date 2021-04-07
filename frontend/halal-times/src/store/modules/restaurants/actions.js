@@ -28,8 +28,8 @@ export default {
     for (const key in responseData) {
       const restaurant = {
         restaurantId: +responseData[key].id_store,
-        // imgpath: responseData[key].image,
-        imgpath: 'https://i.stack.imgur.com/y9DpT.jpg',
+        imgpath: responseData[key].image,
+        // imgpath: 'https://i.stack.imgur.com/y9DpT.jpg',
         restaurantName: responseData[key].store_name,
         averageScore: responseData[key].averageScore,
         locationRegion: responseData[key].location_region,
@@ -163,13 +163,14 @@ export default {
       }
       averageScore = sum / reviewList.length;
     } else averageScore = 0;
-    
+
     console.log('actions: refreshAverageScore/sum', sum);
     console.log('actions: refreshAverageScore/averageScore', averageScore);
     context.commit('refreshAverageScore', averageScore.toFixed(1));
   },
   async registerReview(context, payload) {
     // content, id_user, id_store, score
+    console.log('payload : ', payload);
     const reviewData = {
       ...payload,
       email: context.rootGetters.getUserEmail,
@@ -292,9 +293,9 @@ export default {
       const likeData = {
         id_review: payload,
         likeCnt: +value.likeCnt,
-        likeCheck: likeCheck,
+        likeCheck: likeCheck
       };
       context.commit('modifyReviewLike', likeData);
     });
-  },
+  }
 };

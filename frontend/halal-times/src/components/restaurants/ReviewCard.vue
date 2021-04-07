@@ -171,7 +171,8 @@ export default {
     'score',
     'content',
     'upload_date',
-    'likeCnt'
+    'likeCnt',
+    'likeCheck'
   ],
   data() {
     return {
@@ -181,7 +182,8 @@ export default {
       modifyDialogIsVisible: false,
       deleteDialogIsVisible: false,
       ratings: 0,
-      reviewContents: ''
+      reviewContents: '',
+      like: false
     };
   },
   computed: {
@@ -203,16 +205,20 @@ export default {
     },
     likeCount() {
       const reviews = this.$store.getters['restaurants/reviews'];
-      const index = reviews.findIndex(review => review.id_review === +this.id_review);
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
 
       return this.$store.getters['restaurants/reviews'][index].likeCnt;
     },
     liked() {
       const reviews = this.$store.getters['restaurants/reviews'];
-      const index = reviews.findIndex(review => review.id_review === +this.id_review);
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
 
       return this.$store.getters['restaurants/reviews'][index].likeCheck;
-    },
+    }
   },
   created() {
     // this.likeCount = this.likeCnt;
@@ -222,6 +228,7 @@ export default {
     updateAverageScore() {
       this.$store.dispatch('restaurants/refreshAverageScore');
     },
+
     async isLiked() {
       if (this.$store.getters.getUserEmail === '') {
         alert('로그인이 필요한 기능입니다.');
@@ -229,18 +236,28 @@ export default {
       }
 
       try {
-        await this.$store.dispatch('restaurants/toggleReviewLike', +this.id_review);
+        await this.$store.dispatch(
+          'restaurants/toggleReviewLike',
+          +this.id_review
+        );
       } catch (error) {
         this.error = error.message || '리뷰 좋아요 중 문제가 발생했습니다.';
       }
       const reviews = this.$store.getters['restaurants/reviews'];
-      const index = reviews.findIndex(review => review.id_review === +this.id_review);
-      const likeCheck = this.$store.getters['restaurants/reviews'][index].likeCheck;
-      console.log("methods: isLiked/likeCheck", likeCheck);
-      if (likeCheck)
-        this.$toast.info(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 이 리뷰가 도움이 된다고 추천하였습니다.</span>`);
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
+      const likeCheck = this.$store.getters['restaurants/reviews'][index]
+        .likeCheck;
+      console.log('methods: isLiked/likeCheck', likeCheck);
+      if (!likeCheck)
+        this.$toast.info(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 이 리뷰가 도움이 된다고 추천하였습니다.</span>`
+        );
       else
-        this.$toast.show(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 추천을 취소합니다.</span>`);
+        this.$toast.show(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 추천을 취소합니다.</span>`
+        );
     },
     openDialog(type) {
       if (type === 'modify') {

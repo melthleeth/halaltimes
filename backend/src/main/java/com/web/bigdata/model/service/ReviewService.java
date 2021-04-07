@@ -37,7 +37,7 @@ public interface ReviewService {
 	public int likeCount(int id_review) throws Exception;
 
 	/** 좋아요 했는지 조회 */
-	public int likeCheck(Map<String, Object> map) throws Exception;
+	public String likeCheck(Map<String, Object> map) throws Exception;
 
 	/** 좋아요 했었던 적이 있었을 때 가져올 정보 */
 	public ReviewLikeDto likeInfo(Map<String, Object> map) throws Exception;

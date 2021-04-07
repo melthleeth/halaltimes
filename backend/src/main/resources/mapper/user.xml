@@ -39,7 +39,7 @@
 	</select>
 
 	<select id="findUserInfo" parameterType="string" resultType="UserDto">
-		select id_user, email, nickname, born_year, gender, favorites, profile_image
+		select id_user, email, nickname, born_year, gender, profile_image
 		from user
 		where email=#{email}
 	</select>

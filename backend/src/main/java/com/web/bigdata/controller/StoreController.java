@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,7 @@ import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.UserClusteredDto;
 import com.web.bigdata.model.service.ReviewService;
 import com.web.bigdata.model.service.S3FileUploadService;
 import com.web.bigdata.model.service.StoreService;
@@ -34,26 +38,26 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Api("StoreController V1")
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
+@CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
 @RequestMapping("/store")
 public class StoreController {
 	private static final Logger logger = LoggerFactory.getLogger(StoreController.class);
 	private static final String SUCCESS = "success";
 	private static final String FAIL = "fail";
-	
+
 	@Autowired
 	private StoreService storeService;
-	
+
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
-	
+
 	@ApiOperation(value = "식당 목록", notes = "모든 식당의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list")
 	public ResponseEntity<List<StoreDto>> getList(StoreParameterDto storeParameterDto,
@@ -61,8 +65,8 @@ public class StoreController {
 		storeParameterDto.setSortBy(sortBy);
 		logger.info("getList - 호출, " + storeParameterDto);
 		List<StoreDto> storeList = storeService.getList(storeParameterDto);
-		
-		for(StoreDto store : storeList) {
+		System.out.println(storeList);
+		for (StoreDto store : storeList) {
 //			System.out.println(store.getId_store());
 			store.setReviews(reviewService.getReviewCount(store.getId_store()));
 			String avgScoreStr = storeService.getStoreAvgScore(store.getId_store());
@@ -70,23 +74,44 @@ public class StoreController {
 			double avgScore = avgScoreStr == null ? 0 : Double.parseDouble(avgScoreStr);
 			store.setAverageScore(avgScore);
 		}
-		
+
 		return new ResponseEntity<List<StoreDto>>(storeList, HttpStatus.OK);
 	}
-	
+
+	@ApiOperation(value = "추천 식당 목록", notes = "추천 받은 식당의 정보를 반환한다.", response = List.class)
+	@GetMapping("/list/recomm")
+	public ResponseEntity<List<StoreDto>> getRecommList(String email) throws Exception {
+		logger.info("getRecommList - 호출, " + email);
+		int id_user = userService.findUserInfo(email).getId_user();
+		List<UserClusteredDto> recomStore = storeService.getClusteredStores(id_user);
+		List<StoreDto> recomStoreList = new LinkedList<StoreDto>();
+
+		for (UserClusteredDto storeDto : recomStore) {
+			recomStoreList.add(storeService.getRecommList(storeDto.getId_store()));
+		}
+
+		for (StoreDto store : recomStoreList) {
+			store.setReviews(reviewService.getReviewCount(store.getId_store()));
+			String avgScoreStr = storeService.getStoreAvgScore(store.getId_store());
+			double avgScore = avgScoreStr == null ? 0 : Double.parseDouble(avgScoreStr);
+			store.setAverageScore(avgScore);
+		}
+
+		return new ResponseEntity<List<StoreDto>>(recomStoreList, HttpStatus.OK);
+	}
+
 	@ApiOperation(value = "해당 숫자의 순서의 Store", notes = "해당 게시글의 정보 반환한다.", response = List.class)
 	@GetMapping("/list/{no}")
 	public ResponseEntity<StoreDto> getLikeStore(@PathVariable int no) throws Exception {
 		logger.info("getOne - 호출, " + no);
-		
-		return new ResponseEntity<StoreDto>(storeService.getLikeStore(no), HttpStatus.OK);
-	}	
 
+		return new ResponseEntity<StoreDto>(storeService.getLikeStore(no), HttpStatus.OK);
+	}
 
 	@ApiOperation(value = "음식점 상세 보기", notes = "음식점 번호에 해당하는 음식점의 정보를 반환한다.", response = StoreDto.class)
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> getStoreDetail(@RequestParam int id_store, @RequestParam(required = false) String email)
-			throws Exception {
+	public ResponseEntity<Map<String, Object>> getStoreDetail(@RequestParam int id_store,
+			@RequestParam(required = false) String email) throws Exception {
 		logger.info("getDetail - 호출");
 		HttpStatus status = HttpStatus.OK;
 
@@ -94,48 +119,49 @@ public class StoreController {
 		Map<String, Object> likeCheckMap = new HashMap<>();
 
 		try {
-			// 조회수  증가
+			// 조회수 증가
 			storeService.hitsUp(id_store);
-			
+
 			// 게시글 정보
 			StoreDto storeDto = storeService.getDetail(id_store);
 //			System.out.println("storeDto 는 => "+storeDto);
 			String scoreStr = storeService.getStoreAvgScore(id_store);
 			double score = scoreStr == null ? 0 : Double.parseDouble(scoreStr);
-			score = Math.round(score*100)/100.0;
+			score = Math.round(score * 100) / 100.0;
 			storeDto.setAverageScore(score);
-			resultMap.put("storeInfo", storeDto);
-			
+			resultMap.put("storeInfo : ", storeDto);
+
 			// like(bookmark) 했는지 확인
 			Integer id_user_temp = userService.getIdUser(email);
-			int id_user = id_user_temp == null ? 0 : id_user_temp; 
+			int id_user = id_user_temp == null ? 0 : id_user_temp;
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-
+			System.out.println("bookmarkDto : "+bookmarkDto);
+			
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
 			}
-			
+
 			// like를 누른 적이 있으면
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
 			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
-			for(ReviewDto review : reviewList) {
+			for (ReviewDto review : reviewList) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
-				map.put("id_user",id_user);
-				review.setLikeCheck(reviewService.likeCheck(map));
+				map.put("id_user", id_user);
+				System.out.println(map);
+				String check = reviewService.likeCheck(map);
+				int likeCheck = check == null ? 0 : Integer.parseInt(check);
+				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
 			}
+			System.out.println("reviewList : " + reviewList);
 			resultMap.put("reviewList", reviewList);
-			System.out.println(reviewList);
-			System.out.println(reviewList);
-			System.out.println(resultMap.get(reviewList));
-			System.out.println(resultMap.get(reviewList));
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
@@ -146,7 +172,7 @@ public class StoreController {
 	}
 
 	// store_image 테이블을 생성해야 할 듯.
-	
+
 //	@ApiOperation(value = "게시글 작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 //	@PostMapping
 //	public ResponseEntity<String> write(StoreDto storeDto) {
@@ -227,8 +253,6 @@ public class StoreController {
 //
 //		return new ResponseEntity<String>(result, status);
 //	}
-	
-	
 
 //	@ApiOperation(value = "게시글 삭제", notes = "게시글 번호에 해당하는 게시글의 정보를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 //	@DeleteMapping
@@ -254,7 +278,6 @@ public class StoreController {
 //		return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
 //	}
 
-	
 //	@ApiOperation(value = "이미지 저장", notes = "게시글의 이미지를 저장한다.")
 //	@PostMapping("/imgs/save")
 //	private ResponseEntity<String> saveFiles(String id_store, List<MultipartFile> files) {
@@ -313,7 +336,7 @@ public class StoreController {
 			map.put("id_user", id_user);
 
 			BookmarkDto bookmarkDto = storeService.likeInfo(map);
-			System.out.println("bookmarkDto"+bookmarkDto);
+			System.out.println("bookmarkDto" + bookmarkDto);
 			// 해당 게시글에 한번도 북마크 한 적 없다면
 			if (bookmarkDto == null) {
 				storeService.insertLike(map);
@@ -328,7 +351,7 @@ public class StoreController {
 				active = 1;
 //				storeService.likeCntUp(id_store); // like 갯수 증가
 			} else {
-				storeService.unlike(map);	
+				storeService.unlike(map);
 				active = 0;
 //				storeService.likeCntDown(id_store); // like 갯수 감소
 			}
@@ -346,109 +369,139 @@ public class StoreController {
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
+	@ApiOperation(value = "북마크 정보 조회", notes = "회원의 북마크 정보를 가지고 온다.", response = HashMap.class)
+	@GetMapping("/bookmark/all")
+	public ResponseEntity<List<BookmarkDto>> getBookmarks(@RequestParam String email, HttpServletRequest req)
+			throws Exception {
+		logger.info("getBookmarks - 호출");
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		
+		List<BookmarkDto> bookmarkList = new ArrayList<>();
+		// 회원 정보 조회
+		try {
+			int id_user = userService.findUserInfo(email).getId_user();
+			bookmarkList = userService.getBookmarkList(id_user);
+			for(BookmarkDto bookmark : bookmarkList) {
+				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
+				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
+				score = Math.round(score*100)/100.0;
+				bookmark.setScore(score+"");
+				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
+			}
+			status = HttpStatus.ACCEPTED;
+		} catch (RuntimeException e) {
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+
+		return new ResponseEntity<List<BookmarkDto>>(bookmarkList, status);
+	}
+	
+
 	@ApiOperation(value = "이미지 삽입", notes = "S3에 이미지를 저장 하고 store 테이블에 이미지url 삽입 - 1회용", response = HashMap.class)
 	@PutMapping("/insertImg")
 	public ResponseEntity<Map<String, Object>> insertImg() throws Exception {
 		logger.info("insertImg - 호출");
 		HttpStatus status = HttpStatus.OK;
-		
-		
+
 		Map<String, Object> resultMap = new HashMap<>();
 
-		for(int index=0; index<347; index++) {
+		for (int index = 0; index < 347; index++) {
 			String id_store = storeService.getIdStore(index);
 //			System.out.println(id_store);
 			String path = "C:\\Users\\yhs\\Desktop\\싸피\\2학기\\특화 플젝\\image";
-			path = path + "\\"+index;
+			path = path + "\\" + index;
 			Map<String, Object> map = new HashMap<String, Object>();
-			
+
 			List<File> imgs = new ArrayList<>();
 			imgs = getImgFileList(path);
 //			
-			for(File img : imgs) {
+			for (File img : imgs) {
 				String imgName = img.toString();
 //				 확장자를 찾기 위한 코드
 				final String ext = imgName.substring(imgName.lastIndexOf('.'));
 //				// 파일이름 암호화
 				final String saveFileName = getUuid() + ext;
 //				s3FileUploadService.uploadOnS3(saveFileName, img);
-				final String origName = imgName.substring(path.length()+1,imgName.length());
+				final String origName = imgName.substring(path.length() + 1, imgName.length());
 				map.put("id_store", id_store);
 				map.put("origName", origName);
-				map.put("saveFileName", "https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/"+saveFileName);
+				map.put("saveFileName", "https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/" + saveFileName);
 //				System.out.println(map);
 //				storeService.insertImgUrl(map);
 			}
 		}
-		
+
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
-	
+
 	// 이미지
 	private static String getUuid() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
-	
-	/**
-     * 해당 경로의 이미지 파일 목록 반환 
-     */
-    public static List<File> getImgFileList(String path){        
-         
-        return getImgFileList(new File(path));
-    }    
 
-    /**
-     * 해당 경로의 이미지 파일 목록 반환 
-     */
-    public static List<File> getImgFileList(File file){        
-            
-        List<File> resultList = new ArrayList<File>(); //이미지 파일을 저장할 리스트 생성
-        
-         //지정한 이미지폴더가 존재 할지 않을경우 빈 리스트 반환.
-        if(!file.exists()) return resultList;
-        
-        File[] list = file.listFiles(new FileFilter() { //원하는 파일만 가져오기 위해 FileFilter정의
-            
-            String strImgExt = "jpg|jpeg|png|gif|bmp"; //허용할 이미지타입
-            
-            @Override
-            public boolean accept(File pathname) {                            
-                
-                //System.out.println(pathname);
-                boolean chkResult = false;
-                if(pathname.isFile()) {
-                    String ext = pathname.getName().substring(pathname.getName().lastIndexOf(".")+1);
-                    //System.out.println("확장자:"+ext);
-                    chkResult = strImgExt.contains(ext.toLowerCase());        
-                    //System.out.println(chkResult +" "+ext.toLowerCase());
-                } else {
-                    chkResult = true;
-                }
-                return chkResult;
-            }
-        });        
-        
-        for(File f : list) {            
-            if(f.isDirectory()) {
-                //폴더이면 이미지목록을 가져오는 현재메서드를 재귀호출
-                resultList.addAll(getImgFileList(f));                 
-            }else {            
-                //폴더가 아니고 파일이면 리스트(resultList)에 추가
-                resultList.add(f);
-            }
-        }            
-        return resultList; 
-    }
-    
-    //확장자를 제외한 파일 이름 만 출력
-    public static String getFileNameNoExt(String filepath){        
-        String fileName = filepath.substring(0,  filepath.lastIndexOf("."));
-        return fileName;
-    }    
-    
-    //파일 확장자만 출력
-    public static String getFileExt(String filepath){
-        String ext = filepath.substring(filepath.lastIndexOf(".")+1);
-        return ext;
-    }
+	/**
+	 * 해당 경로의 이미지 파일 목록 반환
+	 */
+	public static List<File> getImgFileList(String path) {
+
+		return getImgFileList(new File(path));
+	}
+
+	/**
+	 * 해당 경로의 이미지 파일 목록 반환
+	 */
+	public static List<File> getImgFileList(File file) {
+
+		List<File> resultList = new ArrayList<File>(); // 이미지 파일을 저장할 리스트 생성
+
+		// 지정한 이미지폴더가 존재 할지 않을경우 빈 리스트 반환.
+		if (!file.exists())
+			return resultList;
+
+		File[] list = file.listFiles(new FileFilter() { // 원하는 파일만 가져오기 위해 FileFilter정의
+
+			String strImgExt = "jpg|jpeg|png|gif|bmp"; // 허용할 이미지타입
+
+			@Override
+			public boolean accept(File pathname) {
+
+				// System.out.println(pathname);
+				boolean chkResult = false;
+				if (pathname.isFile()) {
+					String ext = pathname.getName().substring(pathname.getName().lastIndexOf(".") + 1);
+					// System.out.println("확장자:"+ext);
+					chkResult = strImgExt.contains(ext.toLowerCase());
+					// System.out.println(chkResult +" "+ext.toLowerCase());
+				} else {
+					chkResult = true;
+				}
+				return chkResult;
+			}
+		});
+
+		for (File f : list) {
+			if (f.isDirectory()) {
+				// 폴더이면 이미지목록을 가져오는 현재메서드를 재귀호출
+				resultList.addAll(getImgFileList(f));
+			} else {
+				// 폴더가 아니고 파일이면 리스트(resultList)에 추가
+				resultList.add(f);
+			}
+		}
+		return resultList;
+	}
+
+	// 확장자를 제외한 파일 이름 만 출력
+	public static String getFileNameNoExt(String filepath) {
+		String fileName = filepath.substring(0, filepath.lastIndexOf("."));
+		return fileName;
+	}
+
+	// 파일 확장자만 출력
+	public static String getFileExt(String filepath) {
+		String ext = filepath.substring(filepath.lastIndexOf(".") + 1);
+		return ext;
+	}
 }
