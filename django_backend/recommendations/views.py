@@ -5,7 +5,9 @@ from .models import Review, User, Store, DjangoRecomm, DjangoUser, DjangoReview
 
 from .algorithm.recommender import ItemBased
 
+from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 import pandas as pd
 import pickle
@@ -17,14 +19,21 @@ filename = 'finalized_model.sav'
 
 @api_view(["GET"])
 def adminUpdate(request):
-    userUpdate()
-    reviewUpdate()
-    userClusterd(n=30)
-    clusterModel(n=30)
-    similarStore()
+    try:
+        userUpdate()
+        reviewUpdate()
+        userClusterd(n=30)
+        clusterModel(n=30)
+        similarStore()
+        msg = "success"
+    except:
+        msg = "fail"
+
+    return Response(msg)
 
 
 def userUpdate():
+    print('')
     DjangoUser.objects.filter(is_skeleton=0).delete()
     halaltime_users_all = User.objects.filter(
         active = 1
@@ -67,7 +76,6 @@ def reviewUpdate():
     ).values(
         'id_user', 'id_store', 'score'
     )
-
 
     for line in halaltime_reviews_all:
         store = Store.objects.only('id_store').get(id_store=line["id_store"])
@@ -176,20 +184,26 @@ def userLabel(age, gender):
 def newUser(request):
     born_year = request.POST['born_year']
     gender = request.POST['gender']
-
     age = 2021 - int(born_year[:4]) + 1
 
-    label = userLabel(age, gender)
+    try:
+        label = userLabel(age, gender)
 
-    user = DjangoUser()
+        user = DjangoUser()
 
-    user.age = age
-    if gender:
-        user.gender_m, user.gender_f = 0, 1
-    else:
-        user.gender_m, user.gender_f = 1, 0
-    user.is_skeleton = False
-    user.review_cnt = 0
-    user.label = label
+        user.age = age
+        if gender:
+            user.gender_m, user.gender_f = 0, 1
+        else:
+            user.gender_m, user.gender_f = 1, 0
+        user.is_skeleton = False
+        user.review_cnt = 0
+        user.label = label
 
-    user.save()
+        user.save()
+        msg = "success"
+
+    except:
+        msg = "fail"
+
+    return Response(msg)
