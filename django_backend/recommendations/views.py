@@ -104,7 +104,7 @@ def clusterModel():
     pass
     # 클러스터 작업을 진행 한 후 모델을 저장
     # userClusterd 함께 넣을지 고민
-    pass
+
 
 @api_view(['POST'])
 def similarStore():
