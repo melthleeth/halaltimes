@@ -296,8 +296,6 @@ export default {
     console.log('created: reviews', this.$store.getters['restaurants/reviews']);
     // this.bookmarked = this.$store.getters['restaurants/bookmarked'];
 
-    this.updateAverageScore();
-
     switch (this.muslimFriendly) {
       case '무슬림 자가 인증':
         this.tagColor = 2;
@@ -325,6 +323,7 @@ export default {
         this.error =
           error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
+          this.updateAverageScore();
 
       this.isLoading = false;
       // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
