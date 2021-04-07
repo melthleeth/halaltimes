@@ -7,20 +7,18 @@ from .algorithm.recommender import ItemBased
 
 from rest_framework.decorators import api_view
 
-# 파이썬 패키지
-import pandas as pd
-from sklearn.cluster import KMeans
 
-'''
-나는야 관리자~ 업데이트를 하지
-'''
+import pandas as pd
+import pickle
+from sklearn.cluster import KMeans
+from sklearn.neighbors import KNeighborsClassifier
 
 
 @api_view(["GET"])
 def adminUpdate():
     userUpdate()
-    userClusterd()
-    clusterModel()
+    userClusterd(n=30)
+    clusterModel(n=30)
     similarStore()
 
 
@@ -44,7 +42,10 @@ def userUpdate():
         id_user = line.id_user
         born_year = line.born_year
         age = 2021 - int(born_year[:4]) + 1
-        gender = line.gender
+        if line.gender:
+            gender_m, gender_f = 1, 0
+        else:
+            gender_m, gender_f = 0, 1
 
         halaltime_reviews_all.filter(
             id_user = id_user
@@ -55,55 +56,52 @@ def userUpdate():
         DjangoUser.objects.create(
             id_user = id_user,
             age=age,
-            gender=gender,
+            gender_m=gender_m,
+            gender_f=gender_f,
             review_cnt=review_cnt
             )
     
 
-def userClusterd(request):
-    # user Update 함
-
-    # update 된 DjangoUser DB 사용
+def userClusterd(n):
     user_data = DjangoUser.objects.values(
         'id_django_user',
         'id_user',
         'age',
-        'gender',
+        'gender_m',
+        'gender_f',
         'review_cnt',
         'label'
     )
     data = []
     for line in user_data:
         age = line.age
-
-        if line.gender:
-            gender_m, gender_f = 1, 0
-        else:
-            gender_m, gender_f = 0, 1
-
+        gender_m = line.gender_m
+        gender_f = line.gender_f
         reviews = line.review_cnt
-
         data.append([age, gender_m, gender_f, reviews])
-
-    # data 값 넣고 돌려서 label 값 부여하기 output : dataframe
-    # 순서대로 DB에 label 값 update
 
     df = pd.DataFrame(data, columns=["age", "gender_m", "gender_f", "reviews"])
 
-    kmeans = KMeans(n_clusters=30).fit(df)
+    kmeans = KMeans(n_clusters=n).fit(df)
 
     for idx in range(len(kmeans.labels_)):
         user = user_data.filter(id_django_user=idx)
         user.label = kmeans.labels_[idx]
         user.save()
 
-    # label 업데이트 완성 되면 similarStore 실행하여 DjangoRecomm 채움
 
+def clusterModel(n):
+    user_data = DjangoUser.objects.values(
+        'age','gender_m', 'gender_f','reviews_cnt','label'
+    )
+    data = user_data.values(
+        'age','gender_m', 'gender_f','reviews_cnt'
+    )
+    classifier = KNeighborsClassifier(n_neighbors=n)
+    classifier.fit(data, user_data.label)
 
-def clusterModel():
-    pass
-    # 클러스터 작업을 진행 한 후 모델을 저장
-    # userClusterd 함께 넣을지 고민
+    filename = 'finalized_model.sav'
+    pickle.dump(classifier, open(filename, 'wb'))
 
 
 @api_view(['POST'])
@@ -128,7 +126,6 @@ def similarStore():
     ibcf.loadData(data)
     model = ibcf.buildModel(nNeighbors=15)
 
-    # DjangoRecomm DB 날리는 작업 실행
     DjangoRecomm.objects.all().delete()
     for user in data.keys():
         recommendation = ibcf.Recommendation(user, model=model)
@@ -145,21 +142,16 @@ def transposePrefs(prefs):
     return transposed
 
 
-'''
-나는 자동화 작업이지롱 
-관리자는 필요 없어~ >_<
-'''
-
-
 def userLabel(age, gender):
     if gender:
         new_user = [age, 1, 0, 0]
     else:
         new_user = [age, 0, 1, 0]
 
-    # 모델 저장한 거 사용
-    label = 0
-    return label
+    model = pickle.load(open(filename, 'rb'))
+    label = model.predict(new_user)
+
+    return label[0]
 
 
 @api_view(['POST'])
@@ -174,7 +166,10 @@ def newUser(request):
     user = DjangoUser()
     user.id_user = id_user
     user.age = age
-    user.gender = gender
+    if gender:
+        user.gender_m, user.gender_f = 1, 0
+    else:
+        user.gender_m, user.gender_f = 0, 1
     user.is_skeleton = False
     user.review_cnt = 0
     user.label = label
