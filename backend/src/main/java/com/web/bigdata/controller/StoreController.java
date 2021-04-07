@@ -157,10 +157,7 @@ public class StoreController {
 				review.setNickname(userService.getNickName(review.getId_user()));
 			}
 			resultMap.put("reviewList", reviewList);
-			System.out.println(reviewList);
-			System.out.println(reviewList);
-			System.out.println(resultMap.get(reviewList));
-			System.out.println(resultMap.get(reviewList));
+			System.out.println("reviewList : " + reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());

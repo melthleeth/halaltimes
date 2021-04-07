@@ -152,6 +152,22 @@ export default {
       context.commit('setBookmarked', bookmarked);
     });
   },
+  refreshAverageScore(context) {
+    const reviewList = context.getters.reviews;
+    let sum = 0;
+
+    let averageScore;
+    if (reviewList.length > 0) {
+      for (const key in reviewList) {
+        sum += +reviewList[key].score;
+      }
+      averageScore = sum / reviewList.length;
+    } else averageScore = 0;
+
+    console.log('actions: refreshAverageScore/sum', sum);
+    console.log('actions: refreshAverageScore/averageScore', averageScore);
+    context.commit('refreshAverageScore', averageScore.toFixed(1));
+  },
   async registerReview(context, payload) {
     // content, id_user, id_store, score
     const reviewData = {
@@ -242,5 +258,43 @@ export default {
     context.commit('deleteReview', payload);
 
     return responseData;
+  },
+  async toggleReviewLike(context, payload) {
+    const email = context.rootGetters.getUserEmail;
+
+    const response = await fetch(
+      `${SERVER_URL}/review/like?id_review=${payload}&email=${email}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json;',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*'
+        },
+        method: 'PUT'
+      }
+    );
+    const responseData = response.json(); // id_store, active
+
+    // console.log("actions: toggleBookmark/responseData", responseData);
+
+    responseData.then(value => {
+      // console.log("actions: toggleBookmark/value", value);
+      if (!response.ok) {
+        alert('리뷰 좋아요 실패!');
+        const error = new Error(
+          responseData.message || 'actions: toggleBookmark 실패'
+        );
+        throw error;
+      }
+      console.log('actions: toggleBookmark/value.likeCheck', value.likeCheck);
+      const likeCheck = +value.likeCheck === 1 ? true : false;
+      const likeData = {
+        id_review: payload,
+        likeCnt: +value.likeCnt,
+        likeCheck: likeCheck
+      };
+      context.commit('modifyReviewLike', likeData);
+    });
   }
 };

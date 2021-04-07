@@ -134,9 +134,9 @@
  	</select>
 	
 	<select id="likeCheck" parameterType="map" resultType="int">
-	    select count(id_review_like)
+	    select active
 	    from review_like
-	    where id_review = #{id_review} and id_user = #{id_user}
+	    where id_review = #{id_review} and id_user = #{id_user};
 	</select>
 	
 	<select id="likeInfo" parameterType="map" resultType="ReviewLikeDto">

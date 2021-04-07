@@ -294,7 +294,7 @@ public class ReviewController {
 
 			int like_check = 0;
 			like_check = likeDto.getLiked(); // like 체크 값
-			System.out.println("like_check : "+ like_check);
+//			System.out.println("like_check : "+ like_check);
 			if (like_check == 0) {
 				reviewService.like(map);
 				like_check = 1;
@@ -314,7 +314,7 @@ public class ReviewController {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-
+		System.out.println("resultMap : " + resultMap);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 

@@ -124,18 +124,20 @@
             >X</span
           >
           <span class="text-2xl font-bold mt-2 mb-4">리뷰 삭제</span>
-          <section class="flex flex-col space-y-2 mt-6 mb-12 w-full justify-center text-center">
+          <section
+            class="flex flex-col space-y-2 mt-6 mb-12 w-full justify-center text-center"
+          >
             <span class="text-lg">정말 삭제하시겠어요?</span>
             <span class="text-xs">(되돌릴 수 없어요😭)</span>
           </section>
           <base-button
-              type="submit"
-              @click="deleteReview"
-              mode="primary"
-              class="text-base mb-2"
-            >
-              삭제하기</base-button
-            >
+            type="submit"
+            @click="deleteReview"
+            mode="primary"
+            class="text-base mb-2"
+          >
+            삭제하기</base-button
+          >
         </base-dialog>
         <div
           class="btn-like flex items-center justify-center cursor-pointer transition duration-100 ease-in-out transform hover:scale-105"
@@ -169,17 +171,19 @@ export default {
     'score',
     'content',
     'upload_date',
-    'likeCnt'
+    'likeCnt',
+    'likeCheck'
   ],
   data() {
     return {
       ratingWidth: null,
-      liked: false,
-      likeCount: null,
+      // liked: 0,
+      // likeCount: null,
       modifyDialogIsVisible: false,
       deleteDialogIsVisible: false,
       ratings: 0,
-      reviewContents: ''
+      reviewContents: '',
+      like: false
     };
   },
   computed: {
@@ -198,16 +202,62 @@ export default {
       else if (this.ratings === '2') return '😒';
       else if (this.ratings === '1') return '😠';
       else return '';
+    },
+    likeCount() {
+      const reviews = this.$store.getters['restaurants/reviews'];
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
+
+      return this.$store.getters['restaurants/reviews'][index].likeCnt;
+    },
+    liked() {
+      const reviews = this.$store.getters['restaurants/reviews'];
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
+
+      return this.$store.getters['restaurants/reviews'][index].likeCheck;
     }
   },
   created() {
-    this.likeCount = this.likeCnt;
+    // this.likeCount = this.likeCnt;
+    // this.liked = this.likeCheck;
   },
   methods: {
-    isLiked() {
-      this.liked = !this.liked;
-      if (this.liked) this.likeCount += 1;
-      else this.likeCount -= 1;
+    updateAverageScore() {
+      this.$store.dispatch('restaurants/refreshAverageScore');
+    },
+
+    async isLiked() {
+      if (this.$store.getters.getUserEmail === '') {
+        alert('로그인이 필요한 기능입니다.');
+        return;
+      }
+
+      try {
+        await this.$store.dispatch(
+          'restaurants/toggleReviewLike',
+          +this.id_review
+        );
+      } catch (error) {
+        this.error = error.message || '리뷰 좋아요 중 문제가 발생했습니다.';
+      }
+      const reviews = this.$store.getters['restaurants/reviews'];
+      const index = reviews.findIndex(
+        review => review.id_review === +this.id_review
+      );
+      const likeCheck = this.$store.getters['restaurants/reviews'][index]
+        .likeCheck;
+      console.log('methods: isLiked/likeCheck', likeCheck);
+      if (!likeCheck)
+        this.$toast.info(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 이 리뷰가 도움이 된다고 추천하였습니다.</span>`
+        );
+      else
+        this.$toast.show(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 추천을 취소합니다.</span>`
+        );
     },
     openDialog(type) {
       if (type === 'modify') {
@@ -232,24 +282,39 @@ export default {
         this.error = error.message || '리뷰를 수정하는 중 문제가 발생했습니다.';
       }
       if (result === 'success')
-        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 수정되었습니다.</span>`);
-      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 수정에 실패하였습니다.</span>`);
+        this.$toast.success(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 수정되었습니다.</span>`
+        );
+      else
+        this.$toast.error(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 수정에 실패하였습니다.</span>`
+        );
 
+      this.updateAverageScore();
       this.closeDialog('modify');
     },
     async deleteReview() {
       let result;
       try {
-        result = await this.$store.dispatch('restaurants/deleteReview', this.id_review);
+        result = await this.$store.dispatch(
+          'restaurants/deleteReview',
+          this.id_review
+        );
       } catch (error) {
         this.error = error.message || '리뷰를 삭제하는 중 문제가 발생했습니다.';
       }
       if (result === 'success')
-        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 삭제되었습니다.</span>`);
-      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 삭제에 실패하였습니다.</span>`);
+        this.$toast.success(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰가 삭제되었습니다.</span>`
+        );
+      else
+        this.$toast.error(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 삭제에 실패하였습니다.</span>`
+        );
 
+      this.updateAverageScore();
       this.closeDialog('delete');
-    },
+    }
   }
 };
 </script>

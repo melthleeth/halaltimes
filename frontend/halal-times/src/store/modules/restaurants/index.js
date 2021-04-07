@@ -12,6 +12,7 @@ export default {
       restaurantName: "",
       bookmarked: '',
       storeInfo: null,
+      averageScore: 0,
       restaurants: [
         {
           restaurantId: 1,

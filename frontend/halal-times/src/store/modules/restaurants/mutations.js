@@ -14,6 +14,11 @@ export default {
   setReviews(state, payload) {
     state.reviews = payload;
   },
+  modifyReviewLike(state, payload) {
+    const index = state.reviews.findIndex(review => review.id_review === payload.id_review);
+    state.reviews[index].likeCnt = payload.likeCnt;
+    state.reviews[index].likeCheck = payload.likeCheck;
+  },
   modifyReview(state, payload) {
     const index = state.reviews.findIndex(review => review.id_review === payload.id_review);
     state.reviews[index].content = payload.content;
@@ -25,6 +30,9 @@ export default {
   },
   setBookmarked(state, payload) {
     state.bookmarked = payload;
+  },
+  refreshAverageScore(state, payload) {
+    state.averageScore = payload;
   },
   setFetchTimestamp(state) {
     state.lastFetch = new Date().getTime();
