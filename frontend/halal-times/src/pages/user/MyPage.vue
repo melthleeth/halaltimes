@@ -82,6 +82,7 @@
             >닉네임 변경</base-button
           >
         </div>
+
         <div class="flex flex-row">
           <div class="flex flex-row w-1/4"></div>
           <div class="flex flex-row text-xs text-right">
@@ -89,6 +90,17 @@
             <br />
             * 수정한 정보는 할랄타임즈의 서비스에 바로 적용돼요
           </div>
+        </div>
+
+        <div v-if="getRole == 1" class="flex flex-row my-3">
+          <div class="flex flex-row w-1/4">관리자</div>
+          <base-button
+            class="text-sm flex flex-row"
+            mode="brown"
+            @click="recommUpdate"
+            >추천업데이트</base-button
+          >
+          <span class="checkMessageColor">{{ rocommloadingmessage }}</span>
         </div>
       </article>
     </section>
@@ -125,12 +137,14 @@ export default {
       reviews: {},
       //
       isLoading: false,
-      userInfo: null
+      userInfo: null,
+
+      rocommloadingmessage: '',
     };
   },
   components: {
     ReviewDesign,
-    BookmarkDesign
+    BookmarkDesign,
   },
   computed: {
     currDate() {
@@ -139,11 +153,11 @@ export default {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
       };
       return event.toLocaleDateString(undefined, options);
     },
-    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole'])
+    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole']),
   },
   created() {
     this.loadMyInfo();
@@ -154,7 +168,7 @@ export default {
       this.isLoading = true;
       try {
         await this.$store.dispatch('account/loadMyInfo', {
-          forceRefresh: refresh
+          forceRefresh: refresh,
         });
       } catch (error) {
         this.error =
@@ -174,14 +188,14 @@ export default {
       this.reviews = userInfo.reviewList;
       this.bookmarks = userInfo.bookmarkList;
     },
-    addProfile: function(input) {
+    addProfile: function (input) {
       if (input.target.files[0]) {
         if (this.user.profile_image) {
           const params = new URLSearchParams();
           params.append('email', this.user.email);
           axios
             .get(`${SERVER_URL}/user/profilepic/delete`, { params })
-            .then(response => {
+            .then((response) => {
               console.log(response);
             });
         }
@@ -192,25 +206,25 @@ export default {
         axios
           .post(`${SERVER_URL}/user/profilepic/upload`, frm, {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+              'Content-Type': 'multipart/form-data',
+            },
           })
-          .then(response => {
+          .then((response) => {
             console.log(response);
             alert('프로필 업로드 완료');
             const params = new URLSearchParams();
             params.append('email', this.getUserEmail);
             axios
               .get(`${SERVER_URL}/user`, { params })
-              .then(response => {
+              .then((response) => {
                 console.log(response);
                 this.user.profile_image = response.data.info.profile_image;
                 console.log('check' + this.user.profile_image);
               })
-              .catch(error => {
+              .catch((error) => {
                 this.$router.push({
                   path: '/Error',
-                  query: { status: error.response.status }
+                  query: { status: error.response.status },
                 });
               });
           });
@@ -238,7 +252,7 @@ export default {
         try {
           const modifiedData = {
             nickname: this.user.nickname,
-            email: this.user.email
+            email: this.user.email,
           };
           result = await this.$store.dispatch(
             'account/modifyNickname',
@@ -254,8 +268,17 @@ export default {
           alert('닉네임 변경 실패!');
         }
       }
-    }
-  }
+    },
+    async recommUpdate() {
+      const result = await this.$store.dispatch('recomm/connectDjano');
+      this.rocommloadingmessage = 'In Progress';
+      if (result == 'SUCCESS') {
+        this.rocommloadingmessage = 'success';
+      } else {
+        this.rocommloadingmessage = 'error';
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -266,5 +289,13 @@ img {
 
 #bg {
   background-color: #f4f2ea;
+}
+
+.checkMessageColor {
+  color: #cf4f2e;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin-top: 0.5rem;
+  margin-left: 9rem;
 }
 </style>
