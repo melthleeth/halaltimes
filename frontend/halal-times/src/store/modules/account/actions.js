@@ -106,7 +106,7 @@ export default {
       frm.append('gender', payload.gender)
       frm.append('born_year', payload.born_year)
 
-      axios.post(`${django_server}new_user/`, frm)
+      axios.post(`${django_server}/recommendations/new_user/`, frm)
       .then(response=>{
         console.log(response)
       })
