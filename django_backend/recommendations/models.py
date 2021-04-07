@@ -105,7 +105,7 @@ class User(models.Model):
 
 class DjangoUser(models.Model):
     id_django_user = models.AutoField(primary_key=True)
-    id_user = models.ForeignKey(User, models.CASCADE, db_column='user')
+    id_user = models.IntegerField()
     age = models.IntegerField(default=1)
     gender = models.BooleanField()
     is_skeleton = models.BooleanField(default=False)
