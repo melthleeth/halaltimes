@@ -8,10 +8,14 @@ from .algorithm.recommender import ItemBased
 from rest_framework.decorators import api_view
 
 # 파이썬 패키지
+import pandas as pd
+from sklearn.cluster import KMeans
 
 '''
 나는야 관리자~ 업데이트를 하지
 '''
+
+
 @api_view(["GET"])
 def adminUpdate():
     userUpdate()
@@ -58,10 +62,15 @@ def userUpdate():
 
 def userClusterd(request):
     # user Update 함
-    
+
     # update 된 DjangoUser DB 사용
     user_data = DjangoUser.objects.values(
-        'id_user','born_year','gender'
+        'id_django_user',
+        'id_user',
+        'age',
+        'gender',
+        'review_cnt',
+        'label'
     )
     data = []
     for line in user_data:
@@ -75,18 +84,27 @@ def userClusterd(request):
         reviews = line.review_cnt
 
         data.append([age, gender_m, gender_f, reviews])
-    
+
     # data 값 넣고 돌려서 label 값 부여하기 output : dataframe
     # 순서대로 DB에 label 값 update
 
+    df = pd.DataFrame(data, columns=["age", "gender_m", "gender_f", "reviews"])
+
+    kmeans = KMeans(n_clusters=30).fit(df)
+
+    for idx in range(len(kmeans.labels_)):
+        user = user_data.filter(id_django_user=idx)
+        user.label = kmeans.labels_[idx]
+        user.save()
 
     # label 업데이트 완성 되면 similarStore 실행하여 DjangoRecomm 채움
 
 
 def clusterModel():
+    pass
     # 클러스터 작업을 진행 한 후 모델을 저장
     # userClusterd 함께 넣을지 고민
-    pass
+
 
 @api_view(['POST'])
 def similarStore():
@@ -99,7 +117,7 @@ def similarStore():
     for line in review_data:
         line_user = line.id_user
         user_label = DjangoUser.objects.filter(id_user=line_user)
-        
+
         user = user_label.label
         item = line.id_store
         score = line.score
@@ -127,11 +145,12 @@ def transposePrefs(prefs):
     return transposed
 
 
-
 '''
 나는 자동화 작업이지롱 
 관리자는 필요 없어~ >_<
 '''
+
+
 def userLabel(age, gender):
     if gender:
         new_user = [age, 1, 0, 0]
@@ -149,7 +168,7 @@ def newUser(request):
     born_year = request.GET.get("born_year")
     gender = request.GET.get("gender")
     age = 2021 - int(born_year[:4]) + 1
-    
+
     label = userLabel(age, gender)
 
     user = DjangoUser()
