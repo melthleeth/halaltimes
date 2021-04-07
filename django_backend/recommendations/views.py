@@ -13,6 +13,7 @@ import pickle
 from sklearn.cluster import KMeans
 from sklearn.neighbors import KNeighborsClassifier
 
+filename = 'finalized_model.sav'
 
 @api_view(["GET"])
 def adminUpdate():
@@ -58,7 +59,7 @@ def userUpdate():
             age=age,
             gender_m=gender_m,
             gender_f=gender_f,
-            review_cnt=review_cnt
+            review_cnt= halaltime_reviews_all.review_cnt
             )
     
 
@@ -100,11 +101,9 @@ def clusterModel(n):
     classifier = KNeighborsClassifier(n_neighbors=n)
     classifier.fit(data, user_data.label)
 
-    filename = 'finalized_model.sav'
     pickle.dump(classifier, open(filename, 'wb'))
 
 
-@api_view(['POST'])
 def similarStore():
     review_data = Review.objects.filter(
         active = 1
