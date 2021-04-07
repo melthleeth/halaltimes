@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 
-from .models import Review, DjangoRecomm, DjangoUser
+from .models import Review, User, DjangoRecomm, DjangoUser
 
 from .algorithm.recommender import ItemBased
 
@@ -26,24 +26,39 @@ def adminUpdate():
 
 def userUpdate():
     # is_skeleton 아닌 값만 DjangoUser DB에서 삭제
+    DjangoUser.objects.filter(is_skeleton=False).delete()
 
+    halaltime_users_all = User.objects.filter(
+        active = 1
+    ).values(
+        'id_user', 'born_year', 'gender'
+    )
+
+    halaltime_reviews_all = Review.objects.filter(
+        active = 1
+    ).values(
+        'id_user'
+    )
     # User에서 데이터 가져와서 DjangoUser 채움 
+    for line in halaltime_users_all:
+        id_user = line.id_user
+        born_year = line.born_year
+        age = 2021 - int(born_year[:4]) + 1
+        gender = line.gender
 
-    # cf
-    # user_review_cnt = Review.objects.values(
-    #     'id_user'
-    # )
+        halaltime_reviews_all.filter(
+            id_user = id_user
+        ).annotate(
+            review_cnt = Count('id_user')
+        )
 
-    # review_cnt = user_review_cnt.filter(
-    #     id_user=line.id_user,
-    #     active=line.active
-    # ).values(
-    #     'id_user'
-    # ).annotate(
-    #     reviews=Count('id_user')
-    # )
-    pass
-
+        DjangoUser.objects.create(
+            id_user = id_user,
+            age=age,
+            gender=gender,
+            review_cnt=review_cnt
+            )
+    
 
 def userClusterd(request):
     # user Update 함
@@ -89,12 +104,14 @@ def clusterModel():
     pass
     # 클러스터 작업을 진행 한 후 모델을 저장
     # userClusterd 함께 넣을지 고민
-
+    pass
 
 @api_view(['POST'])
-def similarStore(request):
-    review_data = Review.objects.values(
-        'id_user', 'id_store', 'score'
+def similarStore():
+    review_data = Review.objects.filter(
+        active = 1
+    ).values(
+        'id_user', 'id_store','score'
     )
     data = {}
     for line in review_data:
@@ -112,6 +129,7 @@ def similarStore(request):
     model = ibcf.buildModel(nNeighbors=15)
 
     # DjangoRecomm DB 날리는 작업 실행
+    DjangoRecomm.objects.all().delete()
     for user in data.keys():
         recommendation = ibcf.Recommendation(user, model=model)
         for store in recommendation:
