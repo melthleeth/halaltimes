@@ -162,9 +162,9 @@ def transposePrefs(prefs):
 
 def userLabel(age, gender):
     if gender:
-        new_user = [age, 1, 0, 0]
+        new_user = [[age, 1, 0, 0]]
     else:
-        new_user = [age, 0, 1, 0]
+        new_user = [[age, 0, 1, 0]]
 
     model = pickle.load(open(filename, 'rb'))
     label = model.predict(new_user)
@@ -174,20 +174,15 @@ def userLabel(age, gender):
 
 @api_view(['POST'])
 def newUser(request):
-    received_json_data=json.loads(request.body)
-    # id_user = request.POST.get("id_user")
-    # born_year = request.POST.get("born_year")
-    # gender = request.POST.get("gender")
+    born_year = request.POST['born_year']
+    gender = request.POST['gender']
 
-    print(received_json_data)
-    # print(born_year)
-    # print(gender)
     age = 2021 - int(born_year[:4]) + 1
 
     label = userLabel(age, gender)
 
     user = DjangoUser()
-    user.id_user = id_user
+
     user.age = age
     if gender:
         user.gender_m, user.gender_f = 0, 1
