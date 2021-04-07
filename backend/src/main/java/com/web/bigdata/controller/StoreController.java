@@ -80,12 +80,12 @@ public class StoreController {
 
 	@ApiOperation(value = "추천 식당 목록", notes = "추천 받은 식당의 정보를 반환한다.", response = List.class)
 	@GetMapping("/list/recomm")
-	public ResponseEntity<List<StoreDto>> getRecommList(int clustered_no) throws Exception {
-		logger.info("getRecommList - 호출, " + clustered_no);
-		
-		List<UserClusteredDto> recomStore = storeService.getClusteredStores(clustered_no);
+	public ResponseEntity<List<StoreDto>> getRecommList(String email) throws Exception {
+		logger.info("getRecommList - 호출, " + email);
+		int id_user = userService.findUserInfo(email).getId_user();
+		List<UserClusteredDto> recomStore = storeService.getClusteredStores(id_user);
 		List<StoreDto> recomStoreList = new LinkedList<StoreDto>();
-		
+
 		for (UserClusteredDto storeDto : recomStore) {
 			recomStoreList.add(storeService.getRecommList(storeDto.getId_store()));
 		}
@@ -129,7 +129,7 @@ public class StoreController {
 			double score = scoreStr == null ? 0 : Double.parseDouble(scoreStr);
 			score = Math.round(score * 100) / 100.0;
 			storeDto.setAverageScore(score);
-			resultMap.put("storeInfo", storeDto);
+			resultMap.put("storeInfo : ", storeDto);
 
 			// like(bookmark) 했는지 확인
 			Integer id_user_temp = userService.getIdUser(email);
@@ -137,7 +137,8 @@ public class StoreController {
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-
+			System.out.println("bookmarkDto : "+bookmarkDto);
+			
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
@@ -147,20 +148,20 @@ public class StoreController {
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
-
+			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
 			for (ReviewDto review : reviewList) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
 				map.put("id_user", id_user);
-				review.setLikeCheck(reviewService.likeCheck(map));
+				System.out.println(map);
+				String check = reviewService.likeCheck(map);
+				int likeCheck = check == null ? 0 : Integer.parseInt(check);
+				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
 			}
+			System.out.println("reviewList : " + reviewList);
 			resultMap.put("reviewList", reviewList);
-			System.out.println(reviewList);
-			System.out.println(reviewList);
-			System.out.println(resultMap.get(reviewList));
-			System.out.println(resultMap.get(reviewList));
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());

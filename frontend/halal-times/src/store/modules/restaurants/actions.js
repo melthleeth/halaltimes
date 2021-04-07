@@ -163,13 +163,14 @@ export default {
       }
       averageScore = sum / reviewList.length;
     } else averageScore = 0;
-    
+
     console.log('actions: refreshAverageScore/sum', sum);
     console.log('actions: refreshAverageScore/averageScore', averageScore);
     context.commit('refreshAverageScore', averageScore.toFixed(1));
   },
   async registerReview(context, payload) {
     // content, id_user, id_store, score
+    console.log('payload : ', payload);
     const reviewData = {
       ...payload,
       email: context.rootGetters.getUserEmail,
@@ -292,9 +293,9 @@ export default {
       const likeData = {
         id_review: payload,
         likeCnt: +value.likeCnt,
-        likeCheck: likeCheck,
+        likeCheck: likeCheck
       };
       context.commit('modifyReviewLike', likeData);
     });
-  },
+  }
 };

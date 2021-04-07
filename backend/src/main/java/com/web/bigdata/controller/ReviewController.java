@@ -105,11 +105,11 @@ public class ReviewController {
 
 			// post imgs
 			List<ImgDto> review_image = reviewService.getImages(id_review);
-			for (ImgDto img : review_image) {
-				// 이름에 url 붙여주기
-				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
-				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
-			}
+//			for (ImgDto img : review_image) {
+//				// 이름에 url 붙여주기
+//				img.setModified_image(s3FileUploadService.getDefaultUrl() + img.getModified_image());
+//				img.setThumb_image(s3FileUploadService.getDefaultUrl() + img.getThumb_image());
+//			}
 			resultMap.put("fileList", review_image);
 
 			status = HttpStatus.OK;
@@ -128,7 +128,7 @@ public class ReviewController {
 
 		String result = SUCCESS;
 		HttpStatus status = HttpStatus.OK;
-		System.out.println("start " + reviewDto);
+		System.out.println("view에서 받아온 reviewDto : " + reviewDto);
 		
 		
 		List<MultipartFile> files = reviewDto.getFiles();
@@ -138,7 +138,8 @@ public class ReviewController {
 		try {
 			int id_user = userService.getIdUser(reviewDto.getEmail());
 			reviewDto.setId_user(id_user);
-			System.out.println(reviewDto.getId_user());
+			System.out.println("id_user : "+reviewDto.getId_user());
+			System.out.println("reviewDto : "+reviewDto);
 			if (reviewService.write(reviewDto)) {
 //				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
 				System.out.println(reviewDto);
@@ -294,7 +295,7 @@ public class ReviewController {
 
 			int like_check = 0;
 			like_check = likeDto.getLiked(); // like 체크 값
-			System.out.println("like_check : "+ like_check);
+//			System.out.println("like_check : "+ like_check);
 			if (like_check == 0) {
 				reviewService.like(map);
 				like_check = 1;
@@ -314,7 +315,7 @@ public class ReviewController {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-
+		System.out.println("resultMap : " + resultMap);
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 

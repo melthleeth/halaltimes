@@ -13,10 +13,16 @@
 		where active = 1
 	</select>
 	
+	<select id="getLabel" parameterType="int" resultType="int">
+		select label
+		from django_user
+		where id_user = #{id_user}		
+	</select>
+	
 	<select id="getClusteredStores" parameterType="int" resultType="UserClusteredDto">
 		select id_store
-		from user_clustered
-		where clustered_no = #{clustered_no}		
+		from django_recomm
+		where label = #{label}		
 	</select>
 	
 	<select id="getRecommList" parameterType="int" resultType="StoreDto">

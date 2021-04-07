@@ -19,7 +19,7 @@ public interface StoreService {
 	
 	public StoreDto getRecommList(int id_store) throws Exception;
 
-	public List<UserClusteredDto> getClusteredStores(int clustered_no) throws Exception;
+	public List<UserClusteredDto> getClusteredStores(int label) throws Exception;
 	
 	/** like 게시글 */
 	public StoreDto getLikeStore(int no) throws Exception;

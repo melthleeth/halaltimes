@@ -196,8 +196,12 @@
                 ><span>★</span>
               </div>
             </div>
-            <span v-if="averageScore > 0" class="text-sm ml-4">({{ averageScore }})</span>
-            <span v-else class="font-color-black-200 text-xs">아직 등록된 리뷰가 없어요!</span>
+            <span v-if="averageScore > 0" class="text-sm ml-4"
+              >({{ averageScore }})</span
+            >
+            <span v-else class="font-color-black-200 text-xs"
+              >아직 등록된 리뷰가 없어요!</span
+            >
           </div>
           <div class="flex items-center">
             <span class="font-bold w-16 mr-4 text-right">전화번호</span>
@@ -245,13 +249,13 @@ export default {
       tagColor: 1,
       score: 0,
       reviewContents: '',
-      ratings: 0,
+      ratings: 0
     };
   },
   computed: {
     averageScore() {
       const newValue = this.$store.getters['restaurants/averageScore'];
-      
+
       return newValue;
     },
     isBookmark() {
@@ -298,8 +302,6 @@ export default {
     console.log('created: reviews', this.$store.getters['restaurants/reviews']);
     // this.bookmarked = this.$store.getters['restaurants/bookmarked'];
 
-    this.updateAverageScore();
-
     switch (this.muslimFriendly) {
       case '무슬림 자가 인증':
         this.tagColor = 2;
@@ -327,6 +329,7 @@ export default {
         this.error =
           error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
+          this.updateAverageScore();
 
       this.isLoading = false;
       // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
@@ -369,9 +372,14 @@ export default {
       } catch (error) {
         this.error = error.message || '북마크 중 문제가 발생했습니다.';
       }
-      console.log("methods: bookmark/bookmarked", !this.$store.getters['restaurants/bookmarked']);
+      console.log(
+        'methods: bookmark/bookmarked',
+        !this.$store.getters['restaurants/bookmarked']
+      );
       if (!this.$store.getters['restaurants/bookmarked'])
-        this.$toast.info(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 북마크한 식당으로 등록되었습니다.</span>`);
+        this.$toast.info(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 북마크한 식당으로 등록되었습니다.</span>`
+        );
       else
         this.$toast.show(
           `<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 북마크가 해제되었습니다.</span>`

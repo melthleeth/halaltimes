@@ -74,7 +74,7 @@ public class S3FileUploadService {
 
 		// 주소 할당
 		member.setEmail(email);
-		member.setProfile_image(saveFileName);
+		member.setProfile_image("https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/"+saveFileName);
 
 		// 파일 삭제
 		file.delete();
