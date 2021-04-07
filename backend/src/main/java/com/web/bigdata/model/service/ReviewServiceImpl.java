@@ -79,7 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public int likeCheck(Map<String, Object> map) throws Exception {
+	public String likeCheck(Map<String, Object> map) throws Exception {
 		return reviewMapper.likeCheck(map);
 	}
 

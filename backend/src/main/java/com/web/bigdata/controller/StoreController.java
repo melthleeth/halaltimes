@@ -129,7 +129,7 @@ public class StoreController {
 			double score = scoreStr == null ? 0 : Double.parseDouble(scoreStr);
 			score = Math.round(score * 100) / 100.0;
 			storeDto.setAverageScore(score);
-			resultMap.put("storeInfo", storeDto);
+			resultMap.put("storeInfo : ", storeDto);
 
 			// like(bookmark) 했는지 확인
 			Integer id_user_temp = userService.getIdUser(email);
@@ -137,7 +137,8 @@ public class StoreController {
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-
+			System.out.println("bookmarkDto : "+bookmarkDto);
+			
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
 				resultMap.put("like", 0);
@@ -147,17 +148,20 @@ public class StoreController {
 			else {
 				resultMap.put("like", bookmarkDto.getActive());
 			}
-
+			
 			List<ReviewDto> reviewList = reviewService.getStoreReviews(id_store);
 			for (ReviewDto review : reviewList) {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
 				map.put("id_user", id_user);
-				review.setLikeCheck(reviewService.likeCheck(map));
+				System.out.println(map);
+				String check = reviewService.likeCheck(map);
+				int likeCheck = check == null ? 0 : Integer.parseInt(check);
+				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
 			}
-			resultMap.put("reviewList", reviewList);
 			System.out.println("reviewList : " + reviewList);
+			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());

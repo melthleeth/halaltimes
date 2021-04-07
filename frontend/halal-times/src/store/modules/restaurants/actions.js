@@ -170,6 +170,7 @@ export default {
   },
   async registerReview(context, payload) {
     // content, id_user, id_store, score
+    console.log('payload : ', payload);
     const reviewData = {
       ...payload,
       email: context.rootGetters.getUserEmail,

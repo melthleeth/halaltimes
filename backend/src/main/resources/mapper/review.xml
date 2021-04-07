@@ -133,7 +133,7 @@
  		where id_review = #{id_review} and active = 1
  	</select>
 	
-	<select id="likeCheck" parameterType="map" resultType="int">
+	<select id="likeCheck" parameterType="map" resultType="string">
 	    select active
 	    from review_like
 	    where id_review = #{id_review} and id_user = #{id_user};

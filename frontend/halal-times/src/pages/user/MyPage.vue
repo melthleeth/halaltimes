@@ -25,12 +25,13 @@
                 stroke-linejoin="round"
               />
             </svg>
-            <!-- <img
+            <img
               id="blah"
               :src="user.profile_image"
               onerror=""
               alt="프로필 이미지"
-            /> 
+            />
+            <!-- 
             <input id="pic" class="pis" @change="addProfile" type="file" /> -->
             <div class="flex text-sm text-gray-600">
               <label
@@ -203,9 +204,7 @@ export default {
               .get(`${SERVER_URL}/user`, { params })
               .then(response => {
                 console.log(response);
-                this.user.profile_image =
-                  'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
-                  response.data.info.profile_image;
+                this.user.profile_image = response.data.info.profile_image;
                 console.log('check' + this.user.profile_image);
               })
               .catch(error => {
