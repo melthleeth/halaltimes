@@ -90,12 +90,12 @@ public class S3FileUploadService {
 		final String ext = origName.substring(origName.lastIndexOf('.'));
 		// 파일이름 암호화
 		final String saveFileName = getUuid() + ext;
-		final String thumbFileName = "t_" + saveFileName;
+//		final String thumbFileName = "t_" + saveFileName;
 
 		// 파일 객체 생성
 		// System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
 		File file = new File(IMAGE_DIR + saveFileName);
-		File thumb = new File(IMAGE_DIR + thumbFileName);
+//		File thumb = new File(IMAGE_DIR + thumbFileName);
 
 		if (!file.exists()) {
 			file.mkdirs();
@@ -124,21 +124,21 @@ public class S3FileUploadService {
 
 		// 파일 임시 저장
 		uploadFile.transferTo(file);
-		Thumbnails.of(file).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumb);
+//		Thumbnails.of(file).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumb);
 
 		// 파일 변환
 		// S3 파일 업로드
 		uploadOnS3(saveFileName, file);
-		uploadOnS3(thumbFileName, thumb);
+//		uploadOnS3(thumbFileName, thumb);
 
 		imgDto.setOriginal_image(origName);
-		imgDto.setModified_image(saveFileName);
-		imgDto.setThumb_image(thumbFileName);
+		imgDto.setModified_image("https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/"+saveFileName);
+//		imgDto.setThumb_image(thumbFileName);
 //		imgDto.setPicsize(uploadFile.getSize());
 
 		// 파일 삭제
 		file.delete();
-		thumb.delete();
+//		thumb.delete();
 
 		return imgDto;
 	}
@@ -148,6 +148,7 @@ public class S3FileUploadService {
 	}
 
 	public void delete(String fileName) {
+		fileName = fileName.substring(defaultUrl.length());
 		try {
 			// Delete 객체 생성
 			DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
