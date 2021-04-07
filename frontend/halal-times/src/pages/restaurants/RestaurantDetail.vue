@@ -52,13 +52,13 @@
         </article>
       </section>
       <section class="flex flex-col w-5/12 h-auto mx-2">
-        <!-- <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map> -->
+        <kakao-map :lat="+restaurant.lat" :lng="+restaurant.lng"></kakao-map>
         <!-- <naver-map :lat="+restaurant.lat" :lng="+restaurant.lng"></naver-map> -->
-        <img
+        <!-- <img
           src="@/assets/resources/default.png"
           alt="map"
           class="object-cover w-full h-64 border-line-full"
-        />
+        /> -->
         <span class="font-bold text-lg border-line mt-1 pl-1">위치</span>
         <div class="flex border-line text-sm my-2 px-2 pb-2">
           <article
@@ -93,7 +93,9 @@
                 @click="closeReviewDialog"
                 >X</span
               >
-              <span class="text-2xl font-bold mt-2 mb-4 icon-close">리뷰 작성하기</span>
+              <span class="text-2xl font-bold mt-2 mb-4 icon-close"
+                >리뷰 작성하기</span
+              >
               <section class="flex flex-col space-y-4 w-full justify-center">
                 <div class="star-rating space-x-4 mx-auto">
                   {{ ratingEmoji }}
@@ -225,14 +227,14 @@
 </template>
 <script>
 import ReviewCard from '../../components/restaurants/ReviewCard.vue';
-// import KakaoMap from '../../components/ui/KakaoMap.vue';
+import KakaoMap from '../../components/ui/KakaoMap.vue';
 // import NaverMap from '../../components/ui/NaverMap.vue';
 
 export default {
   components: {
-    ReviewCard
-    // NaverMap,
-    // KakaoMap
+    ReviewCard,
+    // NaverMap
+    KakaoMap
   },
   // props: ['restaurantId', 'restaurantName'],
   data() {
@@ -269,8 +271,8 @@ export default {
       return score + 6;
     },
     imgsrc() {
-      // return this.restaurant.imgpath;
-      return 'https://i.stack.imgur.com/y9DpT.jpg';
+      return this.restaurant.imgpath;
+      // return 'https://i.stack.imgur.com/y9DpT.jpg';
     },
     reviews() {
       return this.$store.getters['restaurants/reviews'];
@@ -343,8 +345,13 @@ export default {
         this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';
       }
       if (result === 'success')
-        this.$toast.success(`<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰 등록에 성공하였습니다.</span>`);
-      else this.$toast.error(`<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 등록에 실패하였습니다.</span>`);
+        this.$toast.success(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰 등록에 성공하였습니다.</span>`
+        );
+      else
+        this.$toast.error(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 등록에 실패하였습니다.</span>`
+        );
 
       this.updateAverageScore();
       this.loadLikeReviews();
@@ -366,7 +373,9 @@ export default {
       if (!this.$store.getters['restaurants/bookmarked'])
         this.$toast.info(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😍 북마크한 식당으로 등록되었습니다.</span>`);
       else
-        this.$toast.show(`<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 북마크가 해제되었습니다.</span>`);
+        this.$toast.show(
+          `<span class="G-market-sans-L font-bold text-sm tracking-wide">😥 북마크가 해제되었습니다.</span>`
+        );
     },
     writeReview() {
       if (this.$store.getters.getUserEmail === '') {
@@ -393,7 +402,7 @@ export default {
 }
 
 .icon-close:hover {
-  color: #CF4F2E;
+  color: #cf4f2e;
 }
 
 .star-ratings {

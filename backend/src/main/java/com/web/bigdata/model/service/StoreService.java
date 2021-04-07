@@ -7,6 +7,7 @@ import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.UserClusteredDto;
 
 
 
@@ -15,6 +16,10 @@ public interface StoreService {
 
 	/** 게시글 목록 : 검색 기능 */
 	public List<StoreDto> getList(StoreParameterDto postParameterDto) throws Exception;
+	
+	public StoreDto getRecommList(int id_store) throws Exception;
+
+	public List<UserClusteredDto> getClusteredStores(int clustered_no) throws Exception;
 	
 	/** like 게시글 */
 	public StoreDto getLikeStore(int no) throws Exception;

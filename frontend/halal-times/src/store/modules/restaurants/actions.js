@@ -28,8 +28,8 @@ export default {
     for (const key in responseData) {
       const restaurant = {
         restaurantId: +responseData[key].id_store,
-        // imgpath: responseData[key].image,
-        imgpath: 'https://i.stack.imgur.com/y9DpT.jpg',
+        imgpath: responseData[key].image,
+        // imgpath: 'https://i.stack.imgur.com/y9DpT.jpg',
         restaurantName: responseData[key].store_name,
         averageScore: responseData[key].averageScore,
         locationRegion: responseData[key].location_region,

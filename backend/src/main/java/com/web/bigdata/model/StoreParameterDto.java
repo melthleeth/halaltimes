@@ -4,11 +4,20 @@ public class StoreParameterDto {
 	private int pg;
 	private int spp;
 	private int start;
+	private int id_store;
 	private String key;
 	private String word;
 	private String email;
 	private String sortBy;
-	
+
+	public int getId_store() {
+		return id_store;
+	}
+
+	public void setId_store(int id_store) {
+		this.id_store = id_store;
+	}
+
 	public StoreParameterDto() {
 		pg = 1;
 		spp = 10;
@@ -70,4 +79,12 @@ public class StoreParameterDto {
 	public void setSortBy(String sortBy) {
 		this.sortBy = sortBy;
 	}
+
+	@Override
+	public String toString() {
+		return "StoreParameterDto [pg=" + pg + ", spp=" + spp + ", start=" + start + ", id_store=" + id_store + ", key="
+				+ key + ", word=" + word + ", email=" + email + ", sortBy=" + sortBy + "]";
+	}
+	
+	
 }

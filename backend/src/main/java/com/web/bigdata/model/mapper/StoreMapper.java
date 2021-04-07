@@ -10,13 +10,18 @@ import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
+import com.web.bigdata.model.UserClusteredDto;
 
 @Mapper
 public interface StoreMapper {
 
 	/** 게시글 목록 : 검색 기능 */
 	public List<StoreDto> getList(StoreParameterDto storeParameterDto) throws Exception;
-	
+
+	public StoreDto getRecommList(int id_store) throws Exception;
+
+	public List<UserClusteredDto> getClusteredStores(int clustered_no) throws Exception;
+
 	/** like 게시글 */
 	public StoreDto getLikeStore(int no) throws Exception;
 
@@ -79,24 +84,24 @@ public interface StoreMapper {
 	public int getTempCount(String email) throws Exception;
 
 	/** 임시저장글 작성 */
-	public boolean writeTemp(StoreDto storeDto) throws Exception;	
+	public boolean writeTemp(StoreDto storeDto) throws Exception;
 
 	/** 임시저장글 작성 */
-	public String getIdStore(int index) throws Exception;	
-	
+	public String getIdStore(int index) throws Exception;
+
 	/** 임시저장글 작성 */
 	public int insertImgUrl(Map<String, Object> map) throws Exception;
 
 	/** store 클릭시 조회수 증가 */
-	public int hitsUp(int id_store) throws Exception;	
-	
-	/** id_store으로 store_name 가져오기*/
+	public int hitsUp(int id_store) throws Exception;
+
+	/** id_store으로 store_name 가져오기 */
 	public String getStoreNameByIdStore(int id_store) throws SQLException;
-	
-	/** 해당 음식점의 평균 평점 가져오기*/
+
+	/** 해당 음식점의 평균 평점 가져오기 */
 	public String getStoreAvgScore(int id_store) throws SQLException;
-	
-	/** 해당 음식점의 주소 가져오기*/
+
+	/** 해당 음식점의 주소 가져오기 */
 	public String getStoreAddress(int id_store) throws SQLException;
-	
+
 }
