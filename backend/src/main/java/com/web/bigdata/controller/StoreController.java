@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.web.bigdata.model.BookmarkDto;
+import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.StoreParameterDto;
@@ -137,7 +138,7 @@ public class StoreController {
 			likeCheckMap.put("id_user", id_user);
 			likeCheckMap.put("id_store", id_store);
 			BookmarkDto bookmarkDto = storeService.likeInfo(likeCheckMap);
-			System.out.println("bookmarkDto : "+bookmarkDto);
+//			System.out.println("bookmarkDto : "+bookmarkDto);
 			
 			// 해당 게시글 like 누른적 한 번도 없다면
 			if (bookmarkDto == null) {
@@ -154,13 +155,20 @@ public class StoreController {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
 				map.put("id_user", id_user);
-				System.out.println(map);
 				String check = reviewService.likeCheck(map);
 				int likeCheck = check == null ? 0 : Integer.parseInt(check);
 				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
+				
+				List<ImgDto> imgs = new ArrayList<>();
+				imgs = reviewService.getImages(review.getId_review());
+				List<String> modifiedImg = new ArrayList<>();
+				for(ImgDto x : imgs) {
+					modifiedImg.add(x.getModified_image());
+				}
+				review.setUnmodified(modifiedImg);
+//				review.setUnmodified(unmodified);
 			}
-			System.out.println("reviewList : " + reviewList);
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {

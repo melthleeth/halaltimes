@@ -222,6 +222,12 @@
 		set active = 0
 		where id_review_image = #{id_review_image}
 	</update>
+
+	<update id="deleteCascade" parameterType="int">
+		update review_image
+		set active = 0
+		where id_review = #{id_review}
+	</update>
 	
 	<update id="deleteAllImage" parameterType="string">
 		update review_image
@@ -243,5 +249,12 @@
 		from review
 		where id_store = #{id_store} and active = 1
  	</select>
-	
+ 	
+ 	<select id="getIdReview" parameterType="String" resultType="String">
+ 		select id_review
+		from review
+		where upload_date = #{upload_date} and active = 1
+ 	</select>
+ 	
+ 	
 </mapper>
