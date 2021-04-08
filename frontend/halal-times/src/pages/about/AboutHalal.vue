@@ -108,7 +108,7 @@ export default {
 };
 </script>
 <style scoped>
-img {
+article img {
   width: 100%;
   border: 3.2px solid #2b2a29;
 }
