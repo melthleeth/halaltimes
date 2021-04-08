@@ -4,7 +4,7 @@
   >
     <section id="user-info" class="flex items-center">
       <img
-        src="@/assets/resources/default.png"
+        :src="thumbnail"
         alt="profile image"
         class="w-10 h-10 rounded-full mr-2 object-cover"
       />
@@ -172,7 +172,8 @@ export default {
     'content',
     'upload_date',
     'likeCnt',
-    'likeCheck'
+    'likeCheck',
+    'thumbnail'
   ],
   data() {
     return {
@@ -223,6 +224,7 @@ export default {
   created() {
     // this.likeCount = this.likeCnt;
     // this.liked = this.likeCheck;
+    console.log("created: thumbnail", this.thumbnail);
   },
   methods: {
     updateAverageScore() {

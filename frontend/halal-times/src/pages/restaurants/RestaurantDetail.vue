@@ -46,6 +46,7 @@
               :upload_date="reviewItem.upload_date"
               :likeCnt="reviewItem.likeCnt"
               :likeCheck="reviewItem.likeCheck"
+              :thumbnail="reviewItem.thumbnail"
             ></review-card>
           </div>
           <span
