@@ -76,6 +76,7 @@
             v-for="review in reviews"
             :key="review.id_review"
             class="flex flex-col border-line mx-6 my-2 pb-2 transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl"
+            @click="viewRetaurantDetail(review.id_store, review.store_name)"
           >
             <div class="flex items-center">
               <span class="font-bold mr-2">{{ review.store_name }}</span>
