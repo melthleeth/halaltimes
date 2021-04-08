@@ -142,4 +142,9 @@ public class UserServiceImpl implements UserService {
 	public String getNickName(int id_user) throws SQLException {
 		return userMapper.getNickName(id_user);
 	}
+
+	@Override
+	public String getImage(int id_user) throws SQLException {
+		return userMapper.getImage(id_user);
+	}
 }

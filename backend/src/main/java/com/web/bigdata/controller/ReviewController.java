@@ -59,9 +59,12 @@ public class ReviewController {
 		logger.info("getList - 호출, " + reviewParameterDto);
 		List<ReviewDto> reviewList = reviewService.getList(reviewParameterDto);
 		for(ReviewDto x : reviewList) {
-			System.out.println(x);
 			String store_name = reviewService.getStoreName(x.getId_store());
 			x.setStore_name(store_name);
+			
+			System.out.println(userService.getImage(x.getId_user()));
+			x.setThumbnail(userService.getImage(x.getId_user()));
+			System.out.println(x);
 		}
 		return new ResponseEntity<List<ReviewDto>>(reviewList, HttpStatus.OK);
 	}
