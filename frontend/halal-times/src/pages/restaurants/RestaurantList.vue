@@ -41,6 +41,7 @@
           :reviews="restaurant.reviews"
           :foodCategory="restaurant.foodCategory"
           :muslimFriendly="restaurant.muslimFriendly"
+          :bookmarked="restaurant.bookmarked"
         >
         </restaurant-card>
       </div>
@@ -91,6 +92,7 @@ export default {
   },
   created() {
     this.loadRestaurants();
+    this.loadBookmarks();
     this.loadKeyword();
   },
   methods: {
@@ -105,6 +107,14 @@ export default {
           error.message || '음식점을 불러오는데 문제가 발생했습니다.';
       }
       this.isLoading = false;
+    },
+    async loadBookmarks() {
+      try {
+        await this.$store.dispatch('restaurants/loadBookmarks');
+      } catch (error) {
+        this.error =
+          error.message || '북마크 목록을 불러오는데 문제가 발생했습니다.';
+      }
     },
     loadKeyword() {
       const searchKeyword = this.$store.getters['restaurants/keyword'];

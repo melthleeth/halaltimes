@@ -53,7 +53,8 @@ export default {
         hits: responseData[key].hits,
         reviews: responseData[key].reviews,
         lat: responseData[key].lat,
-        lng: responseData[key].lng
+        lng: responseData[key].lng,
+        bookmarked: false,
       };
       restaurants.push(restaurant);
     }
@@ -61,6 +62,28 @@ export default {
     else if (payload.type === "recommendation") context.commit('setRecommendRestaurants', restaurants);
     else context.commit('setRestaurants', restaurants);
     context.commit('setFetchTimestamp');
+  },
+  async loadBookmarks(context) {
+    const email = context.rootGetters.getUserEmail;
+
+    if (email === "") return;
+
+    const response = await fetch(`${SERVER_URL}/store/bookmark/all?email=${email}`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'GET'
+    });
+    const responseData = await response.json();
+
+    for (const key in responseData) {
+      const restaurantId = +responseData[key].id_store;
+      console.log("restaurantId", restaurantId);
+      context.commit("modifyBookmarked", restaurantId);
+    }
   },
   setKeyword(context, payload) {
     context.commit('setKeyword', payload);

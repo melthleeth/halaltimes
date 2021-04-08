@@ -37,6 +37,11 @@ export default {
     const index = state.reviews.findIndex(review => review.id_review === payload);
     state.reviews.splice(index, 1);
   },
+  modifyBookmarked(state, payload) {
+    const index = state.restaurants.findIndex(restaurant => restaurant.restaurantId === payload);
+    state.restaurants[index].bookmarked = true;
+    console.log("payload", state.restaurants[index].bookmarked);
+  },
   setBookmarked(state, payload) {
     state.bookmarked = payload;
   },
