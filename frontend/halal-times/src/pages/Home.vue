@@ -126,7 +126,7 @@
           id="right-recommendation"
           class="xl:text-xl lg:text-lg md:text-base sm:text-sm font-bold tracking-title w-full my-4"
         >
-        <router-link to="/explore">
+        <router-link v-if="name" to="/community">
           <article class="relative">
             <img
               id="img-size-1"
@@ -145,13 +145,28 @@
             </div>
           </article>
         </router-link>
+        <router-link v-else to="/community">
+          <article class="relative">
+            <img
+              id="img-size-1"
+              src="../assets/resources/home_3.jpg"
+              alt="home_2"
+              class="cursor-pointer object-cover"
+            />
+            <div
+              class="text-overlay flex flex-col space-y-2 xl:text-2xl lg:text-xl md:text-lg sm:text-base"
+            >
+              <span class="">COMMUNITY</span>
+            </div>
+          </article>
+        </router-link>
+        
         </article>
       </section>
     </div>
   </div>
 </template>
 <script>
-// import KakaoMap from "@/components/layout/KakaoMap.vue";
 import nameRaffle from "../data/nameRaffle.js";
 
 function getRandomInt(max) {
@@ -159,7 +174,6 @@ function getRandomInt(max) {
 }
 
 export default {
-  //   components: { KakaoMap },
   data() {
     return {
       randomName: nameRaffle.name,
@@ -168,9 +182,9 @@ export default {
   },
   computed: {
     name() {
-      return localStorage.getItem("username") === null
+      return this.$store.getters.getUserName === ""
         ? `익명의 ${this.randomName[getRandomInt(this.randomName.length)]}`
-        : localStorage.getItem("username");
+        : this.$store.getters.getUserName;
     },
   },
   methods: {

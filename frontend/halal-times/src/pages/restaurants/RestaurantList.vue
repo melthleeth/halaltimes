@@ -3,10 +3,12 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
+  <div id="TOP"></div>
+  <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"><img src="@/assets/icon/arrow-top.png" alt="top" /></a>
     <base-title>Explore</base-title>
     <section
       id="search-bar"
-      class="flex justify-items-center text-base items-center mx-16 mb-12"
+      class="flex flex-col justify-items-center text-base items-center mx-16 mb-12"
     >
       <article class="flex w-full items-center">
         <input
@@ -17,6 +19,7 @@
           v-model.trim="keyword"
         />
       </article>
+      <base-button class="mt-4 text-sm" mode="outline" @click="loadRestaurants(true)">Refresh</base-button>
     </section>
     <section class="flex flex-col">
       <div v-if="isLoading" class="my-32">
@@ -27,7 +30,7 @@
         class="grid grid-cols-3 grid-flow-row gap-1 mx-auto"
       >
         <restaurant-card
-          v-for="restaurant in filteredRestaurants.slice(0, 6)"
+          v-for="restaurant in filteredRestaurants"
           :key="restaurant.restaurantId"
           :restaurantId="restaurant.restaurantId"
           :imgpath="restaurant.imgpath"
@@ -38,6 +41,7 @@
           :reviews="restaurant.reviews"
           :foodCategory="restaurant.foodCategory"
           :muslimFriendly="restaurant.muslimFriendly"
+          :bookmarked="restaurant.bookmarked"
         >
         </restaurant-card>
       </div>
@@ -88,10 +92,11 @@ export default {
   },
   created() {
     this.loadRestaurants();
+    // this.loadBookmarks();
     this.loadKeyword();
   },
   methods: {
-    async loadRestaurants(refresh = true) {
+    async loadRestaurants(refresh = false) {
       this.isLoading = true;
       try {
         await this.$store.dispatch('restaurants/loadRestaurants', {
@@ -102,6 +107,14 @@ export default {
           error.message || '음식점을 불러오는데 문제가 발생했습니다.';
       }
       this.isLoading = false;
+    },
+    async loadBookmarks() {
+      try {
+        await this.$store.dispatch('restaurants/loadBookmarks');
+      } catch (error) {
+        this.error =
+          error.message || '북마크 목록을 불러오는데 문제가 발생했습니다.';
+      }
     },
     loadKeyword() {
       const searchKeyword = this.$store.getters['restaurants/keyword'];

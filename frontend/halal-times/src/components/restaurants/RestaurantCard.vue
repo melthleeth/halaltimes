@@ -38,9 +38,14 @@
           >{{ muslimFriendly }}</span
         >
       </article>
-      <img
-        src="../../assets/icon/bookmark@0.75x.png"
-        class="object-contain justify-items-end ml-auto cursor-pointer mr-2"
+      <img v-if="!bookmarked"
+        src="@/assets/icon/heart.png"
+        class="object-contain w-6 h-6 justify-items-end ml-auto cursor-pointer mr-2"
+        alt="bookmark icon"
+      />
+      <img v-else
+        src="@/assets/icon/heart_filled.png"
+        class="object-contain w-6 h-6 justify-items-end ml-auto cursor-pointer mr-2"
         alt="bookmark icon"
       />
     </section>
@@ -57,7 +62,8 @@ export default {
     'hits',
     'reviews',
     'foodCategory',
-    'muslimFriendly'
+    'muslimFriendly',
+    'bookmarked'
   ],
   data() {
     return {

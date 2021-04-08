@@ -135,7 +135,7 @@ button:focus {
 
 .outline_secondary:hover {
   color: white;
-  background-color: #2f4d3b;
+  background-color: #4f8163;
 }
 
 .outline {
@@ -147,7 +147,8 @@ button:focus {
 .outline:hover,
 .outline:active {
   color: white;
-  background-color: #00002f;
+  background-color: #2B2A29;
+  border: 3px solid #2b2a29;
 }
 
 .small-round-primary {
