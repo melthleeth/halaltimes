@@ -114,7 +114,7 @@
             <bookmark-design :value="bookmark" />
           </section>
           <!-- <restaurant-card-small
-            v-for="bookmark in bookmarks.slice(0, 5)"
+            v-for="bookmark in bookmarks"
             :key="bookmark.restaurantId"
             :restaurantId="bookmark.restaurantId"
             :restaurantName="bookmark.store_name"
@@ -134,7 +134,7 @@
             <review-design :value="review" />
           </section>
           <!-- <review-card-small
-            v-for="review in reviews.slice(0, 5)"
+            v-for="review in reviews"
             :key="review.id_review"
             :id_store="review.id_store"
             :store_name="review.store_name"
