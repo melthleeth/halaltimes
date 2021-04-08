@@ -69,6 +69,7 @@ public class LoginController {
 				resultMap.put("user-email", loginUser.getEmail());
 				resultMap.put("user-name", loginUser.getNickname());
 				resultMap.put("role", loginUser.getRole());
+				resultMap.put("profile_image", loginUser.getProfile_image());
 				status = HttpStatus.ACCEPTED;
 			} else {
 				resultMap.put("message", "로그인 실패");
