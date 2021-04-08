@@ -11,36 +11,36 @@
           class="mt-1 mx-5 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md my-3"
         >
           <div class="space-y-1 my-10 mx-10 text-center">
-            <svg
-              class="mx-auto h-12 w-12 text-gray-400"
-              stroke="currentColor"
-              fill="none"
-              viewBox="0 0 48 48"
-              aria-hidden="true"
-            >
-              <path
-                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <img
-              id="blah"
-              :src="user.profile_image"
-              onerror=""
-              alt="프로필 이미지"
-            />
-            <!-- 
-            <input id="pic" class="pis" @change="addProfile" type="file" /> -->
+            <div v-if="!user.profile_image">
+              <svg
+                class="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
             <div class="flex text-sm text-gray-600">
               <label
                 for="file-upload"
                 class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
               >
-                <span
-                  >* 이미지를 클릭하여 프로필 사진을 등록/업데이트 할 수
-                  있어요</span
+                <img
+                  id="blah"
+                  :src="user.profile_image"
+                  onerror=""
+                  alt="프로필 이미지"
+                />
+                <span class="text-xs"
+                  >* 이미지를 클릭하여 프로필 사진을 등록 및 업데이트를 할 수
+                  있습니다.</span
                 >
               </label>
             </div>
@@ -64,8 +64,7 @@
         <div class="flex flex-row my-3">
           <div class="flex flex-row w-1/4">출생년도</div>
           <div class="flex flex-row w-1/4">
-            {{ user.born_year.slice(0, 4) }}년
-            {{ user.born_year.slice(4, 6) }}월
+            {{ born_year.slice(0, 4) }}년 {{ born_year.slice(4, 6) }}월
           </div>
         </div>
         <div class="flex flex-row my-3">
@@ -143,6 +142,7 @@ export default {
       //
       isLoading: false,
       userInfo: null,
+      born_year: '190001',
 
       rocommloadingmessage: '',
     };
@@ -187,11 +187,11 @@ export default {
       } else {
         this.user.gender = '남성';
       }
-      this.user.profile_image =
-        'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/' +
-        this.user.profile_image;
+      //'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/'
+      // this.user.profile_image = user.profile_image;
       this.reviews = userInfo.reviewList;
       this.bookmarks = userInfo.bookmarkList;
+      this.born_year = userInfo.info.born_year;
     },
     addProfile: function (input) {
       if (input.target.files[0]) {
@@ -235,6 +235,9 @@ export default {
           });
       }
     },
+    changeProfile() {
+      this.addProfile();
+    },
     async modifyNickname() {
       let nicknameCheck;
       try {
@@ -275,13 +278,13 @@ export default {
       }
     },
     async recommUpdate() {
-      // const result = await this.$store.dispatch('recomm/connectDjano');
       this.rocommloadingmessage = 'In Progress';
-      // if (result == 'SUCCESS') {
-      //   this.rocommloadingmessage = 'success';
-      // } else {
-      //   this.rocommloadingmessage = 'error';
-      // }
+      const result = await this.$store.dispatch('recomm/connectDjano');
+      if (result == 'SUCCESS') {
+        this.rocommloadingmessage = 'SUCCESS';
+      } else {
+        this.rocommloadingmessage = 'ERROR';
+      }
     },
   },
 };
