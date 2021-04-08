@@ -63,7 +63,10 @@
         </div>
         <div class="flex flex-row my-3">
           <div class="flex flex-row w-1/4">출생년도</div>
-          <div class="flex flex-row w-1/4">{{ user.born_year }}</div>
+          <div class="flex flex-row w-1/4">
+            {{ user.born_year.slice(0, 4) }}년
+            {{ user.born_year.slice(4, 6) }}월
+          </div>
         </div>
         <div class="flex flex-row my-3">
           <div class="flex flex-row w-1/4">성별</div>
@@ -92,7 +95,7 @@
           </div>
         </div>
 
-        <div v-if="getRole == 1" class="flex flex-row my-3">
+        <div v-if="getRole == 1" class="flex flex-row my-3 items-center">
           <div class="flex flex-row w-1/4">관리자</div>
           <base-button
             class="text-sm flex flex-row"
@@ -100,7 +103,9 @@
             @click="recommUpdate"
             >추천업데이트</base-button
           >
-          <span class="checkMessageColor">{{ rocommloadingmessage }}</span>
+          <div class="flex flex-row text-xs text-right mx-4 checkMessageColor">
+            {{ rocommloadingmessage }}
+          </div>
         </div>
       </article>
     </section>
@@ -270,13 +275,13 @@ export default {
       }
     },
     async recommUpdate() {
-      const result = await this.$store.dispatch('recomm/connectDjano');
+      // const result = await this.$store.dispatch('recomm/connectDjano');
       this.rocommloadingmessage = 'In Progress';
-      if (result == 'SUCCESS') {
-        this.rocommloadingmessage = 'success';
-      } else {
-        this.rocommloadingmessage = 'error';
-      }
+      // if (result == 'SUCCESS') {
+      //   this.rocommloadingmessage = 'success';
+      // } else {
+      //   this.rocommloadingmessage = 'error';
+      // }
     },
   },
 };
@@ -293,9 +298,5 @@ img {
 
 .checkMessageColor {
   color: #cf4f2e;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  margin-top: 0.5rem;
-  margin-left: 9rem;
 }
 </style>
