@@ -1,7 +1,7 @@
 <template>
   <div
     @click="viewRetaurantDetail"
-    class="G-market-sans font-color-black-400 flex flex-col border-line-full justify-center card-corner max-w-sm rounded overflow-hidden bg-white m-2 shadow-lg p-2 transition duration-200 ease-in-out transform hover:scale-105"
+    class="cursor-pointer G-market-sans font-color-black-400 flex flex-col border-line-full justify-center card-corner max-w-sm rounded overflow-hidden bg-white m-2 shadow-lg p-2 transition duration-200 ease-in-out transform hover:scale-105"
   >
     <img
       class="w-full h-60 object-cover"
@@ -40,12 +40,12 @@
       </article>
       <img v-if="!bookmarked"
         src="@/assets/icon/heart.png"
-        class="object-contain w-6 h-6 justify-items-end ml-auto cursor-pointer mr-2"
+        class="object-contain w-6 h-6 justify-items-end ml-auto  mr-2"
         alt="bookmark icon"
       />
       <img v-else
         src="@/assets/icon/heart_filled.png"
-        class="object-contain w-6 h-6 justify-items-end ml-auto cursor-pointer mr-2"
+        class="object-contain w-6 h-6 justify-items-end ml-auto  mr-2"
         alt="bookmark icon"
       />
     </section>

@@ -292,7 +292,6 @@ export default {
             }
           })
           .then(() => {
-            alert('프로필 업로드 완료');
             const params = new URLSearchParams();
             params.append('email', this.getUserEmail);
             axios
@@ -300,8 +299,14 @@ export default {
               .then(response => {
                 this.user.profile_image = response.data.info.profile_image;
                 this.$store.dispatch('setProfileImage', this.user.profile_image)
+                this.$toast.success(
+                    `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 프로필 사진이 변경되었습니다.</span>`
+                  );
               })
               .catch(error => {
+                this.$toast.error(
+                    `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 프로필 사진 변경에 실패하였습니다.</span>`
+                  );
                 this.$router.push({
                   path: '/Error',
                   query: { status: error.response.status }
@@ -340,9 +345,14 @@ export default {
             error.message || '닉네임을 변경하는데 문제가 발생했습니다.';
         }
         if (result == 'SUCCESS') {
-          alert('닉네임 변경 완료');
+          this.$store.dispatch('setUserName', this.user.nickname);
+          this.$toast.success(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 닉네임이 변경되었습니다.</span>`
+            );
         } else {
-          alert('닉네임 변경 실패!');
+          this.$toast.error(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 닉네임 변경에 실패하였습니다.</span>`
+            );
         }
       }
     },

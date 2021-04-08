@@ -51,5 +51,8 @@ export default {
   },
   setProfileImage(context, payload) {
     context.commit('setProfileImage', payload);
+  },
+  setUserName(context, payload) {
+    context.commit('setUserName', payload);
   }
 };
