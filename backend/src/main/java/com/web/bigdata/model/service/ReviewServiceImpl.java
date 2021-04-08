@@ -166,4 +166,9 @@ public class ReviewServiceImpl implements ReviewService {
 	public int deleteCascade(int id_review) throws Exception {
 		return reviewMapper.deleteCascade(id_review);
 	}
+
+	@Override
+	public String getStoreName(int id_store) throws Exception {
+		return reviewMapper.getStoreName(id_store);
+	}
 }

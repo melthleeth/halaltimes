@@ -6,7 +6,7 @@
 
 	<!-- ReviewController -->
 	<select id="getList" parameterType="map" resultType="ReviewDto">
-		select id_review, content, nickname, likeCnt, score,
+		select id_review, id_store,content, nickname, likeCnt, score,
 			case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(upload_date, '%H:%i:%s')
 							else date_format(upload_date, '%y.%m.%d')
@@ -254,6 +254,12 @@
  		select id_review
 		from review
 		where upload_date = #{upload_date} and active = 1
+ 	</select>
+ 	
+ 	<select id="getStoreName" parameterType="int" resultType="String">
+ 		select store_name
+		from store
+		where id_store = #{id_store} and active = 1
  	</select>
  	
  	
