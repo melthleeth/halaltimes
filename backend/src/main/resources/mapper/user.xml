@@ -139,4 +139,10 @@
 		where id_user = #{id_user} and active = 1;
 	</select>
 	
+	<select id="getImage" parameterType="int" resultType="string">
+		select profile_image
+		from user
+		where id_user = #{id_user} and active = 1;
+	</select>
+	
 </mapper>
