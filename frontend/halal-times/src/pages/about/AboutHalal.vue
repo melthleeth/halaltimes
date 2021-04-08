@@ -1,7 +1,7 @@
 <template>
   <div
     id="bg"
-    class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6"
+    class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
     <div id="TOP"></div>
     <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"
