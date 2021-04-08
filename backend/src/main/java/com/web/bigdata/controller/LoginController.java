@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +35,7 @@ public class LoginController {
 	private JwtService jwtService;
 
 	@Autowired
-	private UserService memberService;
-
-	@Autowired
-	private ETCService etcService;
+	private UserService userService;
 
 	@ApiOperation(value = "로그인", notes = "DB에서 정보를 조회하여 로그인 정보와 일치하면 로그인한다.", response = HashMap.class)
 	@PostMapping("/confirm/login")
@@ -47,7 +43,6 @@ public class LoginController {
 			HttpServletResponse response, HttpSession session) {
 		logger.info("login - 호출");
 
-		System.out.println(email + " " + password);
 		HttpStatus status = null;
 		Map<String, Object> resultMap = new HashMap<>();
 
@@ -56,7 +51,7 @@ public class LoginController {
 		dto.setPassword(password);
 		// 로그인
 		try {
-			UserDto loginUser = memberService.login(dto);
+			UserDto loginUser = userService.login(dto);
 
 			if (loginUser != null) {
 				// jwt.io에서 확인
@@ -81,26 +76,6 @@ public class LoginController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
-
-	@ApiOperation(value = "비밀번호 찾기", notes = "DB에서 정보를 조회하여 비밀번호를 찾을 수 있도록 한다.", response = HashMap.class)
-	@GetMapping("/findpwd")
-	public ResponseEntity<Map<String, Object>> findPwd(@RequestParam String email) {
-		logger.info("findPwd - 호출");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = null;
-
-		// 비밀번호 조회
-		try {
-			etcService.findPwd(email);
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<>(status);
 	}
 
 }

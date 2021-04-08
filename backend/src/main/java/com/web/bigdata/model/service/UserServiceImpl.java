@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.web.bigdata.model.UserDto;
 import com.web.bigdata.model.BookmarkDto;
 import com.web.bigdata.model.ReviewDto;
-import com.web.bigdata.model.StoreDto;
 import com.web.bigdata.model.mapper.UserMapper;
 
 @Service
@@ -72,28 +71,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean updatePwd(UserDto userDto) throws Exception {
-		if (userDto == null) {
-			return false;
-		}
-
-		String encodedPassword = userMapper.findPwd(userDto.getEmail());
-
-		if (passwordEncoder.matches(userDto.getPrePwd(), encodedPassword)) {
-			userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-			return userMapper.updatePwd(userDto);
-		}
-
-		return false;
-	}
-
-//	@Override
-//	public List<String> getStoreName(String id_review) throws Exception {
-//		System.out.println("service "+id_review);
-//		return userMapper.getStoreName(id_review);
-//	}
-
-	@Override
 	public boolean delete(String email) throws Exception {
 		return userMapper.delete(email);
 	}
@@ -106,6 +83,26 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteImg(String email) {
 		userMapper.deleteImg(email);
+	}
+
+	@Override
+	public List<ReviewDto> getReviewList(String email) throws SQLException {
+		return userMapper.getReviewList(email);
+	}
+
+	@Override
+	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException {
+		return userMapper.getBookmarkList(id_user);
+	}
+
+	@Override
+	public Integer getIdUser(String email) throws SQLException {
+		return userMapper.getIdUser(email);
+	}
+
+	@Override
+	public String getNickName(int id_user) throws SQLException {
+		return userMapper.getNickName(id_user);
 	}
 
 	@Override
@@ -122,28 +119,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
-	public List<ReviewDto> getReviewList(String email) throws SQLException {
-		return userMapper.getReviewList(email);
-	}
-
-	@Override
-	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException {
-		return userMapper.getBookmarkList(id_user);
-	}
-
-
-	@Override
-	public Integer getIdUser(String email) throws SQLException {
-		return userMapper.getIdUser(email);
-	}
-
-	@Override
-	public String getNickName(int id_user) throws SQLException {
-		return userMapper.getNickName(id_user);
-	}
-
-	@Override
 	public String getImage(int id_user) throws SQLException {
 		return userMapper.getImage(id_user);
 	}
