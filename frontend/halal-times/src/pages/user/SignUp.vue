@@ -312,9 +312,9 @@ export default {
         signupData
       );
       if (result === 'SUCCESS') {
-        console.log('회원가입성공');
+        alert('회원가입을 축하드립니다!');
       } else {
-        console.log('실패');
+        alert('회원가입에 실패하셨습니다..');
       }
 
       this.$router.go(-1);

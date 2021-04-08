@@ -159,7 +159,7 @@ public class StoreController {
 				int likeCheck = check == null ? 0 : Integer.parseInt(check);
 				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
-				
+				review.setThumbnail(userService.getImage(id_user));
 				List<ImgDto> imgs = new ArrayList<>();
 				imgs = reviewService.getImages(review.getId_review());
 				List<String> modifiedImg = new ArrayList<>();
