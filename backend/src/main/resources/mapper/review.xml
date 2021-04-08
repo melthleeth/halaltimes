@@ -14,87 +14,12 @@
 			case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(update_date, '%H:%i:%s')
 							else date_format(update_date, '%y.%m.%d')
-							end update_date,
-			(
-				select thumb_image
-				from (
-					select ri.id_review_image, ri.id_review, ri.original_image, ri.modified_image, ri.thumb_image
-					from review_image ri
-					where r.id_review = ri.id_review
-				) as temp
-				limit 1
-			) as thumb_image				 
+							end update_date				 
 		from review r join user
 		using(id_user)
 		where r.active = 1
 		order by upload_date desc
 		limit 5;
-<!-- 		temp = 0  -->
-<!-- 		리뷰 검색 조건? -->
-<!-- 		<if test="word != null and word != ''"> -->
-<!-- 			<if test="key == 'title'"> -->
-<!-- 				and title like concat('%', #{word}, '%') -->
-<!-- 			</if> -->
-<!-- 			<if test="key != 'title'"> -->
-<!-- 				and #{key} = #{word} -->
-<!-- 			</if> -->
-<!-- 		</if> -->
-<!-- 		<if test="sortBy == 'like'"> -->
-<!--             order by likeCnt desc -->
-<!--         </if> -->
-<!--         <if test="sortBy != 'like'"> -->
-<!-- 			order by id_review desc, update_date desc -->
-<!--         </if> -->
-<!-- 		limit #{start}, #{spp} -->
-	</select>
-	
-	<select id="getLikeReview" parameterType="int" resultType="ReviewDto">
-		select id_review, content,
-				case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
-				then date_format(upload_date, '%H:%i:%s')
-				else date_format(upload_date, '%y.%m.%d')
-				end upload_date,
-				case when date_format(update_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
-				then date_format(update_date, '%H:%i:%s')
-				else date_format(update_date, '%y.%m.%d')
-				end update_date,
-				likeCnt, id_user, nickname,
-				(
-					select modified_image
-					from (
-						select pp.*, (select count(*)
-									from post_vote
-									where pp.id_review_image = post_vote.id_review_image
-						            ) as count
-						from review_image pp
-						where post.id_review = pp.id_review
-						order by count desc
-						) as temp
-					limit 1
-				) as thumb_image				
-		from post join member using(id_user)
-		where temp = 0
-        order by likeCnt desc
-		limit #{no},1
-	</select>
-
-	<select id="getTotalCount" parameterType="map" resultType="int">
-		select count(id_user)
-		from review
-		<if test="word != null and word != ''">
-			<if test="key == 'title'">
-				where subject like concat('%', #{word}, '%')
-			</if>
-			<if test="key != 'title'">
-				where #{key} = #{word}
-			</if>
-		</if>
-	</select>
-	
-	<select id="getCount" resultType="int">
-		select count(*)
-		from review
-		where active = 1
 	</select>
 	
 	<select id="getLastReview" parameterType="string" resultType="string">
@@ -186,56 +111,6 @@
 		set likeCnt = likeCnt - 1
 		where id_review = #{id_review}
 	</update>
-
-	
-	<insert id="uploadFile" parameterType="ImgDto">
-		insert into review_image (id_review, original_image, modified_image, thumb_image)
-<!-- 		, PICSIZE) -->
-		values(#{id_review}, #{original_image}, #{modified_image}, #{thumb_image})
-<!-- 		, #{PICSIZE}) -->
-	</insert>
-	
-	<select id="getImages" parameterType="int" resultType="ImgDto">
-		select id_review_image, id_review, original_image, modified_image, thumb_image
-<!-- 		PICSIZE, -->
-<!-- 			date_format(upload_date, '%Y%m%d') as upload_date, -->
-<!-- 			(	select count(vNo) -->
-<!-- 				from post_vote -->
-<!--     			where post_vote.id_review_image = post_pics.id_review_image -->
-<!--    			) as voteCnt -->
-		from review_image
-		where id_review = #{id_review}
-	</select>
-	
-	<select id="getImgInfo" parameterType="string" resultType="ImgDto">
-		select id_review_image, id_review, original_image, modified_image, thumb_image, 
-<!-- 		PICSIZE, -->
-<!-- 			date_format(upload_date, '%Y%m%d') as upload_date, -->
-<!-- 			(	select count(vNo) -->
-<!-- 				from post_vote -->
-<!--     			where post_vote.id_review_image = post_pics.id_review_image -->
-<!--    			) as voteCnt -->
-		from review_image
-		where id_review_image = #{id_review_image}
-	</select>
-	
-	<update id="deleteImage" parameterType="string">
-		update review_image
-		set active = 0
-		where id_review_image = #{id_review_image}
-	</update>
-
-	<update id="deleteCascade" parameterType="int">
-		update review_image
-		set active = 0
-		where id_review = #{id_review}
-	</update>
-	
-	<update id="deleteAllImage" parameterType="string">
-		update review_image
-		set active = 0
-		where id_review = #{id_review}
-	</update>
 	
 	<select id="getStoreReviews" parameterType="int" resultType="reviewDto">
  		select id_review, id_user, id_store, store_name, score, content, upload_date, update_date,
@@ -263,6 +138,5 @@
 		from store
 		where id_store = #{id_store} and active = 1
  	</select>
- 	
  	
 </mapper>

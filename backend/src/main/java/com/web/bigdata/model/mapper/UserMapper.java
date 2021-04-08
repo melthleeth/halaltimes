@@ -48,7 +48,17 @@ public interface UserMapper {
 	/** 인자로 받은 email의 프로필 사진을 삭제 */
 	public void deleteImg(String email);
 
-//	public List<String> getStoreName(String id_review);
+	/** 리뷰 리스트 */
+	public List<ReviewDto> getReviewList(String email) throws SQLException;
+
+	/** 북마크 리스트 */
+	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
+
+	/** email 로 id_user 가져오기 */
+	public Integer getIdUser(String email) throws SQLException;
+
+	/** id_user 로 nickname 가져오기 */
+	public String getNickName(int id_user) throws SQLException;
 
 	// LoginController
 
@@ -57,16 +67,5 @@ public interface UserMapper {
 
 	/** 인자로 받은 email의 비밀번호를 반환 */
 	public String findPwd(String email);
-
-	/** 게시글 리스트 */
-	public List<ReviewDto> getReviewList(String email) throws SQLException;
-
-	public List<BookmarkDto> getBookmarkList(int id_user) throws SQLException;
-	
-	/** email 로 id_user 가져오기*/
-	public Integer getIdUser(String email)throws SQLException;
-
-	/** id_user 로 nickname 가져오기*/
-	public String getNickName(int id_user)throws SQLException;
 
 }

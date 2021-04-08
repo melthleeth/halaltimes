@@ -15,9 +15,6 @@ public interface ReviewService {
 	/** 리뷰 목록 : 검색 기능 */
 	public List<ReviewDto> getList(ReviewParameterDto reviewParameterDto) throws Exception;
 
-	/** like 리뷰 */
-	public ReviewDto getLikeReview(String id_review) throws Exception;
-
 	/** 하나의 리뷰 정보 */
 	public ReviewDto getDetail(int id_review) throws Exception;
 
@@ -56,33 +53,16 @@ public interface ReviewService {
 
 	public int likeCntDown(int id_review) throws Exception;
 
-	/** File insert to DB */
-	public boolean uploadFile(ImgDto img) throws Exception;
-
-	/** 리뷰의 이미지 가져오기 */
-	public List<ImgDto> getImages(int id_review) throws Exception;
-
-	/** 사진 정보 */
-	public ImgDto getImgInfo(String id_review_image) throws Exception;
-
-	public boolean deleteAllImage(String id_review) throws Exception;
-	
-	/** File DB에서 지우기 */
-	public boolean deleteImage(String id_review_image) throws Exception;
-
 	/** 해당 store의 review들 가져오기 */
 	public List<ReviewDto> getStoreReviews(int id_store) throws Exception;
 
 	/** 해당 store의 review 갯수 가져오기 */
 	public int getReviewCount(int id_store) throws Exception;
-	
-	/** review 를 만들자 마자 upload_date로 id_review 가져오기*/
-	public String getIdReview(String upload_date)throws Exception;
 
-	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
-	public int deleteCascade(int id_review)throws Exception;
+	/** review 를 만들자 마자 upload_date로 id_review 가져오기 */
+	public String getIdReview(String upload_date) throws Exception;
 
-	/** id_review로 store_name 가져오기*/
-	public String getStoreName(int id_store)throws Exception;
+	/** id_review로 store_name 가져오기 */
+	public String getStoreName(int id_store) throws Exception;
 
 }
