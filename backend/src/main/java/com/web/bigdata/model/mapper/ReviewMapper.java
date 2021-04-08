@@ -93,4 +93,7 @@ public interface ReviewMapper {
 	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
 	public int deleteCascade(int id_review)throws SQLException;
 
+	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
+	public String getStoreName(int id_store)throws SQLException;
+
 }

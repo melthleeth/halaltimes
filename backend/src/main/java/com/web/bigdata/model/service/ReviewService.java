@@ -82,4 +82,7 @@ public interface ReviewService {
 	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
 	public int deleteCascade(int id_review)throws Exception;
 
+	/** id_review로 store_name 가져오기*/
+	public String getStoreName(int id_store)throws Exception;
+
 }

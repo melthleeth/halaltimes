@@ -60,8 +60,10 @@ public class ReviewController {
 		List<ReviewDto> reviewList = reviewService.getList(reviewParameterDto);
 		for(ReviewDto x : reviewList) {
 			System.out.println(x);
+			String store_name = reviewService.getStoreName(x.getId_store());
+			x.setStore_name(store_name);
 		}
-		return new ResponseEntity<List<ReviewDto>>(reviewService.getList(reviewParameterDto), HttpStatus.OK);
+		return new ResponseEntity<List<ReviewDto>>(reviewList, HttpStatus.OK);
 	}
 
 //	@ApiOperation(value = "해당 숫자의 순서의 Review", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
