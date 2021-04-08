@@ -232,7 +232,7 @@
           </div>
         </article>
         <article class="flex mx-auto">
-          <base-button id="btn" @click="goPreviousPage">목록으로</base-button>
+          <base-button id="btn" @click="goPreviousPage">돌아가기</base-button>
         </article>
       </section>
     </div>
