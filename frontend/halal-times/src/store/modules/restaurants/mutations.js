@@ -14,6 +14,9 @@ export default {
   setRestaurantList(state, payload) {
     state.restaurantList = payload.reverse().slice(0, 6);
   },
+  setRecommendRestaurants(state, payload) {
+    state.recommendRestaurants = payload.slice(0, 6);
+  },
   setReviews(state, payload) {
     state.reviews = payload;
   },

@@ -11,6 +11,9 @@ export default {
   restaurantName(state) {
       return state.restaurantName;
   },
+  recommendRestaurants(state) {
+    return state.recommendRestaurants;
+  },
   restaurantList(state) {
     return state.restaurantList;
   },

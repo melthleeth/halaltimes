@@ -3,6 +3,10 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
+    <div id="TOP"></div>
+    <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"
+      ><img src="@/assets/icon/arrow-top.png" alt="top"
+    /></a>
     <base-title-small>Halal Times</base-title-small>
     <div id="top-restaurant-title" class="flex flex-col text-center ">
       <section class="w-full border-line">
@@ -342,7 +346,7 @@ export default {
         this.error =
           error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
-          this.updateAverageScore();
+      this.updateAverageScore();
 
       this.isLoading = false;
       // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
@@ -474,5 +478,4 @@ export default {
 .icon-close:hover {
   color: #cf4f2e;
 }
-
 </style>

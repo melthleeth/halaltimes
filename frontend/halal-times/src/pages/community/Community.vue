@@ -3,12 +3,20 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
+  <div id="TOP"></div>
+  <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"><img src="@/assets/icon/arrow-top.png" alt="top" class="w-8 h-8" /></a>
     <base-title>Community</base-title>
     <section v-if="username !== ''" class="flex flex-col">
-      <span class="G-market-sans-B font-bold text-3xl text-center mt-10 mb-8 tracking-wider"
-        ><span class="">{{ username }}</span>님을 위한 추천 음식점</span
+      <span
+        class="G-market-sans-B font-bold text-3xl text-center mt-10 mb-8 tracking-wider"
+        ><span class="underline">{{ username }}</span
+        >님을 위한 추천 음식점</span
       >
-      <div class="grid grid-cols-3 grid-flow-row gap-1 mx-auto">
+
+      <div v-if="isLoading" class="my-20">
+        <base-spinner></base-spinner>
+      </div>
+      <v-else div class="grid grid-cols-3 grid-flow-row gap-1 mx-auto">
         <restaurant-card
           v-for="restaurant in recommendRestaurants"
           :key="restaurant.restaurantId"
@@ -23,12 +31,14 @@
           :muslimFriendly="restaurant.muslimFriendly"
         >
         </restaurant-card>
-      </div>
+      </v-else>
     </section>
     <section class="flex mt-20 mb-4">
       <article class="w-1/2 flex flex-col mx-2">
-        <span class="G-market-sans-B text-2xl text-center mb-6 tracking-wider">최근 등록된 음식점</span>
-        <div v-if="isLoadingRestaurant" class="my-16">
+        <span class="G-market-sans-B text-2xl text-center mb-6 tracking-wider"
+          >최근 등록된 음식점</span
+        >
+        <div v-if="isLoadingRestaurant" class="my-28">
           <base-spinner></base-spinner>
         </div>
         <div v-else class="flex flex-col border-line-full bg-white py-4">
@@ -36,7 +46,12 @@
             v-for="restaurant in restaurants.slice(0, 5)"
             :key="restaurant.restaurantId"
             class="flex m-2 border-line mx-4 py-4 items-center transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-xl"
-            @click="viewRetaurantDetail(restaurant.restaurantId, restaurant.restaurantName)"
+            @click="
+              viewRetaurantDetail(
+                restaurant.restaurantId,
+                restaurant.restaurantName
+              )
+            "
           >
             <img
               class="w-20 h-20 object-cover ml-2"
@@ -67,7 +82,9 @@
         </div>
       </article>
       <article class="w-1/2 flex flex-col mx-2">
-        <span class="G-market-sans-B text-2xl text-center mb-6 tracking-wider">최근 등록된 리뷰</span>
+        <span class="G-market-sans-B text-2xl text-center mb-6 tracking-wider"
+          >최근 등록된 리뷰</span
+        >
         <div v-if="isLoadingReview" class="my-16">
           <base-spinner></base-spinner>
         </div>
@@ -107,7 +124,9 @@
                 >
               </article>
             </div>
-            <div class="text-sm mt-2 mb-1 mx-2 overflow-ellipsis ">{{ review.content }}</div>
+            <div class="text-sm mt-2 mb-1 mx-2 overflow-ellipsis ">
+              {{ review.content }}
+            </div>
           </section>
         </div>
       </article>
@@ -122,6 +141,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       isLoadingRestaurant: false,
       isLoadingReview: false
     };
@@ -131,7 +151,7 @@ export default {
       return this.$store.getters.getUserName;
     },
     recommendRestaurants() {
-      return this.$store.getters['restaurants/restaurantList'];
+      return this.$store.getters['restaurants/recommendRestaurants'];
     },
     restaurants() {
       return this.$store.getters['restaurants/restaurantList'];
@@ -144,10 +164,6 @@ export default {
     this.loadrecommendRestaurants();
     this.loadRestaurantList();
     this.loadReviewList();
-    console.log(
-      'created: restaurantList',
-      this.$store.getters['restaurants/restaurantList']
-    );
     console.log(
       'created: restaurantList',
       this.$store.getters['restaurants/restaurantList']
@@ -167,13 +183,25 @@ export default {
         }
       });
     },
-    loadrecommendRestaurants() {},
-    async loadRestaurantList(refresh = true) {
+    async loadrecommendRestaurants(refresh = false) {
+      this.isLoading = true;
+      try {
+        await this.$store.dispatch('restaurants/loadRestaurants', {
+          forceRefresh: refresh,
+          type: 'recommendation'
+        });
+      } catch (error) {
+        this.error =
+          error.message || '추천받은 음식점을 불러오는데 문제가 발생했습니다.';
+      }
+      this.isLoading = false;
+    },
+    async loadRestaurantList(refresh = false) {
       this.isLoadingRestaurant = true;
       try {
         await this.$store.dispatch('restaurants/loadRestaurants', {
           forceRefresh: refresh,
-          restaurantList: true
+          type: 'newestRestaurant'
         });
       } catch (error) {
         this.error =

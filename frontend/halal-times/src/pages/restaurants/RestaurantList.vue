@@ -3,6 +3,8 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
+  <div id="TOP"></div>
+  <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"><img src="@/assets/icon/arrow-top.png" alt="top" /></a>
     <base-title>Explore</base-title>
     <section
       id="search-bar"
@@ -28,7 +30,7 @@
         class="grid grid-cols-3 grid-flow-row gap-1 mx-auto"
       >
         <restaurant-card
-          v-for="restaurant in filteredRestaurants.slice(0, 6)"
+          v-for="restaurant in filteredRestaurants"
           :key="restaurant.restaurantId"
           :restaurantId="restaurant.restaurantId"
           :imgpath="restaurant.imgpath"

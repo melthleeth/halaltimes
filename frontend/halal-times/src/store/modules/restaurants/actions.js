@@ -5,8 +5,15 @@ export default {
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
       return;
     }
+    const email = context.rootGetters.getUserEmail;
+    
+    if (email === "") return;
 
-    const response = await fetch(`${SERVER_URL}/store/list`, {
+    let url = `${SERVER_URL}/store/list`;
+    if (payload.type === "recommendation")
+      url = `${SERVER_URL}/store/list/recomm?email=${email}`;
+
+    const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json;',
@@ -50,7 +57,8 @@ export default {
       };
       restaurants.push(restaurant);
     }
-    if (payload.restaurantList) context.commit('setRestaurantList', restaurants);
+    if (payload.type === "newestRestaurant") context.commit('setRestaurantList', restaurants);
+    else if (payload.type === "recommendation") context.commit('setRecommendRestaurants', restaurants);
     else context.commit('setRestaurants', restaurants);
     context.commit('setFetchTimestamp');
   },
