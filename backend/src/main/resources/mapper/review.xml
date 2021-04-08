@@ -27,8 +27,8 @@
 		from review r join user
 		using(id_user)
 		where r.active = 1
-		order by upload_date desc
-		limit 8;
+		order by id_review desc
+		limit 8
 <!-- 		temp = 0  -->
 <!-- 		리뷰 검색 조건? -->
 <!-- 		<if test="word != null and word != ''"> -->
