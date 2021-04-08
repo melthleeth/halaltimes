@@ -4,7 +4,7 @@
   >
     <section id="user-info" class="flex items-center">
       <img
-        src="@/assets/resources/default.png"
+        :src="thumbnail"
         alt="profile image"
         class="w-10 h-10 rounded-full mr-2 object-cover"
       />
@@ -30,7 +30,7 @@
         </div>
       </article>
       <article class="flex ml-auto justify-self-end items-center text-sm">
-        <div v-if="identification" class="space-x-2 mr-2">
+        <div v-if="identification === nickname" class="space-x-2 mr-2">
           <base-button mode="small-round-brown" @click="openDialog('modify')"
             >수정</base-button
           >
@@ -156,7 +156,7 @@
       </article>
     </section>
     <section id="user-review" class="flex">
-      <span class="mt-2">{{ content }}</span>
+      <span class="mt-2 whitespace-pre">{{ content }}</span>
     </section>
   </div>
 </template>
@@ -172,7 +172,8 @@ export default {
     'content',
     'upload_date',
     'likeCnt',
-    'likeCheck'
+    'likeCheck',
+    'thumbnail'
   ],
   data() {
     return {
@@ -193,7 +194,7 @@ export default {
       return score + 1.5;
     },
     identification() {
-      return this.$store.getters.getUserEmail === '' ? false : true;
+      return this.$store.getters.getUserName;
     },
     ratingEmoji() {
       if (this.ratings === '5') return '😍';
@@ -223,6 +224,7 @@ export default {
   created() {
     // this.likeCount = this.likeCnt;
     // this.liked = this.likeCheck;
+    console.log("created: thumbnail", this.thumbnail);
   },
   methods: {
     updateAverageScore() {
@@ -339,61 +341,5 @@ export default {
   color: #cf4f2e;
 }
 
-.star-ratings {
-  color: #aaa9a9;
-  position: relative;
-  unicode-bidi: bidi-override;
-  width: max-content;
-  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 1.3px;
-  -webkit-text-stroke-color: #2b2a29;
-}
 
-.star-ratings-fill {
-  color: #fff58c;
-  padding: 0;
-  position: absolute;
-  z-index: 1;
-  display: flex;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  -webkit-text-fill-color: gold;
-}
-
-.star-ratings-base {
-  z-index: 0;
-  padding: 0;
-}
-
-.star-rating {
-  display: flex;
-  flex-direction: row-reverse;
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-  justify-content: space-around;
-  padding: 0 0.2em;
-  text-align: center;
-  width: 5em;
-}
-
-.star-rating input {
-  display: none;
-}
-
-.star-rating label {
-  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 2.3px;
-  -webkit-text-stroke-color: #2b2a29;
-  cursor: pointer;
-}
-
-.star-rating :checked ~ label {
-  -webkit-text-fill-color: gold;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-  -webkit-text-fill-color: #fff58c;
-}
 </style>

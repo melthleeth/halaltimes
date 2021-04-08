@@ -57,5 +57,9 @@ public interface UserService {
 
 	/** id, pwd와 일치하는 UserDto를 반환 */
 	public UserDto login(UserDto dto) throws Exception;
+	
+	public String getImage(int id_user) throws SQLException;
+
+	public String getIdUserIdReview(int id_review)throws SQLException;
 
 }

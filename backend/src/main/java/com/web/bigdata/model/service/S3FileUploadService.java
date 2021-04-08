@@ -61,8 +61,8 @@ public class S3FileUploadService {
 
 		// 파일 변환
 		File file = new File(IMAGE_DIR + saveFileName);
-		if (!file.exists()) {
-			file.mkdirs();
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
 		}
 
 		// 파일 객체 생성

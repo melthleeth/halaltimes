@@ -119,4 +119,12 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	public String getImage(int id_user) throws SQLException {
+		return userMapper.getImage(id_user);
+	}
+
+	@Override
+	public String getIdUserIdReview(int id_review) throws SQLException {
+		return userMapper.getIdUserIdReview(id_review);
+	}
 }

@@ -3,10 +3,18 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6"
   >
+    <div id="TOP"></div>
+    <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"
+      ><img src="@/assets/icon/arrow-top.png" alt="top"
+    /></a>
     <base-title>About</base-title>
     <section class="flex">
       <article class="w-1/2">
-        <img src="../../assets/resources/about_1.png" alt="about-1" class="mt-4" />
+        <img
+          src="../../assets/resources/about_1.png"
+          alt="about-1"
+          class="mt-4"
+        />
       </article>
       <article class="flex flex-col w-1/2 h-auto ml-4 mr-2">
         <span class="text-xl tracking-widest mt-3 mb-2 font-bold"
@@ -17,10 +25,10 @@
           이슬람법에 따라 사용이 허용되는 것을 뜻합니다. 음식, 의약품, 화장품,
           심지어 가전제품까지 일상생활에서 사용하는 모든 것이 해당되며, 그
           중에서도 이슬람 율법이 허락해 무슬림이 먹을 수 있는 음식을 할랄
-          식품이라고 합니다. <br />고기는 이슬람식 도축방식인 다비하(Dhabihah)에 따라
-          도축한 고기만을 할랄 식품으로 인정하며, 이 외에 이슬람 법에 금지되는
-          것들을 <span class="haram-color">하람</span>(Haram)이라고 합니다.
-          정확히 할랄이나 하람으로 분류되지 않은 애매하거나 의심스러운
+          식품이라고 합니다. <br />고기는 이슬람식 도축방식인 다비하(Dhabihah)에
+          따라 도축한 고기만을 할랄 식품으로 인정하며, 이 외에 이슬람 법에
+          금지되는 것들을 <span class="haram-color">하람</span>(Haram)이라고
+          합니다. 정확히 할랄이나 하람으로 분류되지 않은 애매하거나 의심스러운
           식음료들은 <span class="syu-color">슈브하</span>(Syubhah)에
           속합니다.</span
         >
@@ -29,7 +37,7 @@
     <section class="flex mt-4">
       <article class="flex flex-col w-1/2 mb-auto  ml-2 mr-4">
         <span class="text-xl tracking-widest mt-3 mb-2 font-bold"
-          >전 세계 무슬림 인구는 약 21억 명으로 전 세계 인구의 25%. 
+          >전 세계 무슬림 인구는 약 21억 명으로 전 세계 인구의 25%.
           <span class="halal-color">할랄시장</span>은 수출 시장의 핵심
           키워드</span
         >
@@ -89,18 +97,18 @@ export default {
     currDate() {
       const event = new Date();
       const options = {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       };
       return event.toLocaleDateString(undefined, options);
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
-img {
+article img {
   width: 100%;
   border: 3.2px solid #2b2a29;
 }

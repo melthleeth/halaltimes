@@ -133,10 +133,15 @@ public class StoreController {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
 				map.put("id_user", id_user);
+				
 				String check = reviewService.likeCheck(map);
 				int likeCheck = check == null ? 0 : Integer.parseInt(check);
 				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
+				String id_userStr = userService.getIdUserIdReview(review.getId_review());
+				int id_user2 = id_userStr == null ? 0 : Integer.parseInt(id_userStr);
+				
+				review.setThumbnail(userService.getImage(id_user2));
 			}
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;

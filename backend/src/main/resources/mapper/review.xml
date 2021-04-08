@@ -6,7 +6,7 @@
 
 	<!-- ReviewController -->
 	<select id="getList" parameterType="map" resultType="ReviewDto">
-		select id_review, id_store,content, nickname, likeCnt, score,
+		select id_review, id_store,id_user,content, nickname, likeCnt, score,
 			case when date_format(upload_date, '%Y%m%d') = date_format(now(), '%Y%m%d')
 							then date_format(upload_date, '%H:%i:%s')
 							else date_format(upload_date, '%y.%m.%d')
@@ -18,8 +18,8 @@
 		from review r join user
 		using(id_user)
 		where r.active = 1
-		order by upload_date desc
-		limit 5;
+		order by id_review desc
+		limit 8
 	</select>
 	
 	<select id="getLastReview" parameterType="string" resultType="string">

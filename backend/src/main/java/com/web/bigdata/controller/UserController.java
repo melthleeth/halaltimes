@@ -129,6 +129,7 @@ public class UserController {
 				bookmark.setScore(score + "");
 				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
 			}
+			System.out.println("bookmarkList : " + bookmarkList);
 			resultMap.put("bookmarkList", bookmarkList);
 			status = HttpStatus.ACCEPTED;
 		} catch (RuntimeException e) {
@@ -166,7 +167,7 @@ public class UserController {
 
 	@ApiOperation(value = "회원 탈퇴", notes = "회원탈퇴를 한다.", response = Boolean.class)
 	@PutMapping("/delete")
-	public ResponseEntity<Boolean> delete(@RequestBody Map<String, String> map) {
+	public ResponseEntity<Boolean> delete(@RequestParam String email) {
 		logger.info("delete - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
@@ -174,9 +175,11 @@ public class UserController {
 
 		// 회원 탈퇴
 		try {
-			String email = map.get("email");
+//			String email = map.get("email");
 			String fileName = userService.findUserInfo(email).getProfile_image();
-			s3FileUploadService.delete(fileName);
+			if(fileName != null) {
+				s3FileUploadService.delete(fileName);
+			}
 			flag = userService.delete(email);
 			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {

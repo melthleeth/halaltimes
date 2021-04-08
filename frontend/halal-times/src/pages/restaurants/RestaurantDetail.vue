@@ -3,6 +3,10 @@
     id="bg"
     class="G-market-sans font-color-black-400 w-2/3 mx-auto px-10 py-6"
   >
+    <div id="TOP"></div>
+    <a href="#TOP" id="top-button" class="fixed bottom-8 right-8"
+      ><img src="@/assets/icon/arrow-top.png" alt="top"
+    /></a>
     <base-title-small>Halal Times</base-title-small>
     <div id="top-restaurant-title" class="flex flex-col text-center ">
       <section class="w-full border-line">
@@ -42,6 +46,7 @@
               :upload_date="reviewItem.upload_date"
               :likeCnt="reviewItem.likeCnt"
               :likeCheck="reviewItem.likeCheck"
+              :thumbnail="reviewItem.thumbnail"
             ></review-card>
           </div>
           <span
@@ -148,7 +153,7 @@
                 />
                 <!-- <input type="file" accept=".png, .jpg, .jpeg, .gif" @change="uploadImage" /> -->
               </section>
-              <input
+              <!-- <input
                 multiple="multiple"
                 ref="file"
                 type="file"
@@ -156,7 +161,7 @@
                 name="file"
                 @change="onChangeImages"
                 class="my-4"
-              />
+              /> -->
               <section class="flex space-x-2 mt-6 mb-4">
                 <base-button
                   type="submit"
@@ -232,7 +237,7 @@
           </div>
         </article>
         <article class="flex mx-auto">
-          <base-button id="btn" @click="goPreviousPage">목록으로</base-button>
+          <base-button id="btn" @click="goPreviousPage">돌아가기</base-button>
         </article>
       </section>
     </div>
@@ -342,7 +347,7 @@ export default {
         this.error =
           error.message || '북마크와 리뷰를 불러오는 중 문제가 발생했습니다.';
       }
-          this.updateAverageScore();
+      this.updateAverageScore();
 
       this.isLoading = false;
       // this.restaurant.lat = (+this.restaurant.lat).toFixed(4);
@@ -474,71 +479,4 @@ export default {
 .icon-close:hover {
   color: #cf4f2e;
 }
-
-.star-ratings {
-  color: #aaa9a9;
-  position: relative;
-  unicode-bidi: bidi-override;
-  width: max-content;
-  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 1.3px;
-  -webkit-text-stroke-color: #2b2a29;
-}
-
-.star-ratings-fill {
-  color: #fff58c;
-  padding: 0;
-  position: absolute;
-  z-index: 1;
-  display: flex;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  -webkit-text-fill-color: gold;
-}
-
-.star-ratings-base {
-  z-index: 0;
-  padding: 0;
-}
-
-.star-rating {
-  display: flex;
-  flex-direction: row-reverse;
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-  justify-content: space-around;
-  padding: 0 0.2em;
-  text-align: center;
-  width: 5em;
-}
-
-.star-rating input {
-  display: none;
-}
-
-.star-rating label {
-  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-  -webkit-text-stroke-width: 2.3px;
-  -webkit-text-stroke-color: #2b2a29;
-  cursor: pointer;
-}
-
-.star-rating :checked ~ label {
-  -webkit-text-fill-color: gold;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-  -webkit-text-fill-color: #fff58c;
-}
-
-/*
-How it works
-The stars are labels which each reference a radio button. They are written in the code in reverse order, 5-1.
-
-By using display:flex and flex-direction:row-reverse on their container they appear in the browser the opposite way around, 1-5.
-
-We can now use the general sibling selector ~ to style any subsequent elements - the ones that appear before on screen.
-*/
 </style>

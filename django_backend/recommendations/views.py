@@ -28,12 +28,11 @@ def adminUpdate(request):
         msg = "success"
     except:
         msg = "fail"
-
     return Response(msg)
 
 
 def userUpdate():
-    print('')
+    print('userUpdate')
     DjangoUser.objects.filter(is_skeleton=0).delete()
     halaltime_users_all = User.objects.filter(
         active = 1

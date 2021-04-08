@@ -73,9 +73,9 @@
 	<!-- LoginController -->
 	
 	<select id="login" parameterType="UserDto" resultType="UserDto">
-		select email, password, nickname, role
+		select email, password, nickname, role, profile_image
 		from user
-		where email=#{email}
+		where email=#{email} and active = 1
 	</select>
 
 	<select id="findPwd" parameterType="string" resultType="string">
@@ -112,13 +112,15 @@
 		from review r join user
 		using(id_user)
 		where email = #{email} and r.active = 1
+		limit 5
 	</select>
 
 	<select id="getBookmarkList" parameterType="int" resultType="BookmarkDto">
 		select  id_store, id_bookmark,id_user
 		from bookmark b join user
 		using(id_user)
-		where id_user = #{id_user} and b.active = 1;
+		where id_user = #{id_user} and b.active = 1
+		limit 5;
 	</select>
 	
 	<select id="getIdUser" parameterType="string" resultType="int">
@@ -131,6 +133,18 @@
 		select nickname
 		from user
 		where id_user = #{id_user} and active = 1;
+	</select>
+	
+	<select id="getImage" parameterType="int" resultType="string">
+		select profile_image
+		from user
+		where id_user = #{id_user} and active = 1;
+	</select>
+	
+	<select id="getIdUserIdReview" parameterType="int" resultType="string">
+		select id_user
+		from review
+		where id_review = #{id_review} and active = 1;
 	</select>
 	
 </mapper>

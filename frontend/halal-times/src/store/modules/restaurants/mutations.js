@@ -11,8 +11,17 @@ export default {
   setRestaurantName(state, payload) {
       state.restaurantName = payload;
   },
+  setRestaurantList(state, payload) {
+    state.restaurantList = payload.reverse().slice(0, 6);
+  },
+  setRecommendRestaurants(state, payload) {
+    state.recommendRestaurants = payload.slice(0, 6);
+  },
   setReviews(state, payload) {
     state.reviews = payload;
+  },
+  setReviewList(state, payload) {
+    state.reviewList = payload.slice(0, 8);
   },
   modifyReviewLike(state, payload) {
     const index = state.reviews.findIndex(review => review.id_review === payload.id_review);
@@ -27,6 +36,11 @@ export default {
   deleteReview(state, payload) {
     const index = state.reviews.findIndex(review => review.id_review === payload);
     state.reviews.splice(index, 1);
+  },
+  modifyBookmarked(state, payload) {
+    const index = state.restaurants.findIndex(restaurant => restaurant.restaurantId === payload);
+    state.restaurants[index].bookmarked = true;
+    console.log("payload", state.restaurants[index].bookmarked);
   },
   setBookmarked(state, payload) {
     state.bookmarked = payload;
