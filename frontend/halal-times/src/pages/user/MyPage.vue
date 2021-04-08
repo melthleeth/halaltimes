@@ -1,18 +1,17 @@
 <template>
   <div
     id="bg"
-    class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6"
+    class="G-market-sans font-color-black-400 w-7/12 mx-auto px-10 py-6 flex flex-col"
   >
     <base-title>My Page</base-title>
-    <section class="flex">
+    <span class="G-market-sans-B text-3xl mt-3 mb-4 mx-auto px-1 border-line"
+      >내 정보</span
+    >
+    <section class="flex mb-12">
       <article class="w-1/2">
-        <span class="text-lg mt-3 mb-1 underline">내 정보</span>
-        <div
-          class="mt-1 mx-5 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md my-3"
-        >
-          <div class="space-y-1 my-10 mx-10 text-center">
-            <div v-if="!user.profile_image">
-              <svg
+        <div class="mt-4 mx-auto flex flex-col justify-center">
+          <!-- <div v-if="!user.profile_image">
+            <svg
                 class="mx-auto h-12 w-12 text-gray-400"
                 stroke="currentColor"
                 fill="none"
@@ -26,68 +25,65 @@
                   stroke-linejoin="round"
                 />
               </svg>
-            </div>
-            <div class="flex text-sm text-gray-600">
-              <label
-                for="file-upload"
-                class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
-              >
-                <img
-                  id="blah"
-                  :src="user.profile_image"
-                  onerror=""
-                  alt="프로필 이미지"
-                />
-                <span class="text-xs"
-                  >* 이미지를 클릭하여 프로필 사진을 등록 및 업데이트를 할 수
-                  있습니다.</span
-                >
-              </label>
-            </div>
-            <input
-              id="file-upload"
-              name="file-upload"
-              type="file"
-              class="sr-only pis"
-              @change="addProfile"
-            />
+          </div> -->
+          <div class="flex text-sm text-gray-600 justify-center">
+            <label
+              for="file-upload"
+              class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+            >
+              <img
+                :src="user.profile_image"
+                alt="프로필 이미지"
+                class="w-80 h-80 object-cover border-line-full"
+              />
+            </label>
           </div>
+          <input
+            id="file-upload"
+            name="file-upload"
+            type="file"
+            class="sr-only pis"
+            @change="addProfile"
+          />
+              <span class="text-xs font-color-black-300 mt-2 text-center"
+                >* 이미지를 클릭하면 프로필 사진을 변경할 수 있어요</span
+              >
         </div>
       </article>
       <article class="w-1/2 h-auto mx-2 my-10">
         <div class="flex flex-row my-3">
-          <div class="flex flex-row w-1/4">이메일</div>
-          <div class="flex flex-row w-1/4">
-            <div>{{ user.email }}</div>
-          </div>
+          <span class="flex flex-row w-1/4 font-bold">이메일</span>
+          <span class="flex flex-row w-1/4 text-sm">
+            {{ user.email }}
+          </span>
         </div>
         <div class="flex flex-row my-3">
-          <div class="flex flex-row w-1/4">출생년도</div>
-          <div class="flex flex-row w-1/4">
+          <span class="flex flex-row w-1/4 font-bold">출생년도</span>
+          <span class="flex flex-row w-1/4 text-sm">
             {{ born_year.slice(0, 4) }}년 {{ born_year.slice(4, 6) }}월
-          </div>
+          </span>
         </div>
         <div class="flex flex-row my-3">
-          <div class="flex flex-row w-1/4">성별</div>
-          <div class="flex flex-row w-1/4">{{ user.gender }}</div>
+          <span class="flex flex-row w-1/4 font-bold">성별</span>
+          <span class="flex flex-row w-1/4 text-sm">{{ user.gender }}</span>
         </div>
         <div class="flex flex-row my-3">
-          <div class="flex flex-row w-1/4">닉네임</div>
+          <span class="flex flex-row w-1/4 font-bold">닉네임</span>
           <input
-            class="flex flex-row w-1/4 text-center"
+            class="flex flex-row w-40 text-center text-sm"
             v-model="user.nickname"
           />
           <base-button
             class="text-sm flex flex-row mx-4"
             mode="secondary"
             @click="modifyNickname"
-            >닉네임 변경</base-button
+            >변경하기</base-button
           >
         </div>
 
         <div class="flex flex-row">
           <div class="flex flex-row w-1/4"></div>
-          <div class="flex flex-row text-xs text-right">
+          <div class="flex flex-row text-xs text-right font-color-black-300">
             * 닉네임은 최소 2자, 최대 10자까지 입력이 가능해요
             <br />
             * 수정한 정보는 할랄타임즈의 서비스에 바로 적용돼요
@@ -109,16 +105,47 @@
       </article>
     </section>
     <section class="flex">
-      <article class="w-1/2">
-        <span class="text-lg mt-3 mb-1 underline">최근 북마크한 식당</span>
-        <div v-for="(bookmark, index) in bookmarks" :key="index">
-          <BookmarkDesign :value="bookmark" />
+      <article class="flex flex-col w-1/2">
+        <span
+          class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
+          >최근 북마크한 식당</span
+        >
+        <div class="bg-white border-line-full mx-4">
+        <section v-for="(bookmark, index) in bookmarks" :key="index">
+          <bookmark-design :value="bookmark" />
+        </section>
+        <!-- <restaurant-card-small
+            v-for="bookmark in bookmarks.slice(0, 5)"
+            :key="bookmark.restaurantId"
+            :restaurantId="bookmark.restaurantId"
+            :restaurantName="bookmark.store_name"
+            :imgpath="bookmark.imgpath"
+            :address="bookmark.address"
+            :foodCategory="bookmark.foodCategory"
+            :muslimFriendly="bookmark.muslimFriendly"
+          /> -->
         </div>
       </article>
-      <article class="w-1/2">
-        <span class="text-lg mt-3 mb-1 underline">최근 활동 기록</span>
-        <div v-for="(review, index) in reviews" :key="index">
-          <ReviewDesign :value="review" />
+      <article class="flex flex-col w-1/2">
+        <span
+          class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
+          >최근 활동 기록</span
+        >
+        <div class="bg-white border-line-full mx-4">
+        <section v-for="(review, index) in reviews.slice(0, 5)" :key="index">
+          <review-design :value="review" />
+        </section>
+        <!-- <review-card-small
+            v-for="review in reviews.slice(0, 5)"
+            :key="review.id_review"
+            :id_store="review.id_store"
+            :store_name="review.store_name"
+            :score="review.score"
+            :thumbnail="review.thumbnail"
+            :nickname="review.nickname"
+            :upload_date="review.upload_date"
+            :content="review.content"
+          /> -->
         </div>
       </article>
     </section>
@@ -158,10 +185,18 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import ReviewDesign from './ReviewDesign.vue';
 import BookmarkDesign from './BookmarkDesign.vue';
+// import RestaurantCardSmall from '@/components/restaurants/RestaurantCardSmall.vue';
+// import ReviewCardSmall from '@/components/restaurants/ReviewCardSmall.vue';
 
 const SERVER_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
+  components: {
+    ReviewDesign,
+    BookmarkDesign,
+    // RestaurantCardSmall,
+    // ReviewCardSmall,
+  },
   data() {
     return {
       user: {},
@@ -177,10 +212,6 @@ export default {
       isDeleted: false,
       deleteDialogIsVisible: false
     };
-  },
-  components: {
-    ReviewDesign,
-    BookmarkDesign
   },
   computed: {
     currDate() {
@@ -334,11 +365,6 @@ export default {
 };
 </script>
 <style scoped>
-img {
-  width: 100%;
-  height: 100%;
-}
-
 #bg {
   background-color: #f4f2ea;
 }
