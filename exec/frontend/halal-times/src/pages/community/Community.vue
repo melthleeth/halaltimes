@@ -114,7 +114,7 @@
                 class="flex ml-auto justify-self-end items-center space-x-2"
               >
                 <img
-                  src="@/assets/resources/default.png"
+                  :src="review.thumbnail"
                   alt="profile image"
                   class="w-6 h-6 rounded-full object-cover"
                 />

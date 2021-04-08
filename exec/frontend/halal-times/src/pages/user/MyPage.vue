@@ -45,9 +45,9 @@
             class="sr-only pis"
             @change="addProfile"
           />
-          <span class="text-xs font-color-black-300 mt-2 text-center"
-            >* 이미지를 클릭하면 프로필 사진을 변경할 수 있어요</span
-          >
+              <span class="text-xs font-color-black-300 mt-2 text-center"
+                >* 이미지를 클릭하면 프로필 사진을 변경할 수 있어요</span
+              >
         </div>
       </article>
       <article class="w-1/2 h-auto mx-2 my-10">
@@ -106,15 +106,16 @@
     </section>
     <section class="flex">
       <article class="flex flex-col w-1/2">
-        <span class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
+        <span
+          class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
           >최근 북마크한 식당</span
         >
         <div class="bg-white border-line-full mx-4">
-          <section v-for="(bookmark, index) in bookmarks" :key="index">
-            <bookmark-design :value="bookmark" />
-          </section>
-          <!-- <restaurant-card-small
-            v-for="bookmark in bookmarks"
+        <section v-for="(bookmark, index) in bookmarks" :key="index">
+          <bookmark-design :value="bookmark" />
+        </section>
+        <!-- <restaurant-card-small
+            v-for="bookmark in bookmarks.slice(0, 5)"
             :key="bookmark.restaurantId"
             :restaurantId="bookmark.restaurantId"
             :restaurantName="bookmark.store_name"
@@ -126,14 +127,15 @@
         </div>
       </article>
       <article class="flex flex-col w-1/2">
-        <span class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
+        <span
+          class="G-market-sans-B text-2xl my-4 mx-auto px-1 border-line"
           >최근 활동 기록</span
         >
         <div class="bg-white border-line-full mx-4">
-          <section v-for="(review, index) in reviews.slice(0, 5)" :key="index">
-            <review-design :value="review" />
-          </section>
-          <!-- <review-card-small
+        <section v-for="(review, index) in reviews" :key="index">
+          <review-design :value="review" />
+        </section>
+        <!-- <review-card-small
             v-for="review in reviews"
             :key="review.id_review"
             :id_store="review.id_store"
@@ -148,7 +150,7 @@
       </article>
     </section>
 
-    <section class="mx-auto my-5">
+    <section class="">
       <base-button class="text-xs" @click="showDeleteDialog"
         >회원 탈퇴</base-button
       >
@@ -208,7 +210,7 @@ export default {
       rocommloadingmessage: '',
 
       isDeleted: false,
-      deleteDialogIsVisible: false,
+      deleteDialogIsVisible: false
     };
   },
   computed: {
@@ -218,11 +220,11 @@ export default {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric',
+        day: 'numeric'
       };
       return event.toLocaleDateString(undefined, options);
     },
-    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole']),
+    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole'])
   },
   created() {
     this.loadMyInfo();
@@ -251,7 +253,7 @@ export default {
       this.isLoading = true;
       try {
         await this.$store.dispatch('account/loadMyInfo', {
-          forceRefresh: refresh,
+          forceRefresh: refresh
         });
       } catch (error) {
         this.error =
@@ -268,8 +270,9 @@ export default {
       this.reviews = userInfo.reviewList;
       this.bookmarks = userInfo.bookmarkList;
       this.born_year = userInfo.info.born_year;
+      this.user.profile_image = userInfo.info.profile_image === null ? 'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/%ED%84%B0%EB%B2%88.png' : userInfo.info.profile_image;
     },
-    addProfile: function (input) {
+    addProfile: function(input) {
       if (input.target.files[0]) {
         if (this.user.profile_image) {
           const params = new URLSearchParams();
@@ -285,22 +288,28 @@ export default {
         axios
           .post(`${SERVER_URL}/user/profilepic/upload`, frm, {
             headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+              'Content-Type': 'multipart/form-data'
+            }
           })
           .then(() => {
-            alert('프로필 업로드 완료');
             const params = new URLSearchParams();
             params.append('email', this.getUserEmail);
             axios
               .get(`${SERVER_URL}/user`, { params })
-              .then((response) => {
+              .then(response => {
                 this.user.profile_image = response.data.info.profile_image;
+                this.$store.dispatch('setProfileImage', this.user.profile_image)
+                this.$toast.success(
+                    `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 프로필 사진이 변경되었습니다.</span>`
+                  );
               })
-              .catch((error) => {
+              .catch(error => {
+                this.$toast.error(
+                    `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 프로필 사진 변경에 실패하였습니다.</span>`
+                  );
                 this.$router.push({
                   path: '/Error',
-                  query: { status: error.response.status },
+                  query: { status: error.response.status }
                 });
               });
           });
@@ -325,7 +334,7 @@ export default {
         try {
           const modifiedData = {
             nickname: this.user.nickname,
-            email: this.user.email,
+            email: this.user.email
           };
           result = await this.$store.dispatch(
             'account/modifyNickname',
@@ -336,9 +345,14 @@ export default {
             error.message || '닉네임을 변경하는데 문제가 발생했습니다.';
         }
         if (result == 'SUCCESS') {
-          alert('닉네임 변경 완료');
+          this.$store.dispatch('setUserName', this.user.nickname);
+          this.$toast.success(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 닉네임이 변경되었습니다.</span>`
+            );
         } else {
-          alert('닉네임 변경 실패!');
+          this.$toast.error(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 닉네임 변경에 실패하였습니다.</span>`
+            );
         }
       }
     },
@@ -358,8 +372,8 @@ export default {
       // console.log(localStorage);
       localStorage.clear;
       // console.log(localStorage);
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
