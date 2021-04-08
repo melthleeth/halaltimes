@@ -50,8 +50,8 @@ export default {
       };
       restaurants.push(restaurant);
     }
-
-    context.commit('setRestaurants', restaurants);
+    if (payload.restaurantList) context.commit('setRestaurantList', restaurants);
+    else context.commit('setRestaurants', restaurants);
     context.commit('setFetchTimestamp');
   },
   setKeyword(context, payload) {
@@ -61,6 +61,45 @@ export default {
     // console.log("actions: setRestaurantInfo", payload);
     context.commit('setRestaurantId', payload.id);
     context.commit('setRestaurantName', payload.name);
+  },
+  async loadReviews(context, payload) {
+    if (!payload.forceRefresh && !context.getters.shouldUpdate) {
+      return;
+    }
+
+    const response = await fetch(
+      `${SERVER_URL}/review/list`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json;',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*'
+        },
+        method: 'GET'
+      }
+    );
+    const responseData = await response.json();
+
+    const reviews = [];
+    for (const key in responseData) {
+      const review = {
+        id_review: +responseData[key].id_review,
+        id_user: +responseData[key].id_user,
+        nickname: responseData[key].nickname,
+        id_store: +responseData[key].id_store,
+        store_name: responseData[key].store_name,
+        score: +responseData[key].score,
+        content: responseData[key].content,
+        upload_date: responseData[key].upload_date,
+        likeCnt: +responseData[key].likeCnt,
+        likeCheck: +responseData[key].likeCheck === 1 ? true : false
+      };
+      // console.log("actions: loadReviews/store_name", review.store_name);
+      reviews.push(review);
+    }
+
+    context.commit('setReviewList', reviews);
   },
   async loadLikeReviews(context) {
     console.log(
@@ -297,5 +336,5 @@ export default {
       };
       context.commit('modifyReviewLike', likeData);
     });
-  }
+  },
 };

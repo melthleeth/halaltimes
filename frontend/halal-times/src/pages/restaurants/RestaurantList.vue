@@ -6,7 +6,7 @@
     <base-title>Explore</base-title>
     <section
       id="search-bar"
-      class="flex justify-items-center text-base items-center mx-16 mb-12"
+      class="flex flex-col justify-items-center text-base items-center mx-16 mb-12"
     >
       <article class="flex w-full items-center">
         <input
@@ -17,6 +17,7 @@
           v-model.trim="keyword"
         />
       </article>
+      <base-button class="mt-4 text-sm" mode="outline" @click="loadRestaurants(true)">Refresh</base-button>
     </section>
     <section class="flex flex-col">
       <div v-if="isLoading" class="my-32">
@@ -91,7 +92,7 @@ export default {
     this.loadKeyword();
   },
   methods: {
-    async loadRestaurants(refresh = true) {
+    async loadRestaurants(refresh = false) {
       this.isLoading = true;
       try {
         await this.$store.dispatch('restaurants/loadRestaurants', {

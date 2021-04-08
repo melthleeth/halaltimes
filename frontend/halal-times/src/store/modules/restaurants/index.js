@@ -13,6 +13,9 @@ export default {
       bookmarked: '',
       storeInfo: null,
       averageScore: 0,
+      restaurantList: [],
+      reviewList: [],
+      recommendRestaurants: [],
       restaurants: [
         {
           restaurantId: 1,

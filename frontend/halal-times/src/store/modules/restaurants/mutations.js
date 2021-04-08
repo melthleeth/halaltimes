@@ -11,8 +11,14 @@ export default {
   setRestaurantName(state, payload) {
       state.restaurantName = payload;
   },
+  setRestaurantList(state, payload) {
+    state.restaurantList = payload.reverse().slice(0, 5);
+  },
   setReviews(state, payload) {
     state.reviews = payload;
+  },
+  setReviewList(state, payload) {
+    state.reviewList = payload.reverse().slice(0, 5);
   },
   modifyReviewLike(state, payload) {
     const index = state.reviews.findIndex(review => review.id_review === payload.id_review);

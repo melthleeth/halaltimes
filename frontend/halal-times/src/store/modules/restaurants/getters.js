@@ -11,8 +11,14 @@ export default {
   restaurantName(state) {
       return state.restaurantName;
   },
+  restaurantList(state) {
+    return state.restaurantList;
+  },
   reviews(state) {
     return state.reviews;
+  },
+  reviewList(state) {
+    return state.reviewList;
   },
   bookmarked(state) {
     return state.bookmarked;
