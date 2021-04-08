@@ -70,10 +70,10 @@ export default {
     context.commit('setRestaurantId', payload.id);
     context.commit('setRestaurantName', payload.name);
   },
-  async loadReviews(context, payload) {
-    if (!payload.forceRefresh && !context.getters.shouldUpdate) {
-      return;
-    }
+  async loadReviews(context) {
+    // if (!payload.forceRefresh && !context.getters.shouldUpdate) {
+    //   return;
+    // }
 
     const response = await fetch(
       `${SERVER_URL}/review/list`,

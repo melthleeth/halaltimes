@@ -21,7 +21,7 @@ export default {
     state.reviews = payload;
   },
   setReviewList(state, payload) {
-    state.reviewList = payload.reverse().slice(0, 8);
+    state.reviewList = payload.slice(0, 8);
   },
   modifyReviewLike(state, payload) {
     const index = state.reviews.findIndex(review => review.id_review === payload.id_review);

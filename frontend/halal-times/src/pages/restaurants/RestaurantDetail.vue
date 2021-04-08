@@ -152,7 +152,7 @@
                 />
                 <!-- <input type="file" accept=".png, .jpg, .jpeg, .gif" @change="uploadImage" /> -->
               </section>
-              <input
+              <!-- <input
                 multiple="multiple"
                 ref="file"
                 type="file"
@@ -160,7 +160,7 @@
                 name="file"
                 @change="onChangeImages"
                 class="my-4"
-              />
+              /> -->
               <section class="flex space-x-2 mt-6 mb-4">
                 <base-button
                   type="submit"
