@@ -156,7 +156,7 @@
       </article>
     </section>
     <section id="user-review" class="flex">
-      <span class="mt-2">{{ content }}</span>
+      <span class="mt-2 whitespace-pre">{{ content }}</span>
     </section>
   </div>
 </template>

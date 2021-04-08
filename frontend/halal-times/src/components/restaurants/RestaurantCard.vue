@@ -39,8 +39,8 @@
         >
       </article>
       <img
-        src="../../assets/icon/bookmark@0.75x.png"
-        class="object-contain justify-items-end ml-auto cursor-pointer mr-2"
+        src="@/assets/icon/heart.png"
+        class="object-contain w-6 h-6 justify-items-end ml-auto cursor-pointer mr-2"
         alt="bookmark icon"
       />
     </section>

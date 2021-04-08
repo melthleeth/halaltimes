@@ -96,6 +96,11 @@ export default {
   border-radius: 0 0 30px 0;
 }
 
+.text-2xs {
+  font-size: 0.5rem;
+line-height: 0.75rem;
+}
+
 .tag-color-1 {
   background-color: #3d1f5d;
 }
