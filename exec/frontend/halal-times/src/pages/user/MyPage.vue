@@ -370,7 +370,7 @@ export default {
         .dispatch('LOGOUT')
         .then(() => this.$router.replace('/').catch(() => {}));
       // console.log(localStorage);
-      localStorage.clear;
+      // localStorage.clear;
       // console.log(localStorage);
     }
   }
