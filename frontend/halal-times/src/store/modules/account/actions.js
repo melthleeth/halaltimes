@@ -1,4 +1,5 @@
 const SERVER_URL = process.env.VUE_APP_SERVER_URL;
+import axios from 'axios';
 export default {
   // 인증메일 전송
   async sendCodeCheck(_, payload) {
@@ -92,15 +93,26 @@ export default {
       body: JSON.stringify(payload)
     });
 
-    console.log('res: ', response);
     const responseData = await response.text();
-    console.log(responseData);
 
     if (responseData === '0') {
       // alert("중복된 닉네임입니다.");
       return 'FAIL';
     } else {
-      // alert("사용가능한 닉네임입니다.");
+      // alert("사용가능한 닉네임입니다.");    
+      const django_server = process.env.VUE_APP_DJANGO_URL
+
+      const frm = new FormData()
+      frm.append('gender', payload.gender)
+      frm.append('born_year', payload.born_year)
+
+      axios.post(`${django_server}/recommendations/new_user/`, frm)
+      .then(response=>{
+        console.log(response)
+      })
+      .catch((e)=>{
+        console.log(e)
+      })
       return 'SUCCESS';
     }
   },
