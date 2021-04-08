@@ -168,9 +168,9 @@ export default {
   },
   computed: {
     name() {
-      return localStorage.getItem("username") === null
+      return this.$store.getters.getUserName === ""
         ? `익명의 ${this.randomName[getRandomInt(this.randomName.length)]}`
-        : localStorage.getItem("username");
+        : this.$store.getters.getUserName;
     },
   },
   methods: {
