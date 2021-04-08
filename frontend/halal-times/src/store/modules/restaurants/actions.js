@@ -7,7 +7,7 @@ export default {
     }
     const email = context.rootGetters.getUserEmail;
 
-    if (email === '' && payload.type === "recommendation") return;
+    if (email === '' && payload.type === 'recommendation') return;
 
     let url = `${SERVER_URL}/store/list`;
     if (payload.type === 'recommendation')
@@ -63,29 +63,32 @@ export default {
 
     // if (email === '') return;
 
-    const responseB = await fetch(
-      `${SERVER_URL}/store/bookmark/all?email=${email}`,
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          Accept: 'application/json;',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': '*'
-        },
-        method: 'GET'
-      }
-    );
-    const responseDataB = await responseB.json();
-
-    for (const key in responseDataB) {
-      const restaurantId = +responseDataB[key].id_store;
-      // console.log("restaurantId", restaurantId);
-      // context.commit("modifyBookmarked", restaurantId);
-      const index = restaurants.findIndex(
-        restaurant => restaurant.restaurantId === restaurantId
+    if (email !== '') {
+      const responseB = await fetch(
+        `${SERVER_URL}/store/bookmark/all?email=${email}`,
+        {
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            Accept: 'application/json;',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*'
+          },
+          method: 'GET'
+        }
       );
-      if (index !== null) restaurants[index].bookmarked = true;
+      const responseDataB = await responseB.json();
+
+      for (const key in responseDataB) {
+        const restaurantId = +responseDataB[key].id_store;
+        // console.log("restaurantId", restaurantId);
+        // context.commit("modifyBookmarked", restaurantId);
+        const index = restaurants.findIndex(
+          restaurant => restaurant.restaurantId === restaurantId
+        );
+        if (index !== null) restaurants[index].bookmarked = true;
+      }
     }
+    // console.log(payload.type, restaurants);
 
     if (payload.type === 'newestRestaurant')
       context.commit('setRestaurantList', restaurants);
@@ -215,7 +218,7 @@ export default {
         likeCnt: +reviewList[key].likeCnt,
         likeCheck: +reviewList[key].likeCheck === 1 ? true : false,
         thumbnail:
-        reviewList[key].thumbnail === null
+          reviewList[key].thumbnail === null
             ? 'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/%ED%84%B0%EB%B2%88.png'
             : reviewList[key].thumbnail
       };
