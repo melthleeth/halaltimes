@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.web.bigdata.model.ImgDto;
 import com.web.bigdata.model.ReviewDto;
 import com.web.bigdata.model.ReviewLikeDto;
 import com.web.bigdata.model.ReviewParameterDto;
@@ -28,11 +27,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public ReviewDto getLikeReview(String id_review) throws Exception {
-		return reviewMapper.getLikeReview(id_review);
-	}
-
-	@Override
 	public ReviewDto getDetail(int id_review) throws Exception {
 		return reviewMapper.getOne(id_review);
 	}
@@ -47,16 +41,6 @@ public class ReviewServiceImpl implements ReviewService {
 		if (reviewDto.getContent() == null) {
 			throw new Exception("No Content!");
 		}
-
-//		// 임시저장했던 글이라면
-//		if (reviewDto.getPostNo() != -1) {
-//			System.out.println("?2");
-//			return reviewMapper.writeTemptoDB(reviewDto) == 1;
-//		}
-
-//		if (reviewDto.getId_user() == 0 || "".equals(reviewDto.getId_user())) {
-//			throw new Exception("You are not Logged In!!");
-//		}
 
 		return reviewMapper.write(reviewDto) == 1;
 	}
@@ -121,33 +105,6 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public boolean uploadFile(ImgDto img) throws Exception {
-		return reviewMapper.uploadFile(img) == 1;
-	}
-
-	@Override
-	public List<ImgDto> getImages(int id_review) throws Exception {
-		return reviewMapper.getImages(id_review);
-	}
-
-	@Override
-	public ImgDto getImgInfo(String id_review_image) throws Exception {
-		return reviewMapper.getImgInfo(id_review_image);
-	}
-	
-	@Override
-	@Transactional
-	public boolean deleteImage(String id_review_image) throws Exception {
-		return reviewMapper.deleteImage(id_review_image) == 1;
-	}
-	
-	@Override
-	@Transactional
-	public boolean deleteAllImage(String id_review) throws Exception {
-		return reviewMapper.deleteAllImage(id_review) == 1;
-	}
-
-	@Override
 	public List<ReviewDto> getStoreReviews(int id_store) throws Exception {
 		return reviewMapper.getStoreReviews(id_store);
 	}
@@ -158,13 +115,8 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public String getIdReview(String upload_date) throws Exception{
+	public String getIdReview(String upload_date) throws Exception {
 		return reviewMapper.getIdReview(upload_date);
-	}
-
-	@Override
-	public int deleteCascade(int id_review) throws Exception {
-		return reviewMapper.deleteCascade(id_review);
 	}
 
 	@Override

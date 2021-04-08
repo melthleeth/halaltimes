@@ -8,10 +8,6 @@
 
 	<select id="getAllUser" resultType="UserDto">
 		select email, nickname, role, profile_image, id_user
-<!-- 		, count(distinct post.postNo) as postCnt, count(distinct commentNo) as commentCnt -->
-<!--         from USER left join REVIEW using(EMAIL) -->
-<!--         left join comment using(EMAIL) -->
-<!--         group by EMAIL; -->
 		from user
 	</select>
 	
@@ -77,7 +73,7 @@
 	<!-- LoginController -->
 	
 	<select id="login" parameterType="UserDto" resultType="UserDto">
-		select email, password, nickname, role
+		select email, password, nickname, role, profile_image
 		from user
 		where email=#{email} and active = 1
 	</select>

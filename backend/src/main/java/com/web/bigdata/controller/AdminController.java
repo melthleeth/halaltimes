@@ -34,30 +34,30 @@ public class AdminController {
 	@Autowired
 	private S3FileUploadService s3FileUploadService;
 
-	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보(이메일, 이름, 가입일, 권한, 프로필, 게시글 수, 댓글 수)을 반환한다.", response = HashMap.class)
-	@GetMapping
-	public ResponseEntity<Map<String, Object>> getMembers(@RequestParam String email) throws Exception {
-		logger.info("getMembers - 호출");
-
-		Map<String, Object> resultMap = new HashMap<>();
-		HttpStatus status = HttpStatus.OK;
-
-		// 회원 정보 조회
-		try {
-			if (!"admin".equals(userService.getRole(email))) {
-				resultMap.put("message", "Not a Admin Account");
-				status = HttpStatus.METHOD_NOT_ALLOWED;
-				return new ResponseEntity<Map<String, Object>>(resultMap, status);
-			}
-			resultMap.put("members", userService.getAllUser());
-			status = HttpStatus.OK;
-		} catch (Exception e) {
-			resultMap.put("message", e.getMessage());
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Map<String, Object>>(resultMap, status);
-	}
+//	@ApiOperation(value = "회원 목록 조회", notes = "회원들의 정보(이메일, 이름, 가입일, 권한, 프로필, 게시글 수, 댓글 수)을 반환한다.", response = HashMap.class)
+//	@GetMapping
+//	public ResponseEntity<Map<String, Object>> getMembers(@RequestParam String email) throws Exception {
+//		logger.info("getMembers - 호출");
+//
+//		Map<String, Object> resultMap = new HashMap<>();
+//		HttpStatus status = HttpStatus.OK;
+//
+//		// 회원 정보 조회
+//		try {
+//			if (!"admin".equals(userService.getRole(email))) {
+//				resultMap.put("message", "Not a Admin Account");
+//				status = HttpStatus.METHOD_NOT_ALLOWED;
+//				return new ResponseEntity<Map<String, Object>>(resultMap, status);
+//			}
+//			resultMap.put("members", userService.getAllUser());
+//			status = HttpStatus.OK;
+//		} catch (Exception e) {
+//			resultMap.put("message", e.getMessage());
+//			status = HttpStatus.INTERNAL_SERVER_ERROR;
+//		}
+//
+//		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+//	}
 
 	@ApiOperation(value = "회원 탈퇴 처리", notes = "회원들을 탈퇴 처리하여 성공 여부에 따라 true, false를 반환한다.", response = Boolean.class)
 	@DeleteMapping

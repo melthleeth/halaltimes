@@ -41,10 +41,10 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	StoreService storeService;
-	
+
 	@Autowired
 	ETCService etcService;
 
@@ -69,7 +69,6 @@ public class UserController {
 
 		// 회원가입
 		try {
-			System.out.println("Controller: " + dto);
 			userService.join(dto);
 			status = HttpStatus.ACCEPTED;
 		} catch (Exception e) {
@@ -86,19 +85,16 @@ public class UserController {
 		logger.info("emailCheck - 호출");
 
 		HttpStatus status = HttpStatus.ACCEPTED;
-		 
+
 		boolean isExisted = userService.emailCheck(email);
-		System.out.println("존재하는 이메일인지 확인 : " + isExisted);
-		if(!isExisted) {
+		if (!isExisted) {
 			try {
-				System.out.println("확인해 보자");
 				etcService.sendSimpleMessage(email);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+
 		return new ResponseEntity<Boolean>(isExisted, status);
 	}
 
@@ -126,11 +122,11 @@ public class UserController {
 			resultMap.put("info", userService.findUserInfo(email));
 			resultMap.put("reviewList", userService.getReviewList(email));
 			List<BookmarkDto> bookmarkList = userService.getBookmarkList(id_user);
-			for(BookmarkDto bookmark : bookmarkList) {
+			for (BookmarkDto bookmark : bookmarkList) {
 				bookmark.setStore_name(storeService.getStoreNameByIdStore(bookmark.getId_store()));
 				double score = Double.parseDouble(storeService.getStoreAvgScore(bookmark.getId_store()));
-				score = Math.round(score*100)/100.0;
-				bookmark.setScore(score+"");
+				score = Math.round(score * 100) / 100.0;
+				bookmark.setScore(score + "");
 				bookmark.setAddress(storeService.getStoreAddress(bookmark.getId_store()));
 			}
 			System.out.println("bookmarkList : " + bookmarkList);
@@ -169,32 +165,6 @@ public class UserController {
 		return new ResponseEntity<Boolean>(flag, status);
 	}
 
-	@ApiOperation(value = "회원 비밀번호 변경", notes = "회원의 비밀번호를 수정한다.", response = Boolean.class)
-	@PutMapping("/password")
-	public ResponseEntity<Boolean> modifyPwd(@RequestBody Map<String, String> map) {
-		logger.info("modifyPwd - 호출");
-
-		HttpStatus status = HttpStatus.ACCEPTED;
-		boolean flag = false;
-
-		// 회원 정보 조회
-		UserDto dto = new UserDto();
-		dto.setEmail(map.get("email"));
-		dto.setPassword(map.get("password"));
-		dto.setPrePwd(map.get("prePwd"));
-
-		// 회원 비밀번호 변경
-		try {
-			flag = userService.updatePwd(dto);
-			status = HttpStatus.ACCEPTED;
-		} catch (Exception e) {
-			e.printStackTrace();
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-
-		return new ResponseEntity<Boolean>(flag, status);
-	}
-
 	@ApiOperation(value = "회원 탈퇴", notes = "회원탈퇴를 한다.", response = Boolean.class)
 	@PutMapping("/delete")
 	public ResponseEntity<Boolean> delete(@RequestParam String email) {
@@ -222,7 +192,8 @@ public class UserController {
 
 	@ApiOperation(value = "사용자의 프로필 이미지 업로드", notes = "회원의 프로필 이미지를 수정한다.")
 	@PostMapping("/profilepic/upload")
-	public ResponseEntity<Void> updateUserPicture(@RequestParam String email, @RequestParam MultipartFile profile_image) {
+	public ResponseEntity<Void> updateUserPicture(@RequestParam String email,
+			@RequestParam MultipartFile profile_image) {
 		logger.info("updateUserPicture - 호출");
 
 		// 프로필 이미지 업로드
