@@ -71,4 +71,6 @@ public interface UserMapper {
 
 	public String getImage(int id_user)throws SQLException;
 
+	public String getIdUserIdReview(int id_review) throws SQLException;
+
 }

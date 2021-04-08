@@ -61,7 +61,9 @@ public interface UserService {
 	/** id_user 로 nickname 가져오기*/
 	public String getNickName(int id_user) throws SQLException;
 
-	public String getImage(int id_user) throws SQLException;;
+	public String getImage(int id_user) throws SQLException;
+
+	public String getIdUserIdReview(int id_review)throws SQLException;
 
 
 }

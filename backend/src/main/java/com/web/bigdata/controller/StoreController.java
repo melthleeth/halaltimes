@@ -155,20 +155,18 @@ public class StoreController {
 				Map<String, Object> map = new HashMap<>();
 				map.put("id_review", review.getId_review());
 				map.put("id_user", id_user);
+				
 				String check = reviewService.likeCheck(map);
 				int likeCheck = check == null ? 0 : Integer.parseInt(check);
 				review.setLikeCheck(likeCheck);
 				review.setNickname(userService.getNickName(review.getId_user()));
-				review.setThumbnail(userService.getImage(id_user));
-				List<ImgDto> imgs = new ArrayList<>();
-				imgs = reviewService.getImages(review.getId_review());
-				List<String> modifiedImg = new ArrayList<>();
-				for(ImgDto x : imgs) {
-					modifiedImg.add(x.getModified_image());
-				}
-				review.setUnmodified(modifiedImg);
-//				review.setUnmodified(unmodified);
+				
+				String id_userStr = userService.getIdUserIdReview(review.getId_review());
+				int id_user2 = id_userStr == null ? 0 : Integer.parseInt(id_userStr);
+				
+				review.setThumbnail(userService.getImage(id_user2));
 			}
+//			System.out.println(reviewList);
 			resultMap.put("reviewList", reviewList);
 			status = HttpStatus.OK;
 		} catch (Exception e) {
