@@ -30,7 +30,7 @@
         </div>
       </article>
       <article class="flex ml-auto justify-self-end items-center text-sm">
-        <div v-if="identification" class="space-x-2 mr-2">
+        <div v-if="identification === nickname" class="space-x-2 mr-2">
           <base-button mode="small-round-brown" @click="openDialog('modify')"
             >수정</base-button
           >
@@ -193,7 +193,7 @@ export default {
       return score + 1.5;
     },
     identification() {
-      return this.$store.getters.getUserEmail === '' ? false : true;
+      return this.$store.getters.getUserName;
     },
     ratingEmoji() {
       if (this.ratings === '5') return '😍';
