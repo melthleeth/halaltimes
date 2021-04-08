@@ -110,17 +110,45 @@
     </section>
     <section class="flex">
       <article class="w-1/2">
-        <span class="text-lg mt-3 mb-1 underline">북마크한 식당</span>
+        <span class="text-lg mt-3 mb-1 underline">최근 북마크한 식당</span>
         <div v-for="(bookmark, index) in bookmarks" :key="index">
           <BookmarkDesign :value="bookmark" />
         </div>
       </article>
       <article class="w-1/2">
-        <span class="text-lg mt-3 mb-1 underline">활동 기록</span>
+        <span class="text-lg mt-3 mb-1 underline">최근 활동 기록</span>
         <div v-for="(review, index) in reviews" :key="index">
           <ReviewDesign :value="review" />
         </div>
       </article>
+    </section>
+
+    <section class="">
+      <base-button class="text-xs" @click="showDeleteDialog"
+        >회원 탈퇴</base-button
+      >
+      <base-dialog
+        :open="deleteDialogIsVisible"
+        @close="hideDeleteDialog"
+        class="flex flex-col justify-items-center z-40"
+      >
+        <span class="text-2xl font-bold mt-10 mb-4"
+          >정말 탈퇴하시겠습니까?</span
+        >
+        <section class="flex space-x-2 mt-6">
+          <base-button
+            type="submit"
+            @click="deleteUser"
+            mode="primary"
+            class="text-sm"
+          >
+            네</base-button
+          >
+          <base-button class="text-sm" @click="hideDeleteDialog"
+            >아니오</base-button
+          >
+        </section>
+      </base-dialog>
     </section>
   </div>
 </template>
@@ -145,11 +173,14 @@ export default {
       born_year: '190001',
 
       rocommloadingmessage: '',
+
+      isDeleted: false,
+      deleteDialogIsVisible: false
     };
   },
   components: {
     ReviewDesign,
-    BookmarkDesign,
+    BookmarkDesign
   },
   computed: {
     currDate() {
@@ -158,22 +189,40 @@ export default {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric',
+        day: 'numeric'
       };
       return event.toLocaleDateString(undefined, options);
     },
-    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole']),
+    ...mapGetters(['getAccessToken', 'getUserEmail', 'getUserName', 'getRole'])
   },
   created() {
     this.loadMyInfo();
   },
   methods: {
+    showDeleteDialog() {
+      this.deleteDialogIsVisible = true;
+    },
+    hideDeleteDialog() {
+      this.deleteDialogIsVisible = false;
+    },
+    deleteUser() {
+      console.log('axios 호출');
+      console.log('this.user.email : ', this.user.email);
+      const email = this.user.email;
+      axios.put(`${SERVER_URL}/user/delete?email=${email}`).then(() => {
+        alert('회원탈퇴 완료');
+        this.logout();
+        // this.$emit('deleted', this.user);
+      });
+
+      // this.$router.push('/board/upload');
+    },
     async loadMyInfo(refresh = true) {
       //비동기
       this.isLoading = true;
       try {
         await this.$store.dispatch('account/loadMyInfo', {
-          forceRefresh: refresh,
+          forceRefresh: refresh
         });
       } catch (error) {
         this.error =
@@ -191,7 +240,7 @@ export default {
       this.bookmarks = userInfo.bookmarkList;
       this.born_year = userInfo.info.born_year;
     },
-    addProfile: function (input) {
+    addProfile: function(input) {
       if (input.target.files[0]) {
         if (this.user.profile_image) {
           const params = new URLSearchParams();
@@ -207,22 +256,22 @@ export default {
         axios
           .post(`${SERVER_URL}/user/profilepic/upload`, frm, {
             headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+              'Content-Type': 'multipart/form-data'
+            }
           })
-          .then((response) => {
+          .then(() => {
             alert('프로필 업로드 완료');
             const params = new URLSearchParams();
             params.append('email', this.getUserEmail);
             axios
               .get(`${SERVER_URL}/user`, { params })
-              .then((response) => {
+              .then(response => {
                 this.user.profile_image = response.data.info.profile_image;
               })
-              .catch((error) => {
+              .catch(error => {
                 this.$router.push({
                   path: '/Error',
-                  query: { status: error.response.status },
+                  query: { status: error.response.status }
                 });
               });
           });
@@ -247,7 +296,7 @@ export default {
         try {
           const modifiedData = {
             nickname: this.user.nickname,
-            email: this.user.email,
+            email: this.user.email
           };
           result = await this.$store.dispatch(
             'account/modifyNickname',
@@ -273,7 +322,15 @@ export default {
         this.rocommloadingmessage = 'ERROR';
       }
     },
-  },
+    logout() {
+      this.$store
+        .dispatch('LOGOUT')
+        .then(() => this.$router.replace('/').catch(() => {}));
+      // console.log(localStorage);
+      localStorage.clear;
+      // console.log(localStorage);
+    }
+  }
 };
 </script>
 <style scoped>
