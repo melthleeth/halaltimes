@@ -87,4 +87,13 @@ public interface ReviewMapper {
 	/** 해당 store의 review 갯수 가져오기 */
 	public int getReviewCount(int id_store)throws SQLException;
 
+	/** review 를 만들자 마자 upload_date로 id_review 가져오기*/
+	public String getIdReview(String upload_date)throws SQLException;
+
+	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
+	public int deleteCascade(int id_review)throws SQLException;
+
+	/** review 를 삭제(active = 0) 할 시 review_image도 삭제 (active = 0) */
+	public String getStoreName(int id_store)throws SQLException;
+
 }

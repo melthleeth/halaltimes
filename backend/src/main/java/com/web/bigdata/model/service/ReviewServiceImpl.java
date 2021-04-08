@@ -156,4 +156,19 @@ public class ReviewServiceImpl implements ReviewService {
 	public int getReviewCount(int id_store) throws Exception {
 		return reviewMapper.getReviewCount(id_store);
 	}
+
+	@Override
+	public String getIdReview(String upload_date) throws Exception{
+		return reviewMapper.getIdReview(upload_date);
+	}
+
+	@Override
+	public int deleteCascade(int id_review) throws Exception {
+		return reviewMapper.deleteCascade(id_review);
+	}
+
+	@Override
+	public String getStoreName(int id_store) throws Exception {
+		return reviewMapper.getStoreName(id_store);
+	}
 }

@@ -148,10 +148,19 @@
                 />
                 <!-- <input type="file" accept=".png, .jpg, .jpeg, .gif" @change="uploadImage" /> -->
               </section>
+              <input
+                multiple="multiple"
+                ref="file"
+                type="file"
+                id="file"
+                name="file"
+                @change="onChangeImages"
+                class="my-4"
+              />
               <section class="flex space-x-2 mt-6 mb-4">
                 <base-button
                   type="submit"
-                  @click="registerReview"
+                  @click="completeUpload"
                   mode="primary"
                   class="text-base"
                 >
@@ -233,6 +242,8 @@
 import ReviewCard from '../../components/restaurants/ReviewCard.vue';
 import KakaoMap from '../../components/ui/KakaoMap.vue';
 // import NaverMap from '../../components/ui/NaverMap.vue';
+import axios from 'axios';
+const SERVER_URL = process.env.VUE_APP_SERVER_URL;
 
 export default {
   components: {
@@ -249,7 +260,9 @@ export default {
       tagColor: 1,
       score: 0,
       reviewContents: '',
-      ratings: 0
+      ratings: 0,
+      imageUrl: [],
+      myfile: []
     };
   },
   computed: {
@@ -336,13 +349,62 @@ export default {
       // this.restaurant.lng = (+this.restaurant.lng).toFixed(4);
       // console.log(this.restaurant.lat, this.restaurant.lng);
     },
+    onChangeImages(e) {
+      var file = e.target.files;
+      for (var i = 0; i < file.length; i++) {
+        console.log(file[i]);
+
+        this.imageUrl.push(URL.createObjectURL(file[i]));
+        this.myfile.push(this.$refs.file.files[i]);
+      }
+      console.log('imageUrl : ', this.imageUrl);
+      console.log('myfile : ', this.myfile);
+    },
+    completeUpload() {
+      const restaurantId = this.$store.getters['restaurants/restaurantId'];
+      console.log('restaurantId : ', restaurantId);
+      var frm = new FormData();
+      for (var i = 0; i < this.myfile.length; i++) {
+        let file = this.myfile[i];
+        frm.append('files', file);
+      }
+      frm.append('id_store', restaurantId);
+      frm.append('email', this.$store.getters.getUserEmail);
+      frm.append('content', this.reviewContents);
+      frm.append('score', +this.ratings);
+      console.log('frm : ', frm);
+      console.log('frm : ', frm.score);
+      axios
+        .post(`${SERVER_URL}/review`, frm, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(response => {
+          const result = response.data;
+          if (result === 'success')
+            this.$toast.success(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">🌞 리뷰 등록에 성공하였습니다.</span>`
+            );
+          else
+            this.$toast.error(
+              `<span class="G-market-sans-L font-bold text-sm tracking-wide">❌ 리뷰 등록에 실패하였습니다.</span>`
+            );
+          this.myfile.splice(0, this.myfile.length);
+          this.imageUrl.splice(0, this.imageUrl.length);
+          this.updateAverageScore();
+          this.loadLikeReviews();
+          this.closeReviewDialog();
+        });
+    },
     async registerReview() {
       // content, id_user, id_store, score
       let result;
       try {
         result = await this.$store.dispatch('restaurants/registerReview', {
           content: this.reviewContents,
-          score: +this.ratings
+          score: +this.ratings,
+          files: this.myfile
         });
       } catch (error) {
         this.error = error.message || '리뷰를 등록하는 중 문제가 발생했습니다.';

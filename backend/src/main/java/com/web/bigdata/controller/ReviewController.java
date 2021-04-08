@@ -60,8 +60,10 @@ public class ReviewController {
 		List<ReviewDto> reviewList = reviewService.getList(reviewParameterDto);
 		for(ReviewDto x : reviewList) {
 			System.out.println(x);
+			String store_name = reviewService.getStoreName(x.getId_store());
+			x.setStore_name(store_name);
 		}
-		return new ResponseEntity<List<ReviewDto>>(reviewService.getList(reviewParameterDto), HttpStatus.OK);
+		return new ResponseEntity<List<ReviewDto>>(reviewList, HttpStatus.OK);
 	}
 
 //	@ApiOperation(value = "해당 숫자의 순서의 Review", notes = "해당 리뷰의 정보 반환한다.", response = List.class)
@@ -123,7 +125,7 @@ public class ReviewController {
 
 	@ApiOperation(value = "리뷰 작성", notes = "새로운 리뷰 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
 	@PostMapping
-	public ResponseEntity<String> write(@RequestBody ReviewDto reviewDto) {
+	public ResponseEntity<String> write(ReviewDto reviewDto) {
 		logger.info("write - 호출");
 
 		String result = SUCCESS;
@@ -133,7 +135,7 @@ public class ReviewController {
 		
 		List<MultipartFile> files = reviewDto.getFiles();
 		List<String> unmodified = reviewDto.getUnmodified();
-
+		
 		// 리뷰 작성 성공 시
 		try {
 			int id_user = userService.getIdUser(reviewDto.getEmail());
@@ -141,8 +143,15 @@ public class ReviewController {
 			System.out.println("id_user : "+reviewDto.getId_user());
 			System.out.println("reviewDto : "+reviewDto);
 			if (reviewService.write(reviewDto)) {
-//				String ID_REVIEW = reviewService.getLastReview(reviewDto.getId_user());
-				System.out.println(reviewDto);
+				String id_userStr = Integer.toString(reviewDto.getId_user());
+				String ID_REVIEW = reviewService.getLastReview(id_userStr);
+				System.out.println("리뷰 작성 성공 시 reviewDto: " + reviewDto);
+//				String id_reviewStr = reviewService.getIdReview(reviewDto.getUpload_date());
+//				System.out.println("id_reviewStr : "+id_reviewStr);
+				int id_review = ID_REVIEW == null ? 0 : Integer.parseInt(ID_REVIEW);
+				reviewDto.setId_review(id_review);
+//				System.out.println("id_review : "+id_reviewStr);
+//				reviewDto.setId_review(id_review);
 				
 				// 삭제한 파일이 있다면
 				if (unmodified != null && unmodified.size() > 0) {
@@ -212,11 +221,12 @@ public class ReviewController {
 			// ec2 파일 삭제
 			for (ImgDto imgDto : reviewService.getImages(id_review)) {
 				s3FileUploadService.delete(imgDto.getModified_image());
-				s3FileUploadService.delete(imgDto.getThumb_image());
+//				s3FileUploadService.delete(imgDto.getThumb_image());
 			}
 
 			// db review 삭제 --cascade--> review images 삭제
 			if (reviewService.delete(id_review)) {
+				reviewService.deleteCascade(id_review);
 				return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
 			}
 		} catch (Exception e) {
@@ -230,14 +240,16 @@ public class ReviewController {
 	@ApiOperation(value = "이미지 저장", notes = "리뷰의 이미지를 저장한다.")
 	@PostMapping("/imgs/save")
 	private ResponseEntity<String> saveFiles(int id_review, List<MultipartFile> files) {
-//		logger.info("saveFiles 호출, " + files.size());
-		System.out.println(id_review);
-		System.out.println(files);
+		logger.info("saveFiles 호출, 파일의 수 : " + files.size());
+		System.out.println("id_review : "+id_review);
+		System.out.println("files : " + files);
 
 		// s3 업로드 후 db 저장
 		try {
 			for (MultipartFile file : files) {
 				ImgDto img = s3FileUploadService.uploadImage(file);
+				System.out.println("img : "+ img);
+				System.out.println("file.getOriginalFilename() : "+ file.getOriginalFilename());
 				img.setId_review(id_review);
 				reviewService.uploadFile(img);
 			}
