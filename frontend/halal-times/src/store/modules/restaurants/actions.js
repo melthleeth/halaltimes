@@ -6,11 +6,11 @@ export default {
       return;
     }
     const email = context.rootGetters.getUserEmail;
-    
-    if (email === "") return;
+
+    if (email === '' && payload.type === "recommendation") return;
 
     let url = `${SERVER_URL}/store/list`;
-    if (payload.type === "recommendation")
+    if (payload.type === 'recommendation')
       url = `${SERVER_URL}/store/list/recomm?email=${email}`;
 
     const response = await fetch(url, {
@@ -54,35 +54,69 @@ export default {
         reviews: responseData[key].reviews,
         lat: responseData[key].lat,
         lng: responseData[key].lng,
-        bookmarked: false,
+        bookmarked: false
       };
       restaurants.push(restaurant);
     }
-    if (payload.type === "newestRestaurant") context.commit('setRestaurantList', restaurants);
-    else if (payload.type === "recommendation") context.commit('setRecommendRestaurants', restaurants);
+
+    // const email = context.rootGetters.getUserEmail;
+
+    // if (email === '') return;
+
+    const responseB = await fetch(
+      `${SERVER_URL}/store/bookmark/all?email=${email}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json;',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*'
+        },
+        method: 'GET'
+      }
+    );
+    const responseDataB = await responseB.json();
+
+    for (const key in responseDataB) {
+      const restaurantId = +responseDataB[key].id_store;
+      // console.log("restaurantId", restaurantId);
+      // context.commit("modifyBookmarked", restaurantId);
+      const index = restaurants.findIndex(
+        restaurant => restaurant.restaurantId === restaurantId
+      );
+      if (index !== null) restaurants[index].bookmarked = true;
+    }
+
+    if (payload.type === 'newestRestaurant')
+      context.commit('setRestaurantList', restaurants);
+    else if (payload.type === 'recommendation')
+      context.commit('setRecommendRestaurants', restaurants);
     else context.commit('setRestaurants', restaurants);
     context.commit('setFetchTimestamp');
   },
   async loadBookmarks(context) {
     const email = context.rootGetters.getUserEmail;
 
-    if (email === "") return;
+    if (email === '') return;
 
-    const response = await fetch(`${SERVER_URL}/store/bookmark/all?email=${email}`, {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        Accept: 'application/json;',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*'
-      },
-      method: 'GET'
-    });
+    const response = await fetch(
+      `${SERVER_URL}/store/bookmark/all?email=${email}`,
+      {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json;',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': '*'
+        },
+        method: 'GET'
+      }
+    );
     const responseData = await response.json();
 
     for (const key in responseData) {
       const restaurantId = +responseData[key].id_store;
-      console.log("restaurantId", restaurantId);
-      context.commit("modifyBookmarked", restaurantId);
+      console.log('restaurantId', restaurantId);
+      context.commit('modifyBookmarked', restaurantId);
     }
   },
   setKeyword(context, payload) {
@@ -98,18 +132,15 @@ export default {
     //   return;
     // }
 
-    const response = await fetch(
-      `${SERVER_URL}/review/list`,
-      {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          Accept: 'application/json;',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': '*'
-        },
-        method: 'GET'
-      }
-    );
+    const response = await fetch(`${SERVER_URL}/review/list`, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept: 'application/json;',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*'
+      },
+      method: 'GET'
+    });
     const responseData = await response.json();
 
     const reviews = [];
@@ -124,9 +155,14 @@ export default {
         content: responseData[key].content,
         upload_date: responseData[key].upload_date,
         likeCnt: +responseData[key].likeCnt,
-        likeCheck: +responseData[key].likeCheck === 1 ? true : false
+        likeCheck: +responseData[key].likeCheck === 1 ? true : false,
+        thumbnail:
+          responseData[key].thumbnail === null
+            ? 'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/%ED%84%B0%EB%B2%88.png'
+            : responseData[key].thumbnail
       };
       // console.log("actions: loadReviews/store_name", review.store_name);
+      // console.log("actions: loadReviews/thumbnail", review.thumbnail);
       reviews.push(review);
     }
 
@@ -177,8 +213,13 @@ export default {
         content: reviewList[key].content,
         upload_date: reviewList[key].upload_date,
         likeCnt: +reviewList[key].likeCnt,
-        likeCheck: +reviewList[key].likeCheck === 1 ? true : false
+        likeCheck: +reviewList[key].likeCheck === 1 ? true : false,
+        thumbnail:
+        reviewList[key].thumbnail === null
+            ? 'https://halaltimesbucket.s3.ap-northeast-2.amazonaws.com/%ED%84%B0%EB%B2%88.png'
+            : reviewList[key].thumbnail
       };
+      // console.log("actions: loadLikeReviews/thumbnail", review.thumbnail);
       reviews.push(review);
     }
     // console.log('actions: loadLikeReviews/reviews', reviews);
@@ -367,5 +408,5 @@ export default {
       };
       context.commit('modifyReviewLike', likeData);
     });
-  },
+  }
 };

@@ -92,7 +92,7 @@ export default {
   },
   created() {
     this.loadRestaurants();
-    this.loadBookmarks();
+    // this.loadBookmarks();
     this.loadKeyword();
   },
   methods: {
