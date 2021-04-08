@@ -132,11 +132,11 @@
           >최근 활동 기록</span
         >
         <div class="bg-white border-line-full mx-4">
-        <section v-for="(review, index) in reviews.slice(0, 5)" :key="index">
+        <section v-for="(review, index) in reviews" :key="index">
           <review-design :value="review" />
         </section>
         <!-- <review-card-small
-            v-for="review in reviews.slice(0, 5)"
+            v-for="review in reviews"
             :key="review.id_review"
             :id_store="review.id_store"
             :store_name="review.store_name"
@@ -298,6 +298,7 @@ export default {
               .get(`${SERVER_URL}/user`, { params })
               .then(response => {
                 this.user.profile_image = response.data.info.profile_image;
+                this.$store.dispatch('setProfileImage', this.user.profile_image)
               })
               .catch(error => {
                 this.$router.push({

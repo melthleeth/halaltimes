@@ -10,5 +10,8 @@ export default {
   },
   getRole(state) {
     return state.role;
+  },
+  getProfileImage(state) {
+    return state.profileImage;
   }
 };

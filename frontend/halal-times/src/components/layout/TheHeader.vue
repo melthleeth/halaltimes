@@ -69,7 +69,7 @@
         <router-link to="/mypage">
           <img
             class="h-10 w-10 cursor-pointer rounded-full object-cover"
-            :src="imgsrc"
+            :src="getProfileImage"
             alt="user profile"
           />
         </router-link>
@@ -101,7 +101,8 @@ export default {
       'getAccessToken',
       'getUserEmail',
       'getUserName',
-      'getRole'
+      'getRole',
+      'getProfileImage'
     ])
   },
   methods: {

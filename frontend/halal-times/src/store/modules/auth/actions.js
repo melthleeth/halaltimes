@@ -48,5 +48,8 @@ export default {
         ] = `${response.data['auth-token']}`;
       })
       .error(() => {});
+  },
+  setProfileImage(context, payload) {
+    context.commit('setProfileImage', payload);
   }
 };
