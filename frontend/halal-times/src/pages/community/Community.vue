@@ -168,6 +168,10 @@ export default {
       'created: restaurantList',
       this.$store.getters['restaurants/restaurantList']
     );
+    console.log(
+      'created: recommendRestaurants',
+      this.$store.getters['restaurants/recommendRestaurants']
+    );
   },
   methods: {
     viewRetaurantDetail(restaurantId, restaurantName) {
