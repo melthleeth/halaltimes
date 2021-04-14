@@ -16,7 +16,7 @@
       <div v-if="isLoading" class="my-20">
         <base-spinner></base-spinner>
       </div>
-      <v-else div class="grid grid-cols-3 grid-flow-row gap-1 mx-auto">
+      <div v-else class="grid grid-cols-3 grid-flow-row gap-1 mx-auto">
         <restaurant-card
           v-for="restaurant in recommendRestaurants"
           :key="restaurant.restaurantId"
@@ -31,7 +31,7 @@
           :muslimFriendly="restaurant.muslimFriendly"
         >
         </restaurant-card>
-      </v-else>
+      </div>
     </section>
     <section class="flex mt-20 mb-4">
       <article class="w-1/2 flex flex-col mx-2">
