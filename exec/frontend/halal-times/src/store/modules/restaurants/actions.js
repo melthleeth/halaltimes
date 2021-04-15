@@ -59,10 +59,6 @@ export default {
       restaurants.push(restaurant);
     }
 
-    // const email = context.rootGetters.getUserEmail;
-
-    // if (email === '') return;
-
     if (email !== '') {
       const responseB = await fetch(
         `${SERVER_URL}/store/bookmark/all?email=${email}`,
@@ -85,7 +81,7 @@ export default {
         const index = restaurants.findIndex(
           restaurant => restaurant.restaurantId === restaurantId
         );
-        if (index !== null) restaurants[index].bookmarked = true;
+        if (index >= 0) restaurants[index].bookmarked = true;
       }
     }
     // console.log(payload.type, restaurants);
