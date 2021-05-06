@@ -2,8 +2,8 @@
 HELP.md
 target/
 bin/
-**/src/main/resources/mapper/application.properties
-**/src/main/resources/mapper/mail.properties
+backend/src/main/resources/mapper/application.properties
+backend/src/main/resources/mapper/mail.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
