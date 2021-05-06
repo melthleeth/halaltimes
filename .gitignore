@@ -1,36 +1,36 @@
-.DS_Store
-HELP.md
-target/
-bin/
-application.properties
-mail.properties
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**
-!**/src/test/**
+# .DS_Store
+# HELP.md
+# target/
+# bin/
+# application.properties
+# mail.properties
+# !.mvn/wrapper/maven-wrapper.jar
+# !**/src/main/**
+# !**/src/test/**
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# ### STS ###
+# .apt_generated
+# .classpath
+# .factorypath
+# .project
+# .settings
+# .springBeans
+# .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# ### IntelliJ IDEA ###
+# .idea
+# *.iws
+# *.iml
+# *.ipr
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
+# ### NetBeans ###
+# /nbproject/private/
+# /nbbuild/
+# /dist/
+# /nbdist/
+# /.nb-gradle/
+# build/
 
-### VS Code ###
-.vscode/
-/.metadata/
+# ### VS Code ###
+# .vscode/
+# /.metadata/
