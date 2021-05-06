@@ -2,11 +2,11 @@
 HELP.md
 target/
 bin/
+application.properties
+mail.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-**/src/main/resources/mapper/application.properties
-**/src/main/resources/mapper/mail.properties
 
 ### STS ###
 .apt_generated
